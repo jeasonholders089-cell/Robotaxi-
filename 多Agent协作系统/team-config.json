@@ -1,0 +1,52 @@
+{
+  "teamName": "滴滴Robotaxi 乘客反馈管理平台研发团队",
+  "version": "1.0",
+  "project": {
+    "name": "Robotaxi乘客反馈管理平台",
+    "path": "../乘客反馈管理平台",
+    "docsPath": "../乘客反馈管理平台/docs",
+    "deliverables": "完整的可运行系统"
+  },
+  "members": [
+    {
+      "id": "pm",
+      "name": "项目经理 Agent",
+      "role": "project-manager",
+      "description": "统筹协调项目全局，负责任务分发、进度跟踪、风险预警",
+      "color": "#FF6B6B"
+    },
+    {
+      "id": "product-manager",
+      "name": "产品经理 Agent",
+      "role": "product-manager",
+      "description": "负责需求分析、PRD撰写、产品设计、优先级排序",
+      "color": "#4ECDC4"
+    },
+    {
+      "id": "designer",
+      "name": "设计师 Agent",
+      "role": "designer",
+      "description": "负责用户研究、信息架构、交互设计、视觉设计",
+      "color": "#45B7D1"
+    },
+    {
+      "id": "engineer",
+      "name": "全栈研发工程师 Agent",
+      "role": "fullstack-engineer",
+      "description": "负责技术方案设计、前后端开发、代码评审、测试与部署",
+      "color": "#96CEB4"
+    },
+    {
+      "id": "qa",
+      "name": "测试工程师 Agent",
+      "role": "qa-engineer",
+      "description": "负责测试计划、用例设计、功能测试、回归测试、缺陷跟踪",
+      "color": "#DDA0DD"
+    }
+  ],
+  "collaboration": {
+    "communicationPattern": "pm-dispatched",
+    "syncInterval": "on-demand",
+    "decisionMaking": "pm-approves"
+  }
+}

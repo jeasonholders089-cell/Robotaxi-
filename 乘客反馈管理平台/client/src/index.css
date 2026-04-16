@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #FF6033;
+  --color-primary-dark: #E55A2B;
+  --color-primary-light: #FFF7F5;
+  --color-success: #52C41A;
+  --color-warning: #FAAD14;
+  --color-error: #F5222D;
+  --color-info: #1890FF;
+  --color-border: #E5E5E5;
+  --color-bg: #F5F5F5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--color-bg);
+  color: #1A1A1A;
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Custom utility classes */
+@layer components {
+  .sidebar-item {
+    @apply flex items-center px-4 h-12 cursor-pointer transition-colors duration-200;
+  }
+
+  .sidebar-item:hover {
+    @apply bg-primary-light;
+  }
+
+  .sidebar-item.active {
+    @apply bg-primary-light border-l-[3px] border-primary;
+  }
+
+  .card {
+    @apply bg-white rounded-lg shadow-card p-5;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors duration-200 disabled:bg-gray-300 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 border border-primary text-primary rounded-md hover:bg-primary-light transition-colors duration-200 disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-200;
+  }
+
+  .select {
+    @apply w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-200 bg-white;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply bg-green-50 text-green-600;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-50 text-yellow-600;
+  }
+
+  .badge-error {
+    @apply bg-red-50 text-red-600;
+  }
+
+  .badge-info {
+    @apply bg-blue-50 text-blue-600;
+  }
+}

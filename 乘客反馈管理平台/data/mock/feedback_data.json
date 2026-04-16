@@ -1,0 +1,3840 @@
+{
+  "data": [
+    {
+      "feedback_no": "FB20260223001",
+      "passenger_id": "P20260223001",
+      "trip_id": "T20260223001",
+      "vehicle_id": "Robotaxi-深圳-183",
+      "rating": 3,
+      "feedback_text": "整体一般，没有特别突出也没有大问题",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-02-23 15:42:00",
+      "trip_duration": 42,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260226002",
+      "passenger_id": "P20260226002",
+      "trip_id": "T20260226002",
+      "vehicle_id": "Robotaxi-北京-963",
+      "rating": 4,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-02-26 19:43:00",
+      "trip_duration": 80,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "响应",
+        "定位"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-02-28 09:43:00"
+    },
+    {
+      "feedback_no": "FB20260123003",
+      "passenger_id": "P20260123003",
+      "trip_id": "T20260123003",
+      "vehicle_id": "Robotaxi-广州-756",
+      "rating": 5,
+      "feedback_text": "车内氛围很好，座椅舒适，适合长途出行",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-01-23 15:49:00",
+      "trip_duration": 29,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "导航",
+        "绕路",
+        "人工干预",
+        "放心"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-01-23 19:49:00"
+    },
+    {
+      "feedback_no": "FB20260127004",
+      "passenger_id": "P20260127004",
+      "trip_id": "T20260127004",
+      "vehicle_id": "Robotaxi-广州-542",
+      "rating": 1,
+      "feedback_text": "车况一般，卫生需要改进",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-01-27 09:05:00",
+      "trip_duration": 26,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心",
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260216005",
+      "passenger_id": "P20260216005",
+      "trip_id": "T20260216005",
+      "vehicle_id": "Robotaxi-广州-402",
+      "rating": 2,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-02-16 18:36:00",
+      "trip_duration": 88,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "干净",
+        "温度",
+        "准确",
+        "路线"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-02-17 19:36:00"
+    },
+    {
+      "feedback_no": "FB20260416006",
+      "passenger_id": "P20260416006",
+      "trip_id": "T20260416006",
+      "vehicle_id": "Robotaxi-北京-713",
+      "rating": 2,
+      "feedback_text": "路线规划不合理，绕路了",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-04-16 19:12:00",
+      "trip_duration": 33,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "准确",
+        "放心",
+        "导航"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-04-17 12:12:00"
+    },
+    {
+      "feedback_no": "FB20260117007",
+      "passenger_id": "P20260117007",
+      "trip_id": "T20260117007",
+      "vehicle_id": "Robotaxi-深圳-699",
+      "rating": 3,
+      "feedback_text": "整体还可以，希望继续保持",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-01-17 15:11:00",
+      "trip_duration": 71,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "温度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-01-19 01:11:00"
+    },
+    {
+      "feedback_no": "FB20260211008",
+      "passenger_id": "P20260211008",
+      "trip_id": "T20260211008",
+      "vehicle_id": "Robotaxi-武汉-949",
+      "rating": 1,
+      "feedback_text": "车内有异味，环境不理想",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-02-11 13:04:00",
+      "trip_duration": 31,
+      "status": "已关闭",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "急刹"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-02-12 00:04:00"
+    },
+    {
+      "feedback_no": "FB20260115009",
+      "passenger_id": "P20260115009",
+      "trip_id": "T20260115009",
+      "vehicle_id": "Robotaxi-上海-864",
+      "rating": 1,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-01-15 07:05:00",
+      "trip_duration": 33,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-01-16 03:05:00"
+    },
+    {
+      "feedback_no": "FB20260130010",
+      "passenger_id": "P20260130010",
+      "trip_id": "T20260130010",
+      "vehicle_id": "Robotaxi-北京-697",
+      "rating": 4,
+      "feedback_text": "非常满意这次出行体验，会推荐给朋友",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-01-30 20:42:00",
+      "trip_duration": 25,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-01-31 15:42:00"
+    },
+    {
+      "feedback_no": "FB20260119011",
+      "passenger_id": "P20260119011",
+      "trip_id": "T20260119011",
+      "vehicle_id": "Robotaxi-武汉-124",
+      "rating": 4,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-01-19 14:14:00",
+      "trip_duration": 54,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "温度",
+        "空调"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-01-20 15:14:00"
+    },
+    {
+      "feedback_no": "FB20260203012",
+      "passenger_id": "P20260203012",
+      "trip_id": "T20260203012",
+      "vehicle_id": "Robotaxi-武汉-553",
+      "rating": 3,
+      "feedback_text": "整体一般，没有特别突出也没有大问题",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-02-03 19:28:00",
+      "trip_duration": 43,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "平稳",
+        "颠簸",
+        "异味"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260116013",
+      "passenger_id": "P20260116013",
+      "trip_id": "T20260116013",
+      "vehicle_id": "Robotaxi-上海-587",
+      "rating": 3,
+      "feedback_text": "还行，路线规划基本合理",
+      "city": "上海",
+      "route_start": "上海站",
+      "route_end": "南京路",
+      "trip_time": "2026-01-16 14:44:00",
+      "trip_duration": 77,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "颠簸"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-01-16 17:44:00"
+    },
+    {
+      "feedback_no": "FB20260308014",
+      "passenger_id": "P20260308014",
+      "trip_id": "T20260308014",
+      "vehicle_id": "Robotaxi-北京-697",
+      "rating": 2,
+      "feedback_text": "车内有异味，环境不理想",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-03-08 14:31:00",
+      "trip_duration": 63,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "整洁"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260412015",
+      "passenger_id": "P20260412015",
+      "trip_id": "T20260412015",
+      "vehicle_id": "Robotaxi-深圳-316",
+      "rating": 5,
+      "feedback_text": "自动驾驶技术非常先进，行驶过程流畅自如",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-04-12 15:04:00",
+      "trip_duration": 66,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "空调"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-04-13 10:04:00"
+    },
+    {
+      "feedback_no": "FB20260124016",
+      "passenger_id": "P20260124016",
+      "trip_id": "T20260124016",
+      "vehicle_id": "Robotaxi-深圳-350",
+      "rating": 4,
+      "feedback_text": "行程安全顺利，没有任何急刹或颠簸",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-01-24 09:56:00",
+      "trip_duration": 59,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-01-26 09:56:00"
+    },
+    {
+      "feedback_no": "FB20260310017",
+      "passenger_id": "P20260310017",
+      "trip_id": "T20260310017",
+      "vehicle_id": "Robotaxi-广州-649",
+      "rating": 5,
+      "feedback_text": "车内氛围很好，座椅舒适，适合长途出行",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-03-10 13:12:00",
+      "trip_duration": 46,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "安全",
+        "平稳",
+        "颠簸"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-11 00:12:00"
+    },
+    {
+      "feedback_no": "FB20260318018",
+      "passenger_id": "P20260318018",
+      "trip_id": "T20260318018",
+      "vehicle_id": "Robotaxi-武汉-640",
+      "rating": 5,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-03-18 12:16:00",
+      "trip_duration": 85,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "异味",
+        "温度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-03-20 01:16:00"
+    },
+    {
+      "feedback_no": "FB20260309019",
+      "passenger_id": "P20260309019",
+      "trip_id": "T20260309019",
+      "vehicle_id": "Robotaxi-武汉-615",
+      "rating": 1,
+      "feedback_text": "空调不制冷，非常闷热",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-03-09 10:28:00",
+      "trip_duration": 61,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "速度",
+        "颠簸"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260118020",
+      "passenger_id": "P20260118020",
+      "trip_id": "T20260118020",
+      "vehicle_id": "Robotaxi-广州-677",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-01-18 19:37:00",
+      "trip_duration": 18,
+      "status": "已解决",
+      "ai_category": [
+        "路线规划",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "异味",
+        "准确",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-01-19 02:37:00"
+    },
+    {
+      "feedback_no": "FB20260316021",
+      "passenger_id": "P20260316021",
+      "trip_id": "T20260316021",
+      "vehicle_id": "Robotaxi-深圳-175",
+      "rating": 3,
+      "feedback_text": "服务态度不错，但车速不太稳定",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-03-16 19:31:00",
+      "trip_duration": 23,
+      "status": "已解决",
+      "ai_category": [
+        "接驾体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "温度",
+        "准时",
+        "等待"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-18 12:31:00"
+    },
+    {
+      "feedback_no": "FB20260120022",
+      "passenger_id": "P20260120022",
+      "trip_id": "T20260120022",
+      "vehicle_id": "Robotaxi-深圳-296",
+      "rating": 5,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-01-20 18:36:00",
+      "trip_duration": 52,
+      "status": "已关闭",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "导航"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-01-21 20:36:00"
+    },
+    {
+      "feedback_no": "FB20260325023",
+      "passenger_id": "P20260325023",
+      "trip_id": "T20260325023",
+      "vehicle_id": "Robotaxi-广州-446",
+      "rating": 5,
+      "feedback_text": "路线规划合理，导航准确，到达目的地很顺利",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-03-25 14:04:00",
+      "trip_duration": 46,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "响应",
+        "绕路",
+        "准确",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260215024",
+      "passenger_id": "P20260215024",
+      "trip_id": "T20260215024",
+      "vehicle_id": "Robotaxi-武汉-217",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-02-15 22:42:00",
+      "trip_duration": 31,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "安全"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-02-16 07:42:00"
+    },
+    {
+      "feedback_no": "FB20260326025",
+      "passenger_id": "P20260326025",
+      "trip_id": "T20260326025",
+      "vehicle_id": "Robotaxi-北京-337",
+      "rating": 3,
+      "feedback_text": "服务不错，但是车内音乐声音有点大",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-03-26 16:02:00",
+      "trip_duration": 75,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "速度",
+        "颠簸"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260309026",
+      "passenger_id": "P20260309026",
+      "trip_id": "T20260309026",
+      "vehicle_id": "Robotaxi-上海-268",
+      "rating": 2,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-03-09 15:53:00",
+      "trip_duration": 82,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "空调"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260228027",
+      "passenger_id": "P20260228027",
+      "trip_id": "T20260228027",
+      "vehicle_id": "Robotaxi-深圳-894",
+      "rating": 2,
+      "feedback_text": "车况一般，卫生需要改进",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-02-28 14:54:00",
+      "trip_duration": 64,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "准时",
+        "定位",
+        "路线"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-01 19:54:00"
+    },
+    {
+      "feedback_no": "FB20260327028",
+      "passenger_id": "P20260327028",
+      "trip_id": "T20260327028",
+      "vehicle_id": "Robotaxi-上海-691",
+      "rating": 1,
+      "feedback_text": "等车等了20分钟，严重影响出行计划",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-03-27 18:06:00",
+      "trip_duration": 54,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "路线",
+        "急刹",
+        "颠簸",
+        "导航"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-28 20:06:00"
+    },
+    {
+      "feedback_no": "FB20260414029",
+      "passenger_id": "P20260414029",
+      "trip_id": "T20260414029",
+      "vehicle_id": "Robotaxi-上海-421",
+      "rating": 5,
+      "feedback_text": "行程安全顺利，没有任何急刹或颠簸",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-04-14 08:47:00",
+      "trip_duration": 84,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "人工干预",
+        "整洁",
+        "空调"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260321030",
+      "passenger_id": "P20260321030",
+      "trip_id": "T20260321030",
+      "vehicle_id": "Robotaxi-广州-541",
+      "rating": 4,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-03-21 13:23:00",
+      "trip_duration": 15,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "安全",
+        "异味",
+        "温度",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260402031",
+      "passenger_id": "P20260402031",
+      "trip_id": "T20260402031",
+      "vehicle_id": "Robotaxi-武汉-711",
+      "rating": 1,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-04-02 17:24:00",
+      "trip_duration": 89,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "空调"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-04-02 21:24:00"
+    },
+    {
+      "feedback_no": "FB20260314032",
+      "passenger_id": "P20260314032",
+      "trip_id": "T20260314032",
+      "vehicle_id": "Robotaxi-深圳-155",
+      "rating": 2,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-03-14 21:26:00",
+      "trip_duration": 84,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "准时",
+        "人工干预",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260314033",
+      "passenger_id": "P20260314033",
+      "trip_id": "T20260314033",
+      "vehicle_id": "Robotaxi-北京-806",
+      "rating": 1,
+      "feedback_text": "车况一般，卫生需要改进",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-03-14 15:02:00",
+      "trip_duration": 67,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "温度",
+        "干净",
+        "放心"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-15 15:02:00"
+    },
+    {
+      "feedback_no": "FB20260409034",
+      "passenger_id": "P20260409034",
+      "trip_id": "T20260409034",
+      "vehicle_id": "Robotaxi-上海-294",
+      "rating": 2,
+      "feedback_text": "接驾时间太长，等了半小时",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-04-09 14:40:00",
+      "trip_duration": 60,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "安全",
+        "速度",
+        "颠簸"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-04-10 23:40:00"
+    },
+    {
+      "feedback_no": "FB20260224035",
+      "passenger_id": "P20260224035",
+      "trip_id": "T20260224035",
+      "vehicle_id": "Robotaxi-深圳-192",
+      "rating": 2,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-02-24 14:47:00",
+      "trip_duration": 51,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-02-26 00:47:00"
+    },
+    {
+      "feedback_no": "FB20260318036",
+      "passenger_id": "P20260318036",
+      "trip_id": "T20260318036",
+      "vehicle_id": "Robotaxi-北京-371",
+      "rating": 5,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-03-18 07:24:00",
+      "trip_duration": 63,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "准确",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-03-20 07:24:00"
+    },
+    {
+      "feedback_no": "FB20260316037",
+      "passenger_id": "P20260316037",
+      "trip_id": "T20260316037",
+      "vehicle_id": "Robotaxi-武汉-567",
+      "rating": 2,
+      "feedback_text": "接驾时间太长，等了半小时",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-03-16 10:33:00",
+      "trip_duration": 71,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "导航",
+        "干净",
+        "整洁"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260413038",
+      "passenger_id": "P20260413038",
+      "trip_id": "T20260413038",
+      "vehicle_id": "Robotaxi-武汉-538",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-04-13 18:34:00",
+      "trip_duration": 20,
+      "status": "已解决",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-04-14 23:34:00"
+    },
+    {
+      "feedback_no": "FB20260405039",
+      "passenger_id": "P20260405039",
+      "trip_id": "T20260405039",
+      "vehicle_id": "Robotaxi-深圳-254",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-04-05 09:08:00",
+      "trip_duration": 55,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "速度",
+        "绕路",
+        "急刹",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260409040",
+      "passenger_id": "P20260409040",
+      "trip_id": "T20260409040",
+      "vehicle_id": "Robotaxi-深圳-554",
+      "rating": 1,
+      "feedback_text": "空调不制冷，非常闷热",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-04-09 22:45:00",
+      "trip_duration": 28,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "路线",
+        "速度",
+        "颠簸",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260227041",
+      "passenger_id": "P20260227041",
+      "trip_id": "T20260227041",
+      "vehicle_id": "Robotaxi-广州-370",
+      "rating": 2,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-02-27 19:00:00",
+      "trip_duration": 26,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "噪音",
+        "空调",
+        "颠簸"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-01 18:00:00"
+    },
+    {
+      "feedback_no": "FB20260317042",
+      "passenger_id": "P20260317042",
+      "trip_id": "T20260317042",
+      "vehicle_id": "Robotaxi-武汉-169",
+      "rating": 4,
+      "feedback_text": "行程安全顺利，没有任何急刹或颠簸",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-03-17 09:38:00",
+      "trip_duration": 38,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "速度"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-19 08:38:00"
+    },
+    {
+      "feedback_no": "FB20260320043",
+      "passenger_id": "P20260320043",
+      "trip_id": "T20260320043",
+      "vehicle_id": "Robotaxi-上海-948",
+      "rating": 3,
+      "feedback_text": "车内环境还行，有轻微异味",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-03-20 18:40:00",
+      "trip_duration": 70,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "准确",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-21 04:40:00"
+    },
+    {
+      "feedback_no": "FB20260206044",
+      "passenger_id": "P20260206044",
+      "trip_id": "T20260206044",
+      "vehicle_id": "Robotaxi-北京-263",
+      "rating": 4,
+      "feedback_text": "车内氛围很好，座椅舒适，适合长途出行",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-02-06 14:17:00",
+      "trip_duration": 67,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "异味",
+        "空调"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-02-07 08:17:00"
+    },
+    {
+      "feedback_no": "FB20260211045",
+      "passenger_id": "P20260211045",
+      "trip_id": "T20260211045",
+      "vehicle_id": "Robotaxi-武汉-559",
+      "rating": 5,
+      "feedback_text": "路线规划合理，导航准确，到达目的地很顺利",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-02-11 20:14:00",
+      "trip_duration": 84,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "人工干预"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-02-12 02:14:00"
+    },
+    {
+      "feedback_no": "FB20260314046",
+      "passenger_id": "P20260314046",
+      "trip_id": "T20260314046",
+      "vehicle_id": "Robotaxi-上海-252",
+      "rating": 3,
+      "feedback_text": "服务不错，但是车内音乐声音有点大",
+      "city": "上海",
+      "route_start": "上海站",
+      "route_end": "南京路",
+      "trip_time": "2026-03-14 14:41:00",
+      "trip_duration": 29,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "响应",
+        "准时"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260204047",
+      "passenger_id": "P20260204047",
+      "trip_id": "T20260204047",
+      "vehicle_id": "Robotaxi-上海-967",
+      "rating": 5,
+      "feedback_text": "车内氛围很好，座椅舒适，适合长途出行",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-02-04 10:22:00",
+      "trip_duration": 63,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "异味",
+        "响应",
+        "干净",
+        "准时"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-02-05 21:22:00"
+    },
+    {
+      "feedback_no": "FB20260409048",
+      "passenger_id": "P20260409048",
+      "trip_id": "T20260409048",
+      "vehicle_id": "Robotaxi-上海-234",
+      "rating": 2,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "上海",
+      "route_start": "上海站",
+      "route_end": "南京路",
+      "trip_time": "2026-04-09 18:46:00",
+      "trip_duration": 19,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "急刹",
+        "颠簸"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260218049",
+      "passenger_id": "P20260218049",
+      "trip_id": "T20260218049",
+      "vehicle_id": "Robotaxi-深圳-966",
+      "rating": 4,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-02-18 22:16:00",
+      "trip_duration": 48,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "准时",
+        "定位"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260409050",
+      "passenger_id": "P20260409050",
+      "trip_id": "T20260409050",
+      "vehicle_id": "Robotaxi-武汉-463",
+      "rating": 5,
+      "feedback_text": "路线规划合理，导航准确，到达目的地很顺利",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-04-09 12:23:00",
+      "trip_duration": 61,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "空调",
+        "温度",
+        "颠簸"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260217051",
+      "passenger_id": "P20260217051",
+      "trip_id": "T20260217051",
+      "vehicle_id": "Robotaxi-深圳-569",
+      "rating": 4,
+      "feedback_text": "路线规划合理，导航准确，到达目的地很顺利",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-02-17 09:00:00",
+      "trip_duration": 55,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "温度",
+        "准时",
+        "定位",
+        "整洁"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-02-17 20:00:00"
+    },
+    {
+      "feedback_no": "FB20260403052",
+      "passenger_id": "P20260403052",
+      "trip_id": "T20260403052",
+      "vehicle_id": "Robotaxi-广州-386",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-04-03 15:21:00",
+      "trip_duration": 60,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "准确",
+        "急刹",
+        "导航"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-04-05 00:21:00"
+    },
+    {
+      "feedback_no": "FB20260330053",
+      "passenger_id": "P20260330053",
+      "trip_id": "T20260330053",
+      "vehicle_id": "Robotaxi-广州-324",
+      "rating": 3,
+      "feedback_text": "整体还行，但是车速稍微有点慢",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-03-30 14:31:00",
+      "trip_duration": 83,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "速度",
+        "颠簸",
+        "路线"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260206054",
+      "passenger_id": "P20260206054",
+      "trip_id": "T20260206054",
+      "vehicle_id": "Robotaxi-广州-552",
+      "rating": 3,
+      "feedback_text": "整体一般，没有特别突出也没有大问题",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-02-06 17:29:00",
+      "trip_duration": 89,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "绕路",
+        "颠簸",
+        "路线"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-02-08 16:29:00"
+    },
+    {
+      "feedback_no": "FB20260204055",
+      "passenger_id": "P20260204055",
+      "trip_id": "T20260204055",
+      "vehicle_id": "Robotaxi-北京-220",
+      "rating": 2,
+      "feedback_text": "路线规划不合理，绕路了",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-02-04 10:29:00",
+      "trip_duration": 43,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-02-05 13:29:00"
+    },
+    {
+      "feedback_no": "FB20260303056",
+      "passenger_id": "P20260303056",
+      "trip_id": "T20260303056",
+      "vehicle_id": "Robotaxi-武汉-943",
+      "rating": 2,
+      "feedback_text": "路线规划不合理，绕路了",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-03-03 09:40:00",
+      "trip_duration": 43,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "响应",
+        "准时",
+        "急刹"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-05 00:40:00"
+    },
+    {
+      "feedback_no": "FB20260304057",
+      "passenger_id": "P20260304057",
+      "trip_id": "T20260304057",
+      "vehicle_id": "Robotaxi-上海-170",
+      "rating": 3,
+      "feedback_text": "整体还可以，希望继续保持",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-03-04 14:41:00",
+      "trip_duration": 59,
+      "status": "已关闭",
+      "ai_category": [
+        "接驾体验",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "响应",
+        "速度",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-06 04:41:00"
+    },
+    {
+      "feedback_no": "FB20260206058",
+      "passenger_id": "P20260206058",
+      "trip_id": "T20260206058",
+      "vehicle_id": "Robotaxi-深圳-278",
+      "rating": 1,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-02-06 17:01:00",
+      "trip_duration": 45,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "空调"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260312059",
+      "passenger_id": "P20260312059",
+      "trip_id": "T20260312059",
+      "vehicle_id": "Robotaxi-上海-209",
+      "rating": 4,
+      "feedback_text": "行程安全顺利，没有任何急刹或颠簸",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-03-12 10:56:00",
+      "trip_duration": 48,
+      "status": "已关闭",
+      "ai_category": [
+        "安全感受",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "平稳",
+        "人工干预",
+        "放心"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-03-12 15:56:00"
+    },
+    {
+      "feedback_no": "FB20260302060",
+      "passenger_id": "P20260302060",
+      "trip_id": "T20260302060",
+      "vehicle_id": "Robotaxi-深圳-742",
+      "rating": 5,
+      "feedback_text": "路线规划合理，导航准确，到达目的地很顺利",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-03-02 10:09:00",
+      "trip_duration": 21,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260323061",
+      "passenger_id": "P20260323061",
+      "trip_id": "T20260323061",
+      "vehicle_id": "Robotaxi-北京-680",
+      "rating": 5,
+      "feedback_text": "车辆行驶非常平稳，自动驾驶体验很棒，比人工驾驶还稳",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-03-23 14:56:00",
+      "trip_duration": 22,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "路线",
+        "急刹",
+        "导航"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260219062",
+      "passenger_id": "P20260219062",
+      "trip_id": "T20260219062",
+      "vehicle_id": "Robotaxi-北京-252",
+      "rating": 2,
+      "feedback_text": "接驾时间太长，等了半小时",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-02-19 22:55:00",
+      "trip_duration": 89,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "安全",
+        "定位",
+        "响应",
+        "紧急"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-02-21 21:55:00"
+    },
+    {
+      "feedback_no": "FB20260414063",
+      "passenger_id": "P20260414063",
+      "trip_id": "T20260414063",
+      "vehicle_id": "Robotaxi-北京-832",
+      "rating": 3,
+      "feedback_text": "整体还可以，希望继续保持",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-04-14 19:25:00",
+      "trip_duration": 54,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "整洁",
+        "速度",
+        "空调"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260125064",
+      "passenger_id": "P20260125064",
+      "trip_id": "T20260125064",
+      "vehicle_id": "Robotaxi-广州-334",
+      "rating": 3,
+      "feedback_text": "整体一般，没有特别突出也没有大问题",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-01-25 07:05:00",
+      "trip_duration": 47,
+      "status": "已解决",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "准确"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-01-26 23:05:00"
+    },
+    {
+      "feedback_no": "FB20260408065",
+      "passenger_id": "P20260408065",
+      "trip_id": "T20260408065",
+      "vehicle_id": "Robotaxi-北京-436",
+      "rating": 2,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-04-08 09:54:00",
+      "trip_duration": 65,
+      "status": "已解决",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "路线"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-04-08 12:54:00"
+    },
+    {
+      "feedback_no": "FB20260214066",
+      "passenger_id": "P20260214066",
+      "trip_id": "T20260214066",
+      "vehicle_id": "Robotaxi-武汉-196",
+      "rating": 5,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-02-14 20:12:00",
+      "trip_duration": 75,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "异味",
+        "噪音",
+        "放心"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260203067",
+      "passenger_id": "P20260203067",
+      "trip_id": "T20260203067",
+      "vehicle_id": "Robotaxi-广州-163",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-02-03 21:26:00",
+      "trip_duration": 84,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "准确",
+        "路线"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260120068",
+      "passenger_id": "P20260120068",
+      "trip_id": "T20260120068",
+      "vehicle_id": "Robotaxi-北京-349",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-01-20 22:25:00",
+      "trip_duration": 64,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "速度",
+        "放心",
+        "舒适"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260129069",
+      "passenger_id": "P20260129069",
+      "trip_id": "T20260129069",
+      "vehicle_id": "Robotaxi-上海-846",
+      "rating": 4,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-01-29 20:22:00",
+      "trip_duration": 28,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-01-31 18:22:00"
+    },
+    {
+      "feedback_no": "FB20260207070",
+      "passenger_id": "P20260207070",
+      "trip_id": "T20260207070",
+      "vehicle_id": "Robotaxi-北京-871",
+      "rating": 5,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-02-07 07:05:00",
+      "trip_duration": 84,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "平稳",
+        "温度",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260331071",
+      "passenger_id": "P20260331071",
+      "trip_id": "T20260331071",
+      "vehicle_id": "Robotaxi-深圳-248",
+      "rating": 1,
+      "feedback_text": "车内噪音很大，影响乘坐体验",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-03-31 15:54:00",
+      "trip_duration": 15,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "准时",
+        "定位"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260310072",
+      "passenger_id": "P20260310072",
+      "trip_id": "T20260310072",
+      "vehicle_id": "Robotaxi-武汉-968",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-03-10 14:58:00",
+      "trip_duration": 86,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260310073",
+      "passenger_id": "P20260310073",
+      "trip_id": "T20260310073",
+      "vehicle_id": "Robotaxi-武汉-552",
+      "rating": 4,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-03-10 12:47:00",
+      "trip_duration": 48,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "急刹"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-10 13:47:00"
+    },
+    {
+      "feedback_no": "FB20260219074",
+      "passenger_id": "P20260219074",
+      "trip_id": "T20260219074",
+      "vehicle_id": "Robotaxi-武汉-532",
+      "rating": 5,
+      "feedback_text": "路线规划合理，导航准确，到达目的地很顺利",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-02-19 09:37:00",
+      "trip_duration": 84,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "异味",
+        "干净"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260408075",
+      "passenger_id": "P20260408075",
+      "trip_id": "T20260408075",
+      "vehicle_id": "Robotaxi-上海-698",
+      "rating": 5,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-04-08 15:47:00",
+      "trip_duration": 83,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "绕路",
+        "整洁",
+        "导航"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-04-09 17:47:00"
+    },
+    {
+      "feedback_no": "FB20260206076",
+      "passenger_id": "P20260206076",
+      "trip_id": "T20260206076",
+      "vehicle_id": "Robotaxi-北京-561",
+      "rating": 3,
+      "feedback_text": "还行，路线规划基本合理",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-02-06 09:17:00",
+      "trip_duration": 46,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "绕路",
+        "放心",
+        "路线"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260120077",
+      "passenger_id": "P20260120077",
+      "trip_id": "T20260120077",
+      "vehicle_id": "Robotaxi-上海-867",
+      "rating": 4,
+      "feedback_text": "自动驾驶技术非常先进，行驶过程流畅自如",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-01-20 20:39:00",
+      "trip_duration": 60,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "异味",
+        "干净"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260412078",
+      "passenger_id": "P20260412078",
+      "trip_id": "T20260412078",
+      "vehicle_id": "Robotaxi-上海-755",
+      "rating": 5,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "上海",
+      "route_start": "上海站",
+      "route_end": "南京路",
+      "trip_time": "2026-04-12 19:17:00",
+      "trip_duration": 74,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "安全"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-04-14 10:17:00"
+    },
+    {
+      "feedback_no": "FB20260315079",
+      "passenger_id": "P20260315079",
+      "trip_id": "T20260315079",
+      "vehicle_id": "Robotaxi-广州-752",
+      "rating": 3,
+      "feedback_text": "还行，路线规划基本合理",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-03-15 14:53:00",
+      "trip_duration": 48,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "准确",
+        "放心",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260404080",
+      "passenger_id": "P20260404080",
+      "trip_id": "T20260404080",
+      "vehicle_id": "Robotaxi-深圳-745",
+      "rating": 2,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-04-04 10:01:00",
+      "trip_duration": 77,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "温度",
+        "急刹",
+        "空调"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-04-05 18:01:00"
+    },
+    {
+      "feedback_no": "FB20260320081",
+      "passenger_id": "P20260320081",
+      "trip_id": "T20260320081",
+      "vehicle_id": "Robotaxi-上海-947",
+      "rating": 1,
+      "feedback_text": "车内有异味，环境不理想",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-03-20 20:21:00",
+      "trip_duration": 44,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "紧急",
+        "速度",
+        "放心"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-22 06:21:00"
+    },
+    {
+      "feedback_no": "FB20260415082",
+      "passenger_id": "P20260415082",
+      "trip_id": "T20260415082",
+      "vehicle_id": "Robotaxi-武汉-541",
+      "rating": 2,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-04-15 18:23:00",
+      "trip_duration": 52,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "异味",
+        "干净",
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260316083",
+      "passenger_id": "P20260316083",
+      "trip_id": "T20260316083",
+      "vehicle_id": "Robotaxi-北京-925",
+      "rating": 3,
+      "feedback_text": "还行吧，等车时间稍微有点长",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-03-16 16:14:00",
+      "trip_duration": 45,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260309084",
+      "passenger_id": "P20260309084",
+      "trip_id": "T20260309084",
+      "vehicle_id": "Robotaxi-北京-732",
+      "rating": 1,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-03-09 12:48:00",
+      "trip_duration": 34,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "异味",
+        "响应",
+        "空调",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260211085",
+      "passenger_id": "P20260211085",
+      "trip_id": "T20260211085",
+      "vehicle_id": "Robotaxi-北京-114",
+      "rating": 3,
+      "feedback_text": "服务态度不错，但车速不太稳定",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-02-11 12:19:00",
+      "trip_duration": 61,
+      "status": "已关闭",
+      "ai_category": [
+        "安全感受",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "安全",
+        "定位",
+        "放心",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-02-12 21:19:00"
+    },
+    {
+      "feedback_no": "FB20260407086",
+      "passenger_id": "P20260407086",
+      "trip_id": "T20260407086",
+      "vehicle_id": "Robotaxi-武汉-316",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-04-07 19:20:00",
+      "trip_duration": 48,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "导航",
+        "路线"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-04-08 10:20:00"
+    },
+    {
+      "feedback_no": "FB20260213087",
+      "passenger_id": "P20260213087",
+      "trip_id": "T20260213087",
+      "vehicle_id": "Robotaxi-深圳-132",
+      "rating": 5,
+      "feedback_text": "非常满意这次出行体验，会推荐给朋友",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-02-13 09:57:00",
+      "trip_duration": 44,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-02-13 12:57:00"
+    },
+    {
+      "feedback_no": "FB20260316088",
+      "passenger_id": "P20260316088",
+      "trip_id": "T20260316088",
+      "vehicle_id": "Robotaxi-广州-510",
+      "rating": 2,
+      "feedback_text": "车况一般，卫生需要改进",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-03-16 16:42:00",
+      "trip_duration": 78,
+      "status": "已关闭",
+      "ai_category": [
+        "接驾体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "响应",
+        "人工干预",
+        "等待"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-17 13:42:00"
+    },
+    {
+      "feedback_no": "FB20260116089",
+      "passenger_id": "P20260116089",
+      "trip_id": "T20260116089",
+      "vehicle_id": "Robotaxi-广州-230",
+      "rating": 4,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-01-16 11:27:00",
+      "trip_duration": 62,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "噪音",
+        "干净"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260403090",
+      "passenger_id": "P20260403090",
+      "trip_id": "T20260403090",
+      "vehicle_id": "Robotaxi-深圳-880",
+      "rating": 1,
+      "feedback_text": "空调不制冷，非常闷热",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-04-03 15:44:00",
+      "trip_duration": 38,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "人工干预"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260117091",
+      "passenger_id": "P20260117091",
+      "trip_id": "T20260117091",
+      "vehicle_id": "Robotaxi-广州-666",
+      "rating": 3,
+      "feedback_text": "服务不错，但是车内音乐声音有点大",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-01-17 18:30:00",
+      "trip_duration": 89,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "异味",
+        "整洁",
+        "准确"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-01-19 05:30:00"
+    },
+    {
+      "feedback_no": "FB20260409092",
+      "passenger_id": "P20260409092",
+      "trip_id": "T20260409092",
+      "vehicle_id": "Robotaxi-北京-331",
+      "rating": 1,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-04-09 15:36:00",
+      "trip_duration": 29,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "急刹",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-04-10 15:36:00"
+    },
+    {
+      "feedback_no": "FB20260406093",
+      "passenger_id": "P20260406093",
+      "trip_id": "T20260406093",
+      "vehicle_id": "Robotaxi-北京-701",
+      "rating": 2,
+      "feedback_text": "路线规划不合理，绕路了",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-04-06 21:22:00",
+      "trip_duration": 24,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "响应",
+        "准时",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260122094",
+      "passenger_id": "P20260122094",
+      "trip_id": "T20260122094",
+      "vehicle_id": "Robotaxi-北京-612",
+      "rating": 3,
+      "feedback_text": "还行吧，等车时间稍微有点长",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-01-22 19:17:00",
+      "trip_duration": 53,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "安全",
+        "定位",
+        "响应",
+        "放心"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-01-24 07:17:00"
+    },
+    {
+      "feedback_no": "FB20260326095",
+      "passenger_id": "P20260326095",
+      "trip_id": "T20260326095",
+      "vehicle_id": "Robotaxi-上海-860",
+      "rating": 3,
+      "feedback_text": "车内环境还行，有轻微异味",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-03-26 17:07:00",
+      "trip_duration": 39,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "等待",
+        "绕路",
+        "准时",
+        "路线"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-28 06:07:00"
+    },
+    {
+      "feedback_no": "FB20260308096",
+      "passenger_id": "P20260308096",
+      "trip_id": "T20260308096",
+      "vehicle_id": "Robotaxi-上海-340",
+      "rating": 2,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "上海",
+      "route_start": "上海站",
+      "route_end": "南京路",
+      "trip_time": "2026-03-08 10:06:00",
+      "trip_duration": 78,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "急刹"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-08 17:06:00"
+    },
+    {
+      "feedback_no": "FB20260219097",
+      "passenger_id": "P20260219097",
+      "trip_id": "T20260219097",
+      "vehicle_id": "Robotaxi-深圳-993",
+      "rating": 3,
+      "feedback_text": "整体还行，但是车速稍微有点慢",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-02-19 22:06:00",
+      "trip_duration": 31,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "放心"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260224098",
+      "passenger_id": "P20260224098",
+      "trip_id": "T20260224098",
+      "vehicle_id": "Robotaxi-上海-530",
+      "rating": 4,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "上海",
+      "route_start": "上海站",
+      "route_end": "南京路",
+      "trip_time": "2026-02-24 11:12:00",
+      "trip_duration": 52,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "定位",
+        "响应",
+        "放心"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-02-25 19:12:00"
+    },
+    {
+      "feedback_no": "FB20260311099",
+      "passenger_id": "P20260311099",
+      "trip_id": "T20260311099",
+      "vehicle_id": "Robotaxi-武汉-482",
+      "rating": 5,
+      "feedback_text": "接驾很快，准时到达，司机响应及时",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-03-11 13:09:00",
+      "trip_duration": 53,
+      "status": "已关闭",
+      "ai_category": [
+        "行驶体验",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "速度",
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-11 23:09:00"
+    },
+    {
+      "feedback_no": "FB20260312100",
+      "passenger_id": "P20260312100",
+      "trip_id": "T20260312100",
+      "vehicle_id": "Robotaxi-北京-968",
+      "rating": 1,
+      "feedback_text": "车内噪音很大，影响乘坐体验",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-03-12 13:07:00",
+      "trip_duration": 50,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "准时",
+        "速度",
+        "急刹",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-12 16:07:00"
+    },
+    {
+      "feedback_no": "FB20260313101",
+      "passenger_id": "P20260261101",
+      "trip_id": "T20260409101",
+      "vehicle_id": "Robotaxi-上海-563",
+      "rating": 5,
+      "feedback_text": "车内氛围很好，座椅舒适，适合长途出行",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-03-15 19:13:00",
+      "trip_duration": 34,
+      "status": "已解决",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "响应",
+        "准时"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-16 12:13:00"
+    },
+    {
+      "feedback_no": "FB20260344102",
+      "passenger_id": "P20260157102",
+      "trip_id": "T20260119102",
+      "vehicle_id": "Robotaxi-广州-986",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-03-16 01:54:00",
+      "trip_duration": 59,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "人工干预"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260332103",
+      "passenger_id": "P20260104103",
+      "trip_id": "T20260169103",
+      "vehicle_id": "Robotaxi-广州-929",
+      "rating": 3,
+      "feedback_text": "服务态度不错，但车速不太稳定",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-03-19 03:19:00",
+      "trip_duration": 72,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-20 11:19:00"
+    },
+    {
+      "feedback_no": "FB20260119104",
+      "passenger_id": "P20260231104",
+      "trip_id": "T20260332104",
+      "vehicle_id": "Robotaxi-深圳-148",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-04-08 15:47:00",
+      "trip_duration": 64,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "平稳",
+        "急刹"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260355105",
+      "passenger_id": "P20260331105",
+      "trip_id": "T20260268105",
+      "vehicle_id": "Robotaxi-深圳-944",
+      "rating": 5,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-04-13 07:08:00",
+      "trip_duration": 77,
+      "status": "待处理",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "导航"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260332106",
+      "passenger_id": "P20260318106",
+      "trip_id": "T20260310106",
+      "vehicle_id": "Robotaxi-武汉-137",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-03-28 20:29:00",
+      "trip_duration": 25,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "安全",
+        "急刹",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-29 22:29:00"
+    },
+    {
+      "feedback_no": "FB20260397107",
+      "passenger_id": "P20260108107",
+      "trip_id": "T20260114107",
+      "vehicle_id": "Robotaxi-广州-143",
+      "rating": 2,
+      "feedback_text": "车内有异味，环境不理想",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-01-17 21:24:00",
+      "trip_duration": 42,
+      "status": "已解决",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "准时"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-01-17 23:24:00"
+    },
+    {
+      "feedback_no": "FB20260262108",
+      "passenger_id": "P20260377108",
+      "trip_id": "T20260240108",
+      "vehicle_id": "Robotaxi-北京-311",
+      "rating": 2,
+      "feedback_text": "接驾时间太长，等了半小时",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-03-18 14:16:00",
+      "trip_duration": 76,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "响应",
+        "准时",
+        "异味",
+        "整洁"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-20 13:16:00"
+    },
+    {
+      "feedback_no": "FB20260333109",
+      "passenger_id": "P20260137109",
+      "trip_id": "T20260186109",
+      "vehicle_id": "Robotaxi-北京-269",
+      "rating": 2,
+      "feedback_text": "接驾时间太长，等了半小时",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-03-25 03:21:00",
+      "trip_duration": 24,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "整洁"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260187110",
+      "passenger_id": "P20260169110",
+      "trip_id": "T20260358110",
+      "vehicle_id": "Robotaxi-广州-100",
+      "rating": 5,
+      "feedback_text": "接驾很快，准时到达，司机响应及时",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-02-19 08:34:00",
+      "trip_duration": 29,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "空调",
+        "平稳",
+        "整洁",
+        "急刹"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260252111",
+      "passenger_id": "P20260290111",
+      "trip_id": "T20260325111",
+      "vehicle_id": "Robotaxi-上海-626",
+      "rating": 3,
+      "feedback_text": "服务态度不错，但车速不太稳定",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-03-24 22:44:00",
+      "trip_duration": 45,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "舒适",
+        "平稳",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260397112",
+      "passenger_id": "P20260260112",
+      "trip_id": "T20260248112",
+      "vehicle_id": "Robotaxi-武汉-763",
+      "rating": 1,
+      "feedback_text": "等车等了20分钟，严重影响出行计划",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-03-25 21:17:00",
+      "trip_duration": 85,
+      "status": "已解决",
+      "ai_category": [
+        "安全感受",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "放心",
+        "人工干预",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-27 18:17:00"
+    },
+    {
+      "feedback_no": "FB20260227113",
+      "passenger_id": "P20260161113",
+      "trip_id": "T20260410113",
+      "vehicle_id": "Robotaxi-武汉-637",
+      "rating": 1,
+      "feedback_text": "空调不制冷，非常闷热",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-03-03 17:39:00",
+      "trip_duration": 24,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "舒适",
+        "速度"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-04 12:39:00"
+    },
+    {
+      "feedback_no": "FB20260350114",
+      "passenger_id": "P20260253114",
+      "trip_id": "T20260337114",
+      "vehicle_id": "Robotaxi-广州-112",
+      "rating": 3,
+      "feedback_text": "服务态度不错，但车速不太稳定",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-04-11 09:44:00",
+      "trip_duration": 59,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "干净",
+        "异味",
+        "放心",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-04-13 09:44:00"
+    },
+    {
+      "feedback_no": "FB20260366115",
+      "passenger_id": "P20260414115",
+      "trip_id": "T20260319115",
+      "vehicle_id": "Robotaxi-深圳-548",
+      "rating": 2,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-03-29 13:57:00",
+      "trip_duration": 73,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "放心"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-30 16:57:00"
+    },
+    {
+      "feedback_no": "FB20260324116",
+      "passenger_id": "P20260417116",
+      "trip_id": "T20260364116",
+      "vehicle_id": "Robotaxi-武汉-511",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "武汉",
+      "route_start": "黄鹤楼",
+      "route_end": "户部巷",
+      "trip_time": "2026-02-28 07:09:00",
+      "trip_duration": 87,
+      "status": "已关闭",
+      "ai_category": [
+        "行驶体验",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "舒适",
+        "平稳",
+        "准时"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-01 21:09:00"
+    },
+    {
+      "feedback_no": "FB20260410117",
+      "passenger_id": "P20260312117",
+      "trip_id": "T20260208117",
+      "vehicle_id": "Robotaxi-北京-828",
+      "rating": 1,
+      "feedback_text": "空调不制冷，非常闷热",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-01-17 11:51:00",
+      "trip_duration": 60,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "响应"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-01-18 16:51:00"
+    },
+    {
+      "feedback_no": "FB20260211118",
+      "passenger_id": "P20260127118",
+      "trip_id": "T20260402118",
+      "vehicle_id": "Robotaxi-广州-531",
+      "rating": 1,
+      "feedback_text": "车内噪音很大，影响乘坐体验",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-03-16 11:46:00",
+      "trip_duration": 50,
+      "status": "已关闭",
+      "ai_category": [
+        "车内环境",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "异味",
+        "绕路",
+        "路线",
+        "整洁"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-17 17:46:00"
+    },
+    {
+      "feedback_no": "FB20260427119",
+      "passenger_id": "P20260103119",
+      "trip_id": "T20260234119",
+      "vehicle_id": "Robotaxi-武汉-986",
+      "rating": 4,
+      "feedback_text": "整体满意，希望继续保持",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-02-03 11:03:00",
+      "trip_duration": 64,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "整洁",
+        "噪音"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-02-03 22:03:00"
+    },
+    {
+      "feedback_no": "FB20260180120",
+      "passenger_id": "P20260162120",
+      "trip_id": "T20260163120",
+      "vehicle_id": "Robotaxi-上海-358",
+      "rating": 3,
+      "feedback_text": "整体一般，没有特别突出也没有大问题",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-04-02 09:28:00",
+      "trip_duration": 55,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "人工干预",
+        "紧急",
+        "舒适",
+        "急刹"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-04-03 21:28:00"
+    },
+    {
+      "feedback_no": "FB20260325121",
+      "passenger_id": "P20260202121",
+      "trip_id": "T20260266121",
+      "vehicle_id": "Robotaxi-深圳-429",
+      "rating": 3,
+      "feedback_text": "服务不错，但是车内音乐声音有点大",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-03-21 06:53:00",
+      "trip_duration": 59,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "干净",
+        "异味",
+        "绕路",
+        "路线"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260383122",
+      "passenger_id": "P20260357122",
+      "trip_id": "T20260112122",
+      "vehicle_id": "Robotaxi-上海-472",
+      "rating": 3,
+      "feedback_text": "服务不错，但是车内音乐声音有点大",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-03-28 05:25:00",
+      "trip_duration": 73,
+      "status": "待处理",
+      "ai_category": [
+        "行驶体验",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "响应",
+        "舒适",
+        "平稳",
+        "等待"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260149123",
+      "passenger_id": "P20260236123",
+      "trip_id": "T20260320123",
+      "vehicle_id": "Robotaxi-北京-567",
+      "rating": 2,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-03-02 05:01:00",
+      "trip_duration": 36,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "响应"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-03-02 08:01:00"
+    },
+    {
+      "feedback_no": "FB20260207124",
+      "passenger_id": "P20260212124",
+      "trip_id": "T20260312124",
+      "vehicle_id": "Robotaxi-北京-153",
+      "rating": 1,
+      "feedback_text": "定位不准确，司机找不到我",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-01-18 12:05:00",
+      "trip_duration": 57,
+      "status": "已解决",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "绕路",
+        "导航"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-01-20 05:05:00"
+    },
+    {
+      "feedback_no": "FB20260107125",
+      "passenger_id": "P20260298125",
+      "trip_id": "T20260109125",
+      "vehicle_id": "Robotaxi-上海-555",
+      "rating": 4,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-03-10 11:38:00",
+      "trip_duration": 69,
+      "status": "已关闭",
+      "ai_category": [
+        "接驾体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "定位",
+        "异味",
+        "噪音",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-12 01:38:00"
+    },
+    {
+      "feedback_no": "FB20260184126",
+      "passenger_id": "P20260297126",
+      "trip_id": "T20260197126",
+      "vehicle_id": "Robotaxi-深圳-141",
+      "rating": 5,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-04-03 16:20:00",
+      "trip_duration": 77,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "颠簸",
+        "舒适"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-04-04 04:20:00"
+    },
+    {
+      "feedback_no": "FB20260132127",
+      "passenger_id": "P20260213127",
+      "trip_id": "T20260244127",
+      "vehicle_id": "Robotaxi-上海-998",
+      "rating": 2,
+      "feedback_text": "车况一般，卫生需要改进",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-03-14 17:21:00",
+      "trip_duration": 53,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "准确",
+        "路线"
+      ],
+      "feedback_channel": "电话",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-16 12:21:00"
+    },
+    {
+      "feedback_no": "FB20260330128",
+      "passenger_id": "P20260407128",
+      "trip_id": "T20260337128",
+      "vehicle_id": "Robotaxi-深圳-400",
+      "rating": 4,
+      "feedback_text": "自动驾驶技术非常先进，行驶过程流畅自如",
+      "city": "深圳",
+      "route_start": "宝安机场",
+      "route_end": "福田CBD",
+      "trip_time": "2026-01-27 07:03:00",
+      "trip_duration": 33,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "异味",
+        "温度"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260184129",
+      "passenger_id": "P20260361129",
+      "trip_id": "T20260244129",
+      "vehicle_id": "Robotaxi-北京-877",
+      "rating": 5,
+      "feedback_text": "车内环境很好，干净整洁，温度适宜，很舒适",
+      "city": "北京",
+      "route_start": "北京站",
+      "route_end": "西单",
+      "trip_time": "2026-04-11 23:49:00",
+      "trip_duration": 62,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "紧急"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260263130",
+      "passenger_id": "P20260374130",
+      "trip_id": "T20260121130",
+      "vehicle_id": "Robotaxi-深圳-590",
+      "rating": 3,
+      "feedback_text": "整体一般，没有特别突出也没有大问题",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-03-06 03:03:00",
+      "trip_duration": 74,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "响应"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260353131",
+      "passenger_id": "P20260411131",
+      "trip_id": "T20260427131",
+      "vehicle_id": "Robotaxi-深圳-357",
+      "rating": 5,
+      "feedback_text": "行程安全顺利，没有任何急刹或颠簸",
+      "city": "深圳",
+      "route_start": "世界之窗",
+      "route_end": "海岸城",
+      "trip_time": "2026-02-02 23:46:00",
+      "trip_duration": 67,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-02-03 13:46:00"
+    },
+    {
+      "feedback_no": "FB20260327132",
+      "passenger_id": "P20260244132",
+      "trip_id": "T20260322132",
+      "vehicle_id": "Robotaxi-广州-531",
+      "rating": 5,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-03-04 02:25:00",
+      "trip_duration": 15,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "准确",
+        "导航"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-03-05 19:25:00"
+    },
+    {
+      "feedback_no": "FB20260416133",
+      "passenger_id": "P20260335133",
+      "trip_id": "T20260413133",
+      "vehicle_id": "Robotaxi-广州-482",
+      "rating": 4,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-02-20 22:17:00",
+      "trip_duration": 65,
+      "status": "已关闭",
+      "ai_category": [
+        "接驾体验",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "响应",
+        "准时",
+        "绕路",
+        "路线"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-02-22 03:17:00"
+    },
+    {
+      "feedback_no": "FB20260409134",
+      "passenger_id": "P20260326134",
+      "trip_id": "T20260146134",
+      "vehicle_id": "Robotaxi-广州-329",
+      "rating": 3,
+      "feedback_text": "基本满意，就是空调有点冷",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-04-04 05:42:00",
+      "trip_duration": 70,
+      "status": "已解决",
+      "ai_category": [
+        "接驾体验",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "响应",
+        "异味",
+        "噪音",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-04-05 18:42:00"
+    },
+    {
+      "feedback_no": "FB20260386135",
+      "passenger_id": "P20260282135",
+      "trip_id": "T20260105135",
+      "vehicle_id": "Robotaxi-广州-853",
+      "rating": 2,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-03-27 02:26:00",
+      "trip_duration": 38,
+      "status": "已解决",
+      "ai_category": [
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "急刹",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "您好，您反馈的问题我们已经优化，感谢您的支持。",
+      "reply_time": "2026-03-27 15:26:00"
+    },
+    {
+      "feedback_no": "FB20260174136",
+      "passenger_id": "P20260239136",
+      "trip_id": "T20260243136",
+      "vehicle_id": "Robotaxi-广州-468",
+      "rating": 4,
+      "feedback_text": "自动驾驶技术非常先进，行驶过程流畅自如",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-04-11 16:07:00",
+      "trip_duration": 82,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "干净",
+        "舒适",
+        "颠簸",
+        "噪音"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-04-11 21:07:00"
+    },
+    {
+      "feedback_no": "FB20260382137",
+      "passenger_id": "P20260360137",
+      "trip_id": "T20260296137",
+      "vehicle_id": "Robotaxi-广州-853",
+      "rating": 1,
+      "feedback_text": "等车等了20分钟，严重影响出行计划",
+      "city": "广州",
+      "route_start": "长隆",
+      "route_end": "番禺广场",
+      "trip_time": "2026-02-15 09:59:00",
+      "trip_duration": 51,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "安全",
+        "放心"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260382138",
+      "passenger_id": "P20260287138",
+      "trip_id": "T20260222138",
+      "vehicle_id": "Robotaxi-上海-947",
+      "rating": 4,
+      "feedback_text": "行程安全顺利，没有任何急刹或颠簸",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-04-10 19:54:00",
+      "trip_duration": 37,
+      "status": "待处理",
+      "ai_category": [
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "放心",
+        "紧急"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260361139",
+      "passenger_id": "P20260107139",
+      "trip_id": "T20260163139",
+      "vehicle_id": "Robotaxi-北京-150",
+      "rating": 2,
+      "feedback_text": "行驶过程中有急刹，感觉不太安全",
+      "city": "北京",
+      "route_start": "望京SOHO",
+      "route_end": "798艺术区",
+      "trip_time": "2026-03-24 13:13:00",
+      "trip_duration": 48,
+      "status": "处理中",
+      "ai_category": [
+        "行驶体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "颠簸",
+        "舒适",
+        "安全",
+        "人工干预"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-03-25 18:13:00"
+    },
+    {
+      "feedback_no": "FB20260294140",
+      "passenger_id": "P20260393140",
+      "trip_id": "T20260365140",
+      "vehicle_id": "Robotaxi-广州-853",
+      "rating": 4,
+      "feedback_text": "司机响应速度很快，服务态度专业",
+      "city": "广州",
+      "route_start": "白云机场",
+      "route_end": "天河城",
+      "trip_time": "2026-03-28 05:23:00",
+      "trip_duration": 59,
+      "status": "处理中",
+      "ai_category": [
+        "路线规划",
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "路线",
+        "整洁",
+        "导航"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的支持，我们会不断提升服务质量。",
+      "reply_time": "2026-03-29 20:23:00"
+    },
+    {
+      "feedback_no": "FB20260399141",
+      "passenger_id": "P20260371141",
+      "trip_id": "T20260125141",
+      "vehicle_id": "Robotaxi-上海-465",
+      "rating": 5,
+      "feedback_text": "自动驾驶技术非常先进，行驶过程流畅自如",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-02-20 06:29:00",
+      "trip_duration": 52,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260306142",
+      "passenger_id": "P20260368142",
+      "trip_id": "T20260273142",
+      "vehicle_id": "Robotaxi-武汉-880",
+      "rating": 5,
+      "feedback_text": "车内氛围很好，座椅舒适，适合长途出行",
+      "city": "武汉",
+      "route_start": "武汉天河机场",
+      "route_end": "光谷广场",
+      "trip_time": "2026-02-04 03:01:00",
+      "trip_duration": 16,
+      "status": "已解决",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "干净",
+        "温度"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的好评，我们会继续努力提供优质服务。",
+      "reply_time": "2026-02-04 18:01:00"
+    },
+    {
+      "feedback_no": "FB20260128143",
+      "passenger_id": "P20260403143",
+      "trip_id": "T20260413143",
+      "vehicle_id": "Robotaxi-广州-531",
+      "rating": 5,
+      "feedback_text": "整体体验非常好，期待后续服务",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-01-27 22:07:00",
+      "trip_duration": 76,
+      "status": "待处理",
+      "ai_category": [
+        "车内环境"
+      ],
+      "ai_keywords": [
+        "温度",
+        "整洁"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260367144",
+      "passenger_id": "P20260284144",
+      "trip_id": "T20260153144",
+      "vehicle_id": "Robotaxi-广州-409",
+      "rating": 2,
+      "feedback_text": "路线规划不合理，绕路了",
+      "city": "广州",
+      "route_start": "广州南站",
+      "route_end": "珠江新城",
+      "trip_time": "2026-01-28 04:33:00",
+      "trip_duration": 88,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "定位",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-01-29 02:33:00"
+    },
+    {
+      "feedback_no": "FB20260322145",
+      "passenger_id": "P20260331145",
+      "trip_id": "T20260100145",
+      "vehicle_id": "Robotaxi-武汉-346",
+      "rating": 3,
+      "feedback_text": "车内环境还行，有轻微异味",
+      "city": "武汉",
+      "route_start": "武汉站",
+      "route_end": "楚河汉街",
+      "trip_time": "2026-02-12 14:02:00",
+      "trip_duration": 17,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "安全",
+        "紧急",
+        "绕路",
+        "路线"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-02-12 23:02:00"
+    },
+    {
+      "feedback_no": "FB20260168146",
+      "passenger_id": "P20260259146",
+      "trip_id": "T20260284146",
+      "vehicle_id": "Robotaxi-北京-565",
+      "rating": 1,
+      "feedback_text": "车况一般，卫生需要改进",
+      "city": "北京",
+      "route_start": "首都机场",
+      "route_end": "国贸CBD",
+      "trip_time": "2026-01-30 19:36:00",
+      "trip_duration": 37,
+      "status": "处理中",
+      "ai_category": [
+        "车内环境",
+        "接驾体验"
+      ],
+      "ai_keywords": [
+        "响应",
+        "温度",
+        "整洁",
+        "等待"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-02-01 00:36:00"
+    },
+    {
+      "feedback_no": "FB20260392147",
+      "passenger_id": "P20260110147",
+      "trip_id": "T20260410147",
+      "vehicle_id": "Robotaxi-深圳-635",
+      "rating": 2,
+      "feedback_text": "接驾时间太长，等了半小时",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-04-02 00:28:00",
+      "trip_duration": 44,
+      "status": "已关闭",
+      "ai_category": [
+        "安全感受",
+        "行驶体验"
+      ],
+      "ai_keywords": [
+        "安全",
+        "紧急",
+        "平稳",
+        "速度"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-04-02 10:28:00"
+    },
+    {
+      "feedback_no": "FB20260180148",
+      "passenger_id": "P20260229148",
+      "trip_id": "T20260132148",
+      "vehicle_id": "Robotaxi-上海-434",
+      "rating": 3,
+      "feedback_text": "接驾时间有点长，其他都还好",
+      "city": "上海",
+      "route_start": "虹桥机场",
+      "route_end": "外滩",
+      "trip_time": "2026-02-12 02:55:00",
+      "trip_duration": 70,
+      "status": "处理中",
+      "ai_category": [
+        "接驾体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "定位",
+        "准时",
+        "紧急",
+        "放心"
+      ],
+      "feedback_channel": "App",
+      "reply_text": "感谢您的反馈，我们会尽快处理您的问题。",
+      "reply_time": "2026-02-13 12:55:00"
+    },
+    {
+      "feedback_no": "FB20260231149",
+      "passenger_id": "P20260354149",
+      "trip_id": "T20260377149",
+      "vehicle_id": "Robotaxi-上海-847",
+      "rating": 1,
+      "feedback_text": "自动驾驶反应迟钝，需要人工干预",
+      "city": "上海",
+      "route_start": "浦东机场",
+      "route_end": "陆家嘴",
+      "trip_time": "2026-02-13 06:16:00",
+      "trip_duration": 83,
+      "status": "待处理",
+      "ai_category": [
+        "接驾体验",
+        "安全感受"
+      ],
+      "ai_keywords": [
+        "定位",
+        "准时",
+        "放心",
+        "人工干预"
+      ],
+      "feedback_channel": "小程序",
+      "reply_text": "",
+      "reply_time": ""
+    },
+    {
+      "feedback_no": "FB20260206150",
+      "passenger_id": "P20260267150",
+      "trip_id": "T20260329150",
+      "vehicle_id": "Robotaxi-深圳-944",
+      "rating": 3,
+      "feedback_text": "服务不错，但是车内音乐声音有点大",
+      "city": "深圳",
+      "route_start": "深圳北站",
+      "route_end": "华强北",
+      "trip_time": "2026-02-08 02:58:00",
+      "trip_duration": 71,
+      "status": "处理中",
+      "ai_category": [
+        "安全感受",
+        "路线规划"
+      ],
+      "ai_keywords": [
+        "紧急",
+        "放心",
+        "绕路",
+        "准确"
+      ],
+      "feedback_channel": "Web",
+      "reply_text": "感谢您的反馈，我们已记录您的问题并转交相关团队处理。",
+      "reply_time": "2026-02-09 08:58:00"
+    }
+  ],
+  "metadata": {
+    "total": 150,
+    "positive_count": 52,
+    "neutral_count": 45,
+    "negative_count": 53,
+    "date_range": "2026-01-15 至 2026-04-16",
+    "cities": [
+      "武汉",
+      "北京",
+      "上海",
+      "广州",
+      "深圳"
+    ]
+  }
+}
