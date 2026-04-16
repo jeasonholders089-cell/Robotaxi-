@@ -95,6 +95,11 @@ class AISummaryRequest(BaseModel):
     start_date: Optional[str] = None
     end_date: Optional[str] = None
     city: Optional[str] = None
+    rating_min: Optional[int] = Field(default=None, ge=1, le=5)
+    rating_max: Optional[int] = Field(default=None, ge=1, le=5)
+    status: Optional[List[str]] = None
+    feedback_type: Optional[List[str]] = None
+    keyword: Optional[str] = None
     length: str = Field(default="medium", pattern="^(short|medium|long)$")
     max_count: int = Field(default=100, ge=1, le=1000)
 
@@ -125,6 +130,12 @@ class AISuggestionsRequest(BaseModel):
 
     start_date: Optional[str] = None
     end_date: Optional[str] = None
+    city: Optional[str] = None
+    rating_min: Optional[int] = Field(default=None, ge=1, le=5)
+    rating_max: Optional[int] = Field(default=None, ge=1, le=5)
+    status: Optional[List[str]] = None
+    feedback_type: Optional[List[str]] = None
+    keyword: Optional[str] = None
     top_n: int = Field(default=3, ge=1, le=10)
 
 
@@ -132,6 +143,7 @@ class AISuggestionsResponse(BaseModel):
     """Schema for AI suggestions response."""
 
     suggestions: List[AISuggestionItem]
+    type_distribution: Optional[List[TypeDistribution]] = None
     generated_at: datetime
 
 

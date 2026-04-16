@@ -22,6 +22,7 @@ class Settings(BaseSettings):
 
     # AI Configuration
     AI_MODEL: str = "moonshot-v1-8k"
+    AI_PROVIDER: str = "minimax"  # "kimi" or "minimax"
     AI_TIMEOUT: int = 60
 
     # Server Configuration

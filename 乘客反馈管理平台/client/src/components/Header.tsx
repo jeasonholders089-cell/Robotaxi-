@@ -1,22 +1,25 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { Home } from 'lucide-react'
+import { useNavigation } from './NavigationContext'
 import clsx from 'clsx'
 
 interface HeaderProps {
   sidebarCollapsed: boolean
 }
 
-const pageTitles: Record<string, { title: string; breadcrumbs: string[] }> = {
-  '/': { title: '工作台', breadcrumbs: ['首页'] },
-  '/feedbacks': { title: '反馈列表', breadcrumbs: ['反馈管理', '反馈列表'] },
-  '/dashboard': { title: '数据仪表盘', breadcrumbs: ['数据统计', '仪表盘'] },
-  '/ai-analysis': { title: 'AI 智能分析', breadcrumbs: ['AI 智能', '分析中心'] },
+const sectionLabels: Record<string, string> = {
+  'list': '反馈列表',
+  'dashboard': '数据仪表盘',
+  'ai': 'AI智能分析',
 }
 
 export function Header({ sidebarCollapsed }: HeaderProps) {
   const location = useLocation()
-  const pageInfo = pageTitles[location.pathname] || { title: '', breadcrumbs: [] }
+  const { activeSection } = useNavigation()
+
+  const isFeedbackPage = location.pathname === '/feedbacks'
+  const isWorkbenchPage = location.pathname === '/'
 
   return (
     <header
@@ -28,26 +31,19 @@ export function Header({ sidebarCollapsed }: HeaderProps) {
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm">
         <Home className="w-4 h-4 text-gray-400" />
-        {pageInfo.breadcrumbs.map((crumb, index) => (
-          <React.Fragment key={crumb}>
+        <span className="text-gray-400">/</span>
+        {isWorkbenchPage ? (
+          <span className="text-gray-800 font-medium">工作台</span>
+        ) : isFeedbackPage ? (
+          <>
+            <span className="text-gray-600">用户反馈</span>
             <span className="text-gray-400">/</span>
-            <span
-              className={clsx(
-                index === pageInfo.breadcrumbs.length - 1
-                  ? 'text-gray-800 font-medium'
-                  : 'text-gray-400'
-              )}
-            >
-              {crumb}
+            <span className="text-gray-800 font-medium">
+              {sectionLabels[activeSection] || '反馈列表'}
             </span>
-          </React.Fragment>
-        ))}
+          </>
+        ) : null}
       </div>
-
-      {/* Page Title */}
-      <h1 className="ml-6 text-xl font-semibold text-gray-800">
-        {pageInfo.title}
-      </h1>
     </header>
   )
 }

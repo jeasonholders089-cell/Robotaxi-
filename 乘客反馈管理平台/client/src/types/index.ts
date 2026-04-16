@@ -29,6 +29,8 @@ export interface Feedback {
   trip_duration: number
   rating: number
   feedback_text: string
+  feedback_pictures: string[]
+  feedback_videos: string[]
   feedback_type: string[]
   sentiment: string
   keywords: string[]
@@ -174,6 +176,7 @@ export interface ProductSuggestion {
 
 export interface AISuggestionsResponse {
   suggestions: ProductSuggestion[]
+  type_distribution?: TypeDistribution[]
   generated_at: string
 }
 

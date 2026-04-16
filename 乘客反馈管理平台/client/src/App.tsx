@@ -4,7 +4,7 @@ import { Layout } from '@/components'
 
 // Lazy load pages for code splitting
 const Workbench = lazy(() => import('@/pages/Workbench').then((m) => ({ default: m.Workbench })))
-const FeedbackList = lazy(() => import('@/pages/FeedbackList').then((m) => ({ default: m.FeedbackList })))
+const FeedbackManagement = lazy(() => import('@/pages/FeedbackManagement').then((m) => ({ default: m.FeedbackManagement })))
 const Dashboard = lazy(() => import('@/pages/Dashboard').then((m) => ({ default: m.Dashboard })))
 const AiAnalysis = lazy(() => import('@/pages/AiAnalysis').then((m) => ({ default: m.AiAnalysis })))
 
@@ -23,7 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Workbench />} />
-          <Route path="feedbacks" element={<FeedbackList />} />
+          <Route path="feedbacks" element={<FeedbackManagement />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="ai-analysis" element={<AiAnalysis />} />
         </Route>

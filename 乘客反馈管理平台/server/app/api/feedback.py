@@ -107,7 +107,7 @@ async def get_feedback_detail(
     response = FeedbackResponse(
         id=feedback.id,
         trip_id=feedback.trip_id,
-        passenger_id=service._mask_passenger_id(feedback.passenger_id),
+        passenger_id=feedback.passenger_id,
         vehicle_id=feedback.vehicle_id,
         city=feedback.city,
         route=feedback.route,
@@ -117,6 +117,8 @@ async def get_feedback_detail(
         trip_duration=feedback.trip_duration,
         rating=feedback.rating,
         feedback_text=feedback.feedback_text,
+        feedback_pictures=feedback.feedback_pictures,
+        feedback_videos=feedback.feedback_videos,
         feedback_type=feedback.feedback_type,
         sentiment=feedback.sentiment,
         keywords=feedback.keywords,

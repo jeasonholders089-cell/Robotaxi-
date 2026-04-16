@@ -100,7 +100,7 @@ class FeedbackService:
             FeedbackSummary(
                 id=fb.id,
                 trip_id=fb.trip_id,
-                passenger_id=self._mask_passenger_id(fb.passenger_id),
+                passenger_id=fb.passenger_id,
                 vehicle_id=fb.vehicle_id,
                 city=fb.city,
                 route=f"{fb.route_start} → {fb.route_end}",
@@ -110,6 +110,8 @@ class FeedbackService:
                 feedback_text=fb.feedback_text[:100] + "..."
                 if len(fb.feedback_text) > 100
                 else fb.feedback_text,
+                feedback_pictures=fb.feedback_pictures,
+                feedback_videos=fb.feedback_videos,
                 feedback_type=fb.feedback_type,
                 sentiment=fb.sentiment,
                 keywords=fb.keywords,
@@ -352,7 +354,7 @@ class FeedbackService:
             {
                 "反馈ID": fb.id,
                 "行程ID": fb.trip_id,
-                "乘客ID": self._mask_passenger_id(fb.passenger_id),
+                "乘客ID": fb.passenger_id,
                 "车辆ID": fb.vehicle_id,
                 "城市": fb.city,
                 "路线": fb.route,
@@ -398,3 +400,116 @@ class FeedbackService:
         if len(passenger_id) <= 6:
             return f"PAX***"
         return f"{passenger_id[:3]}***{passenger_id[-3:]}"
+
+    async def for_analysis(
+        self,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        city: Optional[str] = None,
+        rating_min: Optional[int] = None,
+        rating_max: Optional[int] = None,
+        status: Optional[str] = None,
+        keyword: Optional[str] = None,
+        feedback_type: Optional[str] = None,
+        max_count: int = 2000,
+    ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        """
+        Get feedback data for AI analysis.
+
+        - Returns complete feedback_text (not truncated)
+        - Without filters: default to latest 100 records
+        - With filters: up to 2000 records max
+        - Ordered by trip_time descending
+
+        Returns:
+            Tuple of (feedbacks list as dicts, stats dict)
+        """
+        conditions = []
+
+        if start_date:
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+                conditions.append(Feedback.trip_time >= start_dt)
+            except ValueError:
+                pass
+
+        if end_date:
+            try:
+                end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+                end_dt = end_dt.replace(hour=23, minute=59, second=59)
+                conditions.append(Feedback.trip_time <= end_dt)
+            except ValueError:
+                pass
+
+        if city:
+            conditions.append(Feedback.city == city)
+
+        if rating_min is not None:
+            conditions.append(Feedback.rating >= rating_min)
+
+        if rating_max is not None:
+            conditions.append(Feedback.rating <= rating_max)
+
+        if status:
+            conditions.append(Feedback.status == status)
+
+        if keyword:
+            conditions.append(Feedback.feedback_text.like(f"%{keyword}%"))
+
+        if feedback_type:
+            conditions.append(Feedback.feedback_type.contains(feedback_type))
+
+        # Check if any filters are applied
+        has_filters = len(conditions) > 0
+
+        # Without filters: default 100; with filters: up to max_count
+        effective_max = max_count if has_filters else min(100, max_count)
+
+        # Build query
+        query = select(Feedback)
+        if conditions:
+            query = query.where(and_(*conditions))
+        query = query.order_by(Feedback.trip_time.desc()).limit(effective_max)
+
+        result = await self.db.execute(query)
+        feedbacks = result.scalars().all()
+
+        # Convert to dicts with complete feedback_text
+        feedbacks_list = [
+            {
+                "id": fb.id,
+                "trip_id": fb.trip_id,
+                "city": fb.city,
+                "route_start": fb.route_start,
+                "route_end": fb.route_end,
+                "trip_time": fb.trip_time,
+                "rating": fb.rating,
+                "feedback_text": fb.feedback_text,
+                "feedback_type": fb.feedback_type or [],
+                "status": fb.status,
+            }
+            for fb in feedbacks
+        ]
+
+        # Calculate stats
+        total = len(feedbacks_list)
+        if total == 0:
+            return feedbacks_list, {
+                "total_count": 0,
+                "avg_rating": 0,
+                "positive_rate": 0,
+                "negative_rate": 0,
+            }
+
+        total_rating = sum(fb["rating"] for fb in feedbacks_list)
+        positive_count = sum(1 for fb in feedbacks_list if fb["rating"] >= 4)
+        negative_count = sum(1 for fb in feedbacks_list if fb["rating"] <= 2)
+
+        stats = {
+            "total_count": total,
+            "avg_rating": round(total_rating / total, 1),
+            "positive_rate": round(positive_count / total, 2),
+            "negative_rate": round(negative_count / total, 2),
+        }
+
+        return feedbacks_list, stats

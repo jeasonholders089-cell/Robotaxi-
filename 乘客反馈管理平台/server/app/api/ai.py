@@ -1,6 +1,9 @@
 """AI analysis API routes."""
 
+from typing import Optional
+
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -11,7 +14,8 @@ from app.schemas.stats import (
     AISuggestionsRequest,
     AISuggestionsResponse,
 )
-from app.services.ai_service import AIService
+from app.services.ai_service import AIService, start_analysis_task
+from app.services.analysis_task_store import get_task
 
 router = APIRouter(prefix="/ai", tags=["AI Analysis"])
 
@@ -72,3 +76,103 @@ async def generate_suggestions(
     suggestions = await service.generate_suggestions(request)
 
     return APIResponse(data=suggestions)
+
+
+# ===== v1.5 Analysis Pipeline Endpoints =====
+
+
+class AnalyzeRequest(BaseModel):
+    """Request model for POST /api/ai/analyze."""
+
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    city: Optional[str] = None
+    rating_min: Optional[int] = None
+    rating_max: Optional[int] = None
+    status: Optional[str] = None
+    feedback_type: Optional[str] = None
+    keyword: Optional[str] = None
+
+
+class AnalyzeResponse(BaseModel):
+    """Response model for POST /api/ai/analyze."""
+
+    task_id: str
+
+
+class AnalyzeResultResponse(BaseModel):
+    """Response model for GET /api/ai/analyze/{task_id}."""
+
+    task_id: str
+    status: str
+    progress: int
+    summary: Optional[str] = None
+    problems: Optional[list] = None
+    suggestions: Optional[list] = None
+    analyzed_count: int = 0
+    error: Optional[str] = None
+
+
+@router.post("/analyze", response_model=APIResponse)
+async def create_analysis_task(
+    request: AnalyzeRequest,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse:
+    """
+    Start a new AI analysis task.
+
+    Creates an analysis task based on FilterBar filter conditions.
+    Returns task_id for polling the results.
+    """
+    # Build filters dict from request
+    filters = {}
+    if request.start_date:
+        filters["start_date"] = request.start_date
+    if request.end_date:
+        filters["end_date"] = request.end_date
+    if request.city:
+        filters["city"] = request.city
+    if request.rating_min is not None:
+        filters["rating_min"] = request.rating_min
+    if request.rating_max is not None:
+        filters["rating_max"] = request.rating_max
+    if request.status:
+        filters["status"] = request.status
+    if request.feedback_type:
+        filters["feedback_type"] = request.feedback_type
+    if request.keyword:
+        filters["keyword"] = request.keyword
+
+    # Start analysis task
+    task_id = await start_analysis_task(filters, db)
+
+    return APIResponse(data=AnalyzeResponse(task_id=task_id))
+
+
+@router.get("/analyze/{task_id}", response_model=APIResponse)
+async def get_analysis_result(
+    task_id: str,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse:
+    """
+    Get AI analysis task result.
+
+    Returns the analysis result including summary, problems, and suggestions.
+    """
+    task = get_task(task_id)
+
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return APIResponse(
+        data=AnalyzeResultResponse(
+            task_id=task.task_id,
+            status=task.status,
+            progress=task.progress,
+            summary=task.summary,
+            problems=task.problems,
+            suggestions=task.suggestions,
+            analyzed_count=task.analyzed_count,
+            error=task.error,
+        )
+    )

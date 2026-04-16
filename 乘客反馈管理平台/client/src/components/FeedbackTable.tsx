@@ -1,9 +1,10 @@
 import React from 'react'
-import { Star, ChevronUp, ChevronDown, Eye } from 'lucide-react'
+import { ChevronUp, ChevronDown, Eye, Paperclip } from 'lucide-react'
 import clsx from 'clsx'
 import dayjs from 'dayjs'
 import type { Feedback, FeedbackStatus } from '@/types'
 
+// 状态配置
 const statusConfig: Record<FeedbackStatus, { label: string; color: string; bgColor: string }> = {
   pending: { label: '待处理', color: '#FAAD14', bgColor: '#FFFBE6' },
   processing: { label: '处理中', color: '#1890FF', bgColor: '#E6F7FF' },
@@ -72,22 +73,6 @@ export function FeedbackTable({
     }
   }
 
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center gap-0.5">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={clsx(
-              'w-4 h-4',
-              star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-            )}
-          />
-        ))}
-      </div>
-    )
-  }
-
   const renderPageNumbers = () => {
     const pages = []
     const maxVisible = 5
@@ -132,12 +117,12 @@ export function FeedbackTable({
 
   return (
     <div className="card">
-      {/* Table */}
+      {/* Table with horizontal scroll */}
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full min-w-[1100px]">
           <thead>
             <tr className="border-b border-gray-100">
-              <th className="py-3 px-4 text-left">
+              <th className="py-3 px-3 text-left w-10">
                 <input
                   type="checkbox"
                   checked={data.length > 0 && selectedIds.length === data.length}
@@ -145,30 +130,13 @@ export function FeedbackTable({
                   className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                 />
               </th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">反馈ID</th>
-              <th
-                className="py-3 px-4 text-left text-sm font-medium text-gray-600 cursor-pointer"
-                onClick={() => onSort('rating', sortOrder === 'desc' ? 'asc' : 'desc')}
-              >
-                <div className="flex items-center gap-1">
-                  评分
-                  {sortBy === 'rating' && (
-                    sortOrder === 'desc' ? (
-                      <ChevronDown className="w-4 h-4 text-primary" />
-                    ) : (
-                      <ChevronUp className="w-4 h-4 text-primary" />
-                    )
-                  )}
-                </div>
-              </th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">反馈类型</th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">反馈摘要</th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">路线</th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">城市</th>
-              <th
-                className="py-3 px-4 text-left text-sm font-medium text-gray-600 cursor-pointer"
-                onClick={() => onSort('time', sortOrder === 'desc' ? 'asc' : 'desc')}
-              >
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-28">乘客ID</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-32">反馈类型</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600">反馈摘要</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-40">路线</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-20">城市</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-32 cursor-pointer"
+                  onClick={() => onSort('time', sortOrder === 'desc' ? 'asc' : 'desc')}>
                 <div className="flex items-center gap-1">
                   行程时间
                   {sortBy === 'time' && (
@@ -180,8 +148,8 @@ export function FeedbackTable({
                   )}
                 </div>
               </th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">状态</th>
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-600">操作</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-24">状态</th>
+              <th className="py-3 px-3 text-left text-sm font-medium text-gray-600 w-20">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -204,16 +172,12 @@ export function FeedbackTable({
                       className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
                     />
                   </td>
-                  <td className="py-3 px-4">
-                    <span className="text-sm text-primary hover:underline">{item.feedback_no}</span>
+                  <td className="py-3 px-3">
+                    <span className="text-sm text-gray-700 font-medium">
+                      {item.passenger_id}
+                    </span>
                   </td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
-                      {renderStars(item.rating)}
-                      <span className="text-sm text-gray-600">{item.rating}星</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <div className="flex flex-wrap gap-1">
                       {item.feedback_type.slice(0, 2).map((type) => (
                         <span
@@ -234,24 +198,34 @@ export function FeedbackTable({
                       )}
                     </div>
                   </td>
-                  <td className="py-3 px-4">
-                    <p className="text-sm text-gray-600 truncate max-w-[200px]">
-                      {item.feedback_text.slice(0, 50)}
-                      {item.feedback_text.length > 50 && '...'}
+                  <td className="py-3 px-3">
+                    <p className="text-sm text-gray-600 truncate max-w-[250px]" title={item.feedback_text}>
+                      {item.feedback_text.slice(0, 40)}
+                      {item.feedback_text.length > 40 && '...'}
                     </p>
+                    {(item.feedback_pictures?.length || item.feedback_videos?.length) > 0 && (
+                      <div className="flex items-center gap-1 mt-0.5 text-gray-400" title="包含附件">
+                        <Paperclip className="w-3 h-3" />
+                        <span className="text-xs">
+                          {item.feedback_pictures?.length > 0 && `${item.feedback_pictures.length}图`}
+                          {item.feedback_pictures?.length > 0 && item.feedback_videos?.length > 0 && '/'}
+                          {item.feedback_videos?.length > 0 && `${item.feedback_videos.length}视频`}
+                        </span>
+                      </div>
+                    )}
                   </td>
-                  <td className="py-3 px-4">
-                    <p className="text-sm text-gray-600 truncate max-w-[150px]">{item.route}</p>
+                  <td className="py-3 px-3">
+                    <p className="text-sm text-gray-600 truncate max-w-[150px]" title={item.route}>{item.route}</p>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <span className="badge badge-info">{item.city}</span>
                   </td>
-                  <td className="py-3 px-4">
-                    <p className="text-sm text-gray-600">
-                      {dayjs(item.trip_time).format('YYYY-MM-DD HH:mm')}
+                  <td className="py-3 px-3">
+                    <p className="text-sm text-gray-600 whitespace-nowrap">
+                      {dayjs(item.trip_time).format('MM-DD HH:mm')}
                     </p>
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-3">
                     <span
                       className="badge"
                       style={{
@@ -262,10 +236,10 @@ export function FeedbackTable({
                       {status.label}
                     </span>
                   </td>
-                  <td className="py-3 px-4" onClick={(e) => e.stopPropagation()}>
+                  <td className="py-3 px-3" onClick={(e) => e.stopPropagation()}>
                     <button
                       onClick={() => onRowClick(item)}
-                      className="flex items-center gap-1 text-sm text-primary hover:text-primary-dark"
+                      className="flex items-center gap-1 text-sm text-primary hover:text-primary-dark whitespace-nowrap"
                     >
                       <Eye className="w-4 h-4" />
                       查看

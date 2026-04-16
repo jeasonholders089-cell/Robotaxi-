@@ -5,6 +5,11 @@ export function useAISummary(params: {
   start_date?: string
   end_date?: string
   city?: string
+  rating_min?: number
+  rating_max?: number
+  status?: string[]
+  feedback_type?: string[]
+  keyword?: string
   length?: 'short' | 'medium' | 'long'
   max_count?: number
 }) {

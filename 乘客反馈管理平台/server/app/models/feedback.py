@@ -36,6 +36,8 @@ class Feedback(Base):
     # Rating and feedback content
     rating: Mapped[int] = mapped_column(Integer, nullable=False)
     feedback_text: Mapped[str] = mapped_column(Text, nullable=False)
+    feedback_pictures: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)
+    feedback_videos: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)
 
     # AI analysis results
     feedback_type: Mapped[Optional[list]] = mapped_column(JSON, nullable=True)

@@ -23,10 +23,12 @@ class AIClient:
             self.api_key = settings.KIMI_API_KEY
             self.base_url = settings.KIMI_BASE_URL
             self.model = settings.AI_MODEL or "moonshot-v1-8k"
+            self.use_anthropic = False
         else:
             self.api_key = settings.MINIMAX_API_KEY
-            self.base_url = settings.MINIMAX_BASE_URL
-            self.model = "abab6-chat"
+            self.base_url = "https://api.minimaxi.com/anthropic/v1"
+            self.model = "MiniMax-M2.7"
+            self.use_anthropic = True
 
     async def chat(
         self,
@@ -51,6 +53,18 @@ class AIClient:
         if not self.api_key:
             raise ValueError(f"{self.provider.upper()}_API_KEY is not set")
 
+        if self.use_anthropic:
+            return await self._chat_anthropic(messages, max_tokens)
+        else:
+            return await self._chat_openai(messages, temperature, max_tokens)
+
+    async def _chat_openai(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: float,
+        max_tokens: int,
+    ) -> str:
+        """Use OpenAI-compatible API (Kimi)."""
         async with httpx.AsyncClient(timeout=settings.AI_TIMEOUT) as client:
             response = await client.post(
                 f"{self.base_url}/chat/completions",
@@ -68,6 +82,50 @@ class AIClient:
             response.raise_for_status()
             result = response.json()
             return result["choices"][0]["message"]["content"]
+
+    async def _chat_anthropic(
+        self,
+        messages: List[Dict[str, str]],
+        max_tokens: int,
+    ) -> str:
+        """Use Anthropic-compatible API (MiniMax)."""
+        # Convert OpenAI format to Anthropic format
+        anthropic_messages = []
+        for msg in messages:
+            role = msg["role"]
+            if role == "system":
+                role = "user"  # Anthropic doesn't have system messages in the same way
+            anthropic_messages.append({
+                "role": role,
+                "content": msg["content"]
+            })
+
+        async with httpx.AsyncClient(timeout=settings.AI_TIMEOUT) as client:
+            response = await client.post(
+                f"{self.base_url}/messages",
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                    "x-api-key": self.api_key,
+                    "anthropic-version": "2023-06-01"
+                },
+                json={
+                    "model": self.model,
+                    "messages": anthropic_messages,
+                    "max_tokens": max_tokens,
+                },
+            )
+            response.raise_for_status()
+            result = response.json()
+
+            # Extract text from content blocks
+            content = result.get("content", [])
+            for item in content:
+                if item.get("type") == "text":
+                    return item.get("text", "")
+
+            # If no text found, return empty
+            return ""
 
     async def classify(
         self,
@@ -233,7 +291,227 @@ class AIClient:
         )
 
         try:
-            return json.loads(response)
+            # Remove markdown code fences if present
+            cleaned = response.strip()
+            if cleaned.startswith("```"):
+                # Remove ```json or ``` at the start
+                lines = cleaned.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].strip() == "```":
+                    lines = lines[:-1]
+                cleaned = "\n".join(lines).strip()
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            return []
+
+    # ===== v1.5 Analysis Pipeline Prompts =====
+
+    async def summarize_v2(
+        self,
+        feedback_texts: List[str],
+        stats: Dict[str, Any],
+    ) -> str:
+        """
+        Generate summary from feedback data (v1.5 pipeline).
+
+        Args:
+            feedback_texts: List of complete feedback texts
+            stats: Statistics dictionary with total_count, avg_rating, positive_rate, negative_rate
+
+        Returns:
+            Generated summary text (within 150 characters)
+        """
+        # Prepare feedback text content
+        texts_str = "\n".join([f"- {text}" for text in feedback_texts[:50]])
+
+        prompt = f"""你是一个专业的Robotaxi乘客反馈分析师。请分析以下反馈数据，生成简洁的摘要报告。
+
+## 数据统计
+- 总反馈数：{stats.get('total_count', 0)} 条
+- 平均评分：{stats.get('avg_rating', 0)} 分（满分5分）
+- 好评率：{stats.get('positive_rate', 0) * 100}%（评分4-5分）
+- 差评率：{stats.get('negative_rate', 0) * 100}%（评分1-2分）
+
+## 反馈内容
+{texts_str}
+
+## 要求
+1. 用2-3句话总结整体用户满意度状况
+2. 指出用户最常提到的正面体验（不超过2点）
+3. 指出用户最突出的不满问题（不超过2点）
+4. 整体字数控制在150字以内
+
+## 输出格式
+直接输出摘要文本，不需要JSON格式。"""
+
+        return await self.chat(
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=500,
+        )
+
+    async def analyze_problems(
+        self,
+        feedback_data: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        """
+        Analyze product problems from feedback data (v1.5 pipeline).
+
+        Args:
+            feedback_data: List of feedback dicts sorted by rating ascending (low ratings first)
+
+        Returns:
+            Dict with categories and top_problems
+        """
+        # Format feedback data for the prompt
+        feedback_lines = []
+        for fb in feedback_data[:100]:  # Limit to 100 for prompt size
+            rating = fb.get("rating", 0)
+            text = fb.get("feedback_text", "")
+            feedback_lines.append(f"[{rating}分] {text}")
+
+        feedback_str = "\n".join(feedback_lines)
+
+        prompt = f"""你是一个专业的自动驾驶产品分析师。请从以下乘客反馈中识别和分类产品问题。
+
+## 已有分类参考
+- 行驶体验：与车辆行驶、加速、刹车、变道等相关
+- 车内环境：车内温度、噪音、清洁度、座椅舒适度等
+- 接驾体验：等待时间、司机响应、上下车便捷性等
+- 路线规划：导航准确性、路线选择、拥堵情况等
+- 安全感受：安全带提醒、紧急情况处理、风险预警等
+- 服务态度：客服响应、问题解决效率、沟通体验等
+- 其他：不属于以上分类的问题
+
+## 反馈数据（按评分排序，低分优先）
+{feedback_str}
+
+## 分析要求
+1. 将每条反馈归类到上述已有分类（可多选）
+2. 识别是否有新的问题模式未覆盖已有分类，如有请命名新分类
+3. 统计每个分类的：反馈数量、占比、差评率
+4. 按严重程度排序（严重程度 = 差评数量 × 差评率）
+
+## 输出格式（JSON）
+{{
+  "categories": [
+    {{
+      "name": "行驶体验",
+      "is_existing": true,
+      "count": 45,
+      "percentage": 0.15,
+      "negative_rate": 0.42,
+      "common_issues": ["变道过于频繁", "刹车过于急躁"],
+      "user_quotes": ["变道太频繁了，坐着不舒服", "刹车太急"]
+    }},
+    {{
+      "name": "新发现问题：导航播报",
+      "is_existing": false,
+      "count": 12,
+      "percentage": 0.04,
+      "negative_rate": 0.67,
+      "description": "导航语音播报过早或过晚，导致错过路口",
+      "user_quotes": ["导航说左转但已经过了", "播报太晚来不及变道"]
+    }}
+  ],
+  "top_problems": [
+    {{"category": "行驶体验", "severity_score": 18.9, "problem": "变道过于频繁"}}
+  ]
+}}"""
+
+        response = await self.chat(
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=4000,
+        )
+
+        try:
+            # Remove markdown code fences if present
+            cleaned = response.strip()
+            if cleaned.startswith("```"):
+                lines = cleaned.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].strip() == "```":
+                    lines = lines[:-1]
+                cleaned = "\n".join(lines).strip()
+            return json.loads(cleaned)
+        except json.JSONDecodeError:
+            return {"categories": [], "top_problems": []}
+
+    async def generate_suggestions_v2(
+        self,
+        problem_categories: List[Dict[str, Any]],
+        negative_feedbacks: List[str],
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate optimization suggestions (v1.5 pipeline).
+
+        Args:
+            problem_categories: List of problem category dicts from analyze_problems
+            negative_feedbacks: List of negative feedback texts
+
+        Returns:
+            List of suggestion dictionaries
+        """
+        # Format problem categories
+        categories_str = json.dumps(problem_categories, ensure_ascii=False, indent=2)
+
+        # Format negative feedbacks
+        negatives_str = "\n".join([f"- {fb}" for fb in negative_feedbacks[:30]])
+
+        prompt = f"""你是一个自动驾驶产品专家。请基于以下问题分析，生成可落地的产品优化建议。
+
+## 问题分类详情
+{categories_str}
+
+## 差评原声摘录
+{negatives_str}
+
+## 要求
+1. 针对严重程度最高的前5个问题分类
+2. 每个问题给出1-2条具体可落地的优化建议
+3. 建议需结合技术实现可能性和用户体验提升
+4. 每条建议必须引用1条用户原声作为依据
+5. 按严重程度从高到低排序
+
+## 输出格式（JSON数组）
+[
+  {{
+    "problem_category": "行驶体验",
+    "specific_problem": "变道过于频繁",
+    "severity": "high",
+    "evidence": {{
+      "count": 38,
+      "negative_rate": 0.71,
+      "user_voice": "每次坐车都频繁变道，坐得头晕"
+    }},
+    "suggestions": [
+      "优化变道策略，在判断需要变道时优先考虑车道保持而非立即变道",
+      "增加变道前的提醒和缓冲时间，让乘客有心理准备"
+    ],
+    "expected_impact": "降低变道频率X%，提升乘客舒适度评分"
+  }}
+]"""
+
+        response = await self.chat(
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.7,
+            max_tokens=4000,
+        )
+
+        try:
+            # Remove markdown code fences if present
+            cleaned = response.strip()
+            if cleaned.startswith("```"):
+                lines = cleaned.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].strip() == "```":
+                    lines = lines[:-1]
+                cleaned = "\n".join(lines).strip()
+            return json.loads(cleaned)
         except json.JSONDecodeError:
             return []
 

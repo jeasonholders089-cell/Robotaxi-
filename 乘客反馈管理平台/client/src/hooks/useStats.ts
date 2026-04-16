@@ -1,10 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import { getOverviewStats, getTrendData, getDistributionData } from '@/api/stats'
 
-export function useOverviewStats() {
+export function useOverviewStats(params?: {
+  start_date?: string
+  end_date?: string
+  city?: string
+}) {
   return useQuery({
-    queryKey: ['stats', 'overview'],
-    queryFn: getOverviewStats,
+    queryKey: ['stats', 'overview', params],
+    queryFn: () => getOverviewStats(params),
   })
 }
 

@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS `feedback` (
   `trip_duration` INT NOT NULL COMMENT 'Trip duration (minutes)',
   `rating` TINYINT NOT NULL COMMENT 'Rating 1-5',
   `feedback_text` TEXT NOT NULL COMMENT 'Passenger original feedback',
+  `feedback_pictures` JSON DEFAULT NULL COMMENT 'Feedback pictures URLs',
+  `feedback_videos` JSON DEFAULT NULL COMMENT 'Feedback video URLs',
   `feedback_type` JSON DEFAULT NULL COMMENT 'AI classification results, array format',
   `sentiment` VARCHAR(10) DEFAULT NULL COMMENT 'Sentiment: positive/neutral/negative',
   `keywords` JSON DEFAULT NULL COMMENT 'AI extracted keywords',

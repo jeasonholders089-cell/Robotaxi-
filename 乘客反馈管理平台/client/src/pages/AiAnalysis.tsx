@@ -1,12 +1,7 @@
-import React, { useState } from 'react'
-import {
-  Sparkles,
-  RefreshCw,
-  Copy,
-} from 'lucide-react'
-import { DistributionChart } from '@/components'
-import { useAISummary, useAISuggestions, useRefreshAISummary } from '@/hooks'
-import dayjs from 'dayjs'
+import React from 'react'
+import { Sparkles } from 'lucide-react'
+import { useAnalysisTask } from '@/hooks'
+import { useFilterStore } from '@/stores/filterStore'
 
 const priorityConfig = {
   high: { label: '高优先级', color: '#F5222D', bgColor: '#FFF1F0' },
@@ -14,235 +9,212 @@ const priorityConfig = {
   low: { label: '低优先级', color: '#52C41A', bgColor: '#F6FFED' },
 }
 
+// 问题分类颜色
+const categoryColors = {
+  '行驶体验': '#FF6033',
+  '车内环境': '#FF7A45',
+  '接驾体验': '#FFAB66',
+  '路线规划': '#FFDCC2',
+  '安全感受': '#FFF7F0',
+  '服务态度': '#975FE4',
+  '其他': '#E5E5E5',
+}
+
 export function AiAnalysis() {
-  const [analysisScope, setAnalysisScope] = useState<'all' | 'current' | 'custom'>('all')
-  const [dateRange, setDateRange] = useState({
-    start: dayjs().subtract(30, 'day').format('YYYY-MM-DD'),
-    end: dayjs().format('YYYY-MM-DD'),
-  })
+  const { filters } = useFilterStore()
+  const {
+    status,
+    progress,
+    summary,
+    problems,
+    suggestions,
+    analyzedCount,
+    error,
+    isLoading,
+    startAnalysis,
+    reset,
+  } = useAnalysisTask()
 
-  const { data: summary, isLoading: summaryLoading } = useAISummary({
-    start_date: analysisScope === 'custom' ? dateRange.start : undefined,
-    end_date: analysisScope === 'custom' ? dateRange.end : undefined,
-    length: 'medium',
-    max_count: 100,
-  })
+  // Check if any filters are applied
+  const hasFilters = Boolean(
+    filters.startDate ||
+    filters.endDate ||
+    (filters.city && filters.city.length > 0) ||
+    filters.ratingMin > 1 ||
+    filters.ratingMax < 5 ||
+    (filters.status && filters.status.length > 0) ||
+    (filters.feedbackType && filters.feedbackType.length > 0) ||
+    filters.keyword
+  )
 
-  const { data: suggestions, isLoading: suggestionsLoading } = useAISuggestions({
-    start_date: analysisScope === 'custom' ? dateRange.start : undefined,
-    end_date: analysisScope === 'custom' ? dateRange.end : undefined,
-    top_n: 5,
-  })
+  // Estimate data count (simplified - actual count comes from backend)
+  const estimatedCount = hasFilters ? '1,500' : '100'
 
-  const refreshSummary = useRefreshAISummary()
-
-  const handleRefresh = async () => {
-    await refreshSummary.mutateAsync({
-      start_date: analysisScope === 'custom' ? dateRange.start : undefined,
-      end_date: analysisScope === 'custom' ? dateRange.end : undefined,
-      length: 'medium',
-      max_count: 100,
-    })
+  // Determine button text
+  const getButtonText = () => {
+    if (isLoading) return '分析中...'
+    if (status === 'idle') return '开始分析'
+    if (status === 'failed') return '重试'
+    return '重新分析'
   }
 
-  const handleCopy = () => {
-    if (summary?.summary) {
-      navigator.clipboard.writeText(summary.summary)
-    }
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Analysis Scope */}
-      <div className="card">
-        <h3 className="text-sm font-medium text-gray-700 mb-4">分析范围</h3>
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            {(['all', 'current', 'custom'] as const).map((scope) => (
-              <label
-                key={scope}
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="scope"
-                  checked={analysisScope === scope}
-                  onChange={() => setAnalysisScope(scope)}
-                  className="w-4 h-4 text-primary focus:ring-primary"
-                />
-                <span className="text-sm text-gray-600">
-                  {scope === 'all'
-                    ? '全部反馈'
-                    : scope === 'current'
-                    ? '当前筛选'
-                    : '指定时间'}
-                </span>
-              </label>
-            ))}
-          </div>
-
-          {analysisScope === 'custom' && (
-            <div className="flex items-center gap-2">
-              <input
-                type="date"
-                value={dateRange.start}
-                onChange={(e) =>
-                  setDateRange((prev) => ({ ...prev, start: e.target.value }))
-                }
-                className="input w-36"
-              />
-              <span className="text-gray-400">至</span>
-              <input
-                type="date"
-                value={dateRange.end}
-                onChange={(e) =>
-                  setDateRange((prev) => ({ ...prev, end: e.target.value }))
-                }
-                className="input w-36"
-              />
-            </div>
-          )}
-        </div>
+  // Handle analysis error display
+  const renderError = () => {
+    if (!error) return null
+    return (
+      <div className="card bg-red-50 border-red-200">
+        <p className="text-red-600 text-sm">{error}</p>
       </div>
+    )
+  }
 
-      {/* AI Summary */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <h3 className="font-medium text-gray-800">AI 摘要</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleRefresh}
-              disabled={refreshSummary.isPending}
-              className="btn-secondary text-sm"
-            >
-              <RefreshCw
-                className={`w-4 h-4 mr-1 ${refreshSummary.isPending ? 'animate-spin' : ''}`}
-              />
-              重新生成
-            </button>
-            <button
-              onClick={handleCopy}
-              disabled={!summary?.summary}
-              className="btn-secondary text-sm"
-            >
-              <Copy className="w-4 h-4 mr-1" />
-              复制
-            </button>
-          </div>
+  // Render analysis header
+  const renderHeader = () => (
+    <div className="flex items-center justify-between px-6 py-4 bg-white border border-gray-200 rounded-lg">
+      <div className="flex items-center gap-3">
+        <Sparkles className="w-5 h-5 text-primary" />
+        <h2 className="text-lg font-semibold text-gray-800">AI 智能分析</h2>
+        <span className="text-sm text-gray-500">
+          📊 基于当前筛选条件，预估 {estimatedCount} 条数据
+        </span>
+      </div>
+      <button
+        onClick={status === 'idle' || status === 'failed' ? startAnalysis : reset}
+        disabled={isLoading}
+        className="px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+      >
+        {isLoading && (
+          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        )}
+        {getButtonText()}
+      </button>
+    </div>
+  )
+
+  // Render AI Summary Card
+  const renderSummaryCard = () => {
+    if (status === 'idle') {
+      return (
+        <div className="card">
+          <h3 className="font-medium text-gray-800 mb-4">AI 摘要</h3>
+          <p className="text-sm text-gray-400 text-center py-8">
+            点击「开始分析」按钮生成摘要
+          </p>
         </div>
+      )
+    }
 
-        {summaryLoading ? (
+    return (
+      <div className="card">
+        <h3 className="font-medium text-gray-800 mb-4">AI 摘要</h3>
+        {isLoading || status === 'processing' ? (
           <div className="animate-pulse">
-            <div className="h-24 bg-gray-100 rounded" />
+            <div className="h-20 bg-gray-100 rounded" />
           </div>
         ) : summary ? (
-          <div>
-            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-              {summary.summary}
-            </p>
-            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-              <span className="text-xs text-gray-400">
-                已分析 {summary.analyzed_count} 条反馈 ·{' '}
-                {dayjs(summary.generated_at).format('MM-DD HH:mm')} 生成
-              </span>
-            </div>
-          </div>
+          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+            {summary}
+          </p>
         ) : (
           <p className="text-sm text-gray-400 text-center py-8">暂无摘要数据</p>
         )}
       </div>
+    )
+  }
 
-      {/* Distribution + Suggestions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Category Distribution */}
-        <DistributionChart
-          type="pie"
-          data={
-            suggestions?.suggestions?.map((s) => ({
-              name: s.category,
-              value: s.count,
-            })) ?? []
-          }
-          title="问题分类分布"
-          loading={suggestionsLoading}
-          height={320}
-        />
+  // Render Problem Categories Card
+  const renderProblemCategoriesCard = () => {
+    if (status === 'idle') {
+      return (
+        <div className="card">
+          <h3 className="font-medium text-gray-800 mb-4">问题分类</h3>
+          <p className="text-sm text-gray-400 text-center py-8">
+            分析完成后显示问题分类
+          </p>
+        </div>
+      )
+    }
 
-        {/* Product Suggestions */}
+    return (
+      <div className="card">
+        <h3 className="font-medium text-gray-800 mb-4">问题分类分布</h3>
+        {isLoading || status === 'processing' ? (
+          <div className="animate-pulse space-y-3">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-8 bg-gray-100 rounded" />
+            ))}
+          </div>
+        ) : problems && problems.length > 0 ? (
+          <div className="space-y-3">
+            {problems.map((problem, index) => (
+              <div key={index}>
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2">
+                    {!problem.is_existing && (
+                      <span className="text-xs text-purple-600 font-medium">🆕</span>
+                    )}
+                    <span className="text-sm text-gray-700">{problem.name}</span>
+                  </div>
+                  <span className="text-sm font-medium text-primary">
+                    {(problem.percentage * 100).toFixed(0)}%
+                  </span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${(problem.percentage * 100).toFixed(0)}%`,
+                      backgroundColor: problem.is_existing
+                        ? (categoryColors[problem.name as keyof typeof categoryColors] || '#FF6033')
+                        : '#975FE4',
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-400 text-center py-8">暂无问题分类数据</p>
+        )}
+      </div>
+    )
+  }
+
+  // Render Suggestions Card
+  const renderSuggestionsCard = () => {
+    if (status === 'idle') {
+      return (
         <div className="card">
           <h3 className="font-medium text-gray-800 mb-4">产品优化建议</h3>
-          {suggestionsLoading ? (
-            <div className="animate-pulse space-y-3">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-24 bg-gray-100 rounded" />
-              ))}
-            </div>
-          ) : suggestions?.suggestions && suggestions.suggestions.length > 0 ? (
-            <div className="space-y-4">
-              {suggestions.suggestions.map((suggestion, index) => {
-                const config = priorityConfig[suggestion.priority]
-                return (
-                  <div
-                    key={index}
-                    className="p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
-                  >
-                    <div className="flex items-start gap-3">
-                      <span
-                        className="px-2 py-0.5 rounded text-xs font-medium"
-                        style={{
-                          backgroundColor: config.bgColor,
-                          color: config.color,
-                        }}
-                      >
-                        {config.label}
-                      </span>
-                      <div className="flex-1">
-                        <h4 className="text-sm font-medium text-gray-800 mb-1">
-                          {suggestion.category} - {suggestion.problem}
-                        </h4>
-                        <p className="text-xs text-gray-500 mb-2">
-                          影响反馈数: {suggestion.count} 条 (
-                          {(suggestion.percentage * 100).toFixed(1)}%)
-                        </p>
-                        <div className="space-y-1">
-                          {suggestion.suggestions.slice(0, 2).map((s, i) => (
-                            <p key={i} className="text-xs text-gray-600 flex items-start gap-1">
-                              <span className="text-primary">•</span>
-                              {s}
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-400 text-center py-8">暂无建议数据</p>
-          )}
+          <p className="text-sm text-gray-400 text-center py-8">
+            分析完成后显示优化建议
+          </p>
         </div>
-      </div>
+      )
+    }
 
-      {/* Suggestion Detail Cards */}
-      {suggestions?.suggestions && suggestions.suggestions.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="font-medium text-gray-800">建议详情</h3>
-          {suggestions.suggestions.map((suggestion, index) => {
-            const config = priorityConfig[suggestion.priority]
-            return (
-              <div
-                key={index}
-                className="card"
-                style={{ borderLeft: `4px solid ${config.color}` }}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
+    return (
+      <div className="card">
+        <h3 className="font-medium text-gray-800 mb-4">产品优化建议</h3>
+        {isLoading || status === 'processing' ? (
+          <div className="animate-pulse space-y-3">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-20 bg-gray-100 rounded" />
+            ))}
+          </div>
+        ) : suggestions && suggestions.length > 0 ? (
+          <div className="space-y-4">
+            {suggestions.map((suggestion, index) => {
+              const config = priorityConfig[suggestion.severity] || priorityConfig.medium
+              return (
+                <div
+                  key={index}
+                  className="p-3 rounded-lg border border-gray-100"
+                  style={{ borderLeft: `4px solid ${config.color}` }}
+                >
+                  <div className="flex items-start gap-2 mb-2">
                     <span
-                      className="px-2 py-0.5 rounded text-xs font-medium"
+                      className="px-2 py-0.5 rounded text-xs font-medium shrink-0"
                       style={{
                         backgroundColor: config.bgColor,
                         color: config.color,
@@ -250,67 +222,53 @@ export function AiAnalysis() {
                     >
                       {config.label}
                     </span>
-                    <h4 className="text-base font-medium text-gray-800 mt-2">
-                      {suggestion.category} - {suggestion.problem}
+                    <h4 className="text-sm font-medium text-gray-800">
+                      {suggestion.problem_category} - {suggestion.specific_problem}
                     </h4>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-gray-800">{suggestion.count}</p>
-                    <p className="text-xs text-gray-500">反馈数</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <p className="text-xs text-gray-400">占比</p>
-                    <p className="text-sm font-medium text-gray-700">
-                      {(suggestion.percentage * 100).toFixed(1)}%
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">差评率</p>
-                    <p className="text-sm font-medium text-gray-700">
-                      {(suggestion.negative_rate * 100).toFixed(1)}%
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400">置信度</p>
-                    <p className="text-sm font-medium text-gray-700">
-                      {Math.round(85 + suggestion.percentage * 10)}%
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <p className="text-xs text-gray-400 mb-2">用户原声</p>
-                  <div className="space-y-2">
-                    {suggestion.user_voices.map((voice, i) => (
-                      <p
-                        key={i}
-                        className="text-sm text-gray-600 italic bg-gray-50 p-2 rounded"
-                      >
-                        "{voice}"
+                  <p className="text-xs text-gray-500 mb-2">
+                    影响 {suggestion.evidence.count} 条 · 差评率 {(suggestion.evidence.negative_rate * 100).toFixed(0)}%
+                  </p>
+                  <div className="space-y-1">
+                    {suggestion.suggestions.slice(0, 2).map((s, i) => (
+                      <p key={i} className="text-xs text-gray-600 flex items-start gap-1">
+                        <span className="text-primary shrink-0">•</span>
+                        {s}
                       </p>
                     ))}
                   </div>
+                  {suggestion.evidence.user_voice && (
+                    <p className="text-xs text-gray-500 italic mt-2 bg-gray-50 p-2 rounded">
+                      "{suggestion.evidence.user_voice}"
+                    </p>
+                  )}
                 </div>
+              )
+            })}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-400 text-center py-8">暂无建议数据</p>
+        )}
+      </div>
+    )
+  }
 
-                <div>
-                  <p className="text-xs text-gray-400 mb-2">优化建议</p>
-                  <div className="space-y-2">
-                    {suggestion.suggestions.map((s, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        <span className="text-primary font-medium text-sm">{i + 1}.</span>
-                        <p className="text-sm text-gray-700">{s}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+  return (
+    <div className="space-y-6">
+      {/* Analysis Header */}
+      {renderHeader()}
+
+      {/* Error Display */}
+      {renderError()}
+
+      {/* Summary Card */}
+      {renderSummaryCard()}
+
+      {/* Problem Categories + Suggestions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {renderProblemCategoriesCard()}
+        {renderSuggestionsCard()}
+      </div>
     </div>
   )
 }

@@ -7,8 +7,12 @@ import type {
 } from '@/types'
 
 // 获取核心指标
-export async function getOverviewStats(): Promise<OverviewStats> {
-  const response = await client.get<ApiResponse<OverviewStats>>('/api/stats/overview')
+export async function getOverviewStats(params?: {
+  start_date?: string
+  end_date?: string
+  city?: string
+}): Promise<OverviewStats> {
+  const response = await client.get<ApiResponse<OverviewStats>>('/stats/overview', { params })
   return response.data
 }
 
@@ -19,9 +23,8 @@ export async function getTrendData(params: {
   end_date?: string
   city?: string
 }): Promise<TrendResponse> {
-  const response = await client.get<ApiResponse<TrendResponse>>('/api/stats/trend', { params })
-  // Response interceptor already returns response.data (the unwrapped data)
-  return response as unknown as TrendResponse
+  const response = await client.get<ApiResponse<TrendResponse>>('/stats/trend', { params })
+  return response.data
 }
 
 // 获取分布数据
@@ -30,6 +33,6 @@ export async function getDistributionData(params?: {
   end_date?: string
   city?: string
 }): Promise<DistributionResponse> {
-  const response = await client.get<ApiResponse<DistributionResponse>>('/api/stats/distribution', { params })
+  const response = await client.get<ApiResponse<DistributionResponse>>('/stats/distribution', { params })
   return response.data
 }

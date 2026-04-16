@@ -10,10 +10,15 @@ export async function getAISummary(params: {
   start_date?: string
   end_date?: string
   city?: string
+  rating_min?: number
+  rating_max?: number
+  status?: string[]
+  feedback_type?: string[]
+  keyword?: string
   length?: 'short' | 'medium' | 'long'
   max_count?: number
 }): Promise<AISummary> {
-  const response = await client.post<ApiResponse<AISummary>>('/api/ai/summary', params)
+  const response = await client.post<ApiResponse<AISummary>>('/ai/summary', params)
   return response.data
 }
 
@@ -21,9 +26,15 @@ export async function getAISummary(params: {
 export async function getAISuggestions(params: {
   start_date?: string
   end_date?: string
+  city?: string
+  rating_min?: number
+  rating_max?: number
+  status?: string[]
+  feedback_type?: string[]
+  keyword?: string
   top_n?: number
 }): Promise<AISuggestionsResponse> {
-  const response = await client.post<ApiResponse<AISuggestionsResponse>>('/api/ai/suggestions', params)
+  const response = await client.post<ApiResponse<AISuggestionsResponse>>('/ai/suggestions', params)
   return response.data
 }
 
@@ -37,6 +48,67 @@ export async function batchClassify(ids: string[]): Promise<{
     success_count: number
     failed_count: number
     results: { id: string; feedback_type: string[]; sentiment: string }[]
-  }>>('/api/feedbacks/batch-classify', { ids })
+  }>>('/feedbacks/batch-classify', { ids })
+  return response.data
+}
+
+// ===== v1.5 Analysis Pipeline APIs =====
+
+// 问题分类
+export interface ProblemCategory {
+  name: string
+  is_existing: boolean
+  count: number
+  percentage: number
+  negative_rate: number
+  common_issues?: string[]
+  user_quotes?: string[]
+  description?: string
+}
+
+// 分析建议
+export interface AnalysisSuggestion {
+  problem_category: string
+  specific_problem: string
+  severity: 'high' | 'medium' | 'low'
+  evidence: {
+    count: number
+    negative_rate: number
+    user_voice: string
+  }
+  suggestions: string[]
+  expected_impact?: string
+}
+
+// 分析任务状态
+export interface AnalysisTaskResult {
+  task_id: string
+  status: 'pending' | 'processing' | 'completed' | 'failed'
+  progress: number
+  summary: string | null
+  problems: ProblemCategory[] | null
+  suggestions: AnalysisSuggestion[] | null
+  analyzed_count: number
+  error: string | null
+}
+
+// 发起分析任务
+export async function startAnalysis(params: {
+  start_date?: string
+  end_date?: string
+  city?: string
+  rating_min?: number
+  rating_max?: number
+  status?: string[]
+  feedback_type?: string[]
+  keyword?: string
+}): Promise<{ task_id: string }> {
+  const response = await client.post<ApiResponse<{ task_id: string }>>('/ai/analyze', params)
+  return response.data
+}
+
+// 查询分析结果
+export async function getAnalysisResult(taskId: string): Promise<AnalysisTaskResult> {
+  const response = await client.get<ApiResponse<AnalysisTaskResult>>(`/ai/analyze/${taskId}`)
   return response.data
 }

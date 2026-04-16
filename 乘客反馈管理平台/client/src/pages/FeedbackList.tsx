@@ -122,17 +122,17 @@ export function FeedbackList() {
           <button
             onClick={() => handleBatchUpdateStatus('resolved')}
             disabled={selectedIds.length === 0}
-            className="btn-secondary text-sm"
+            className="btn-secondary text-sm whitespace-nowrap"
           >
-            <CheckCircle className="w-4 h-4 mr-1" />
-            批量标记已解决
+            <CheckCircle className="w-4 h-4 mr-1 flex-shrink-0" />
+            <span>批量标记已解决</span>
           </button>
           <button
             onClick={handleExport}
-            className="btn-secondary text-sm"
+            className="btn-secondary text-sm whitespace-nowrap"
           >
-            <Download className="w-4 h-4 mr-1" />
-            导出
+            <Download className="w-4 h-4 mr-1 flex-shrink-0" />
+            <span>导出</span>
           </button>
         </div>
       </div>

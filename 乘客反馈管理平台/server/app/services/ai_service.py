@@ -1,6 +1,8 @@
 """AI analysis service."""
 
+import asyncio
 import json
+import re
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -14,7 +16,18 @@ from app.schemas.stats import (
     AISummaryResponse,
     AISummaryRequest,
 )
-from app.utils.ai_client import AIClient, get_kimi_client
+from app.services.analysis_task_store import (
+    create_task,
+    get_task,
+    update_task_progress,
+    set_task_result,
+    set_task_error,
+    register_running_task,
+    unregister_running_task,
+)
+from app.utils.ai_client import AIClient, get_kimi_client, get_minimax_client
+from app.config import settings
+from app.services.feedback_service import FeedbackService
 
 
 class AIService:
@@ -34,7 +47,12 @@ class AIService:
     def __init__(self, db: AsyncSession, ai_client: Optional[AIClient] = None):
         """Initialize service with database session and AI client."""
         self.db = db
-        self.ai_client = ai_client or get_kimi_client()
+        if ai_client:
+            self.ai_client = ai_client
+        elif settings.AI_PROVIDER == "minimax":
+            self.ai_client = get_minimax_client()
+        else:
+            self.ai_client = get_kimi_client()
 
     async def classify_single(self, feedback_text: str) -> Dict[str, Any]:
         """
@@ -119,6 +137,11 @@ class AIService:
             start_date=request.start_date,
             end_date=request.end_date,
             city=request.city,
+            rating_min=request.rating_min,
+            rating_max=request.rating_max,
+            status=request.status,
+            feedback_type=request.feedback_type,
+            keyword=request.keyword,
             max_count=request.max_count,
         )
 
@@ -170,7 +193,12 @@ class AIService:
         feedbacks, stats = await self._get_feedback_data_for_analysis(
             start_date=request.start_date,
             end_date=request.end_date,
-            city=None,
+            city=request.city,
+            rating_min=request.rating_min,
+            rating_max=request.rating_max,
+            status=request.status,
+            feedback_type=request.feedback_type,
+            keyword=request.keyword,
             max_count=500,
         )
 
@@ -239,6 +267,10 @@ class AIService:
 
         return AISuggestionsResponse(
             suggestions=suggestions,
+            type_distribution=[
+                {"type": t["type"], "count": t["count"], "percentage": t["percentage"]}
+                for t in type_distribution
+            ],
             generated_at=datetime.now(),
         )
 
@@ -256,6 +288,11 @@ class AIService:
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
         city: Optional[str] = None,
+        rating_min: Optional[int] = None,
+        rating_max: Optional[int] = None,
+        status: Optional[List[str]] = None,
+        feedback_type: Optional[List[str]] = None,
+        keyword: Optional[str] = None,
         max_count: int = 100,
     ) -> tuple:
         """
@@ -284,6 +321,22 @@ class AIService:
         if city:
             conditions.append(Feedback.city == city)
 
+        if rating_min is not None:
+            conditions.append(Feedback.rating >= rating_min)
+
+        if rating_max is not None:
+            conditions.append(Feedback.rating <= rating_max)
+
+        if status and len(status) > 0:
+            conditions.append(Feedback.status.in_(status))
+
+        if feedback_type and len(feedback_type) > 0:
+            # Feedback can have multiple types stored as JSON list
+            pass  # Will filter in Python for JSON array
+
+        if keyword:
+            conditions.append(Feedback.feedback_text.contains(keyword))
+
         # Get feedbacks
         query = select(Feedback)
         if conditions:
@@ -292,6 +345,16 @@ class AIService:
 
         result = await self.db.execute(query)
         feedbacks = result.scalars().all()
+
+        # Filter by feedback_type if specified (since it's a JSON array)
+        if feedback_type and len(feedback_type) > 0:
+            feedbacks = [
+                fb
+                for fb in feedbacks
+                if fb.feedback_type
+                and isinstance(fb.feedback_type, list)
+                and any(ft in fb.feedback_type for ft in feedback_type)
+            ]
 
         # Calculate stats
         total = len(feedbacks)
@@ -315,3 +378,148 @@ class AIService:
         }
 
         return feedbacks, stats
+
+
+# ===== v1.5 Analysis Pipeline =====
+
+def is_emoji_only(text: str) -> bool:
+    """Check if text contains only emoji characters."""
+    emoji_pattern = re.compile(
+        "[\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F300-\U0001F5FF"  # symbols & pictographs
+        "\U0001F680-\U0001F6FF"  # transport & map symbols
+        "\U0001F1E0-\U0001F1FF"  # flags
+        "\U00002702-\U000027B0"
+        "\U000024C2-\U0001F251"
+        "]+"
+    )
+    cleaned = emoji_pattern.sub("", text).strip()
+    return len(cleaned) == 0
+
+
+def clean_feedbacks(feedbacks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Clean feedback data for AI analysis.
+
+    1. Remove invalid feedbacks (empty text, emoji-only)
+    2. Sort by rating ascending, trip_time descending (low ratings first)
+    """
+    cleaned = []
+    for fb in feedbacks:
+        text = fb.get("feedback_text", "").strip()
+        # Skip empty text or emoji-only
+        if not text or is_emoji_only(text):
+            continue
+        cleaned.append(fb)
+
+    # Sort by rating ascending, trip_time descending
+    cleaned.sort(key=lambda x: (x["rating"], x.get("trip_time", "")), reverse=[False, True])
+
+    return cleaned
+
+
+async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> None:
+    """
+    Execute the AI analysis pipeline.
+
+    Steps:
+    - Step 1 [0-10%]: Get feedback data based on filters
+    - Step 2 [10-30%]: Clean data
+    - Step 3 [30-60%]: Generate AI summary
+    - Step 4 [60-85%]: Product problem analysis
+    - Step 5 [85-100%]: Generate optimization suggestions
+    """
+    try:
+        update_task_progress(task_id, 0, "processing")
+
+        # Step 1: Get feedback data (0-10%)
+        update_task_progress(task_id, 5)
+        feedback_service = FeedbackService(db)
+        feedbacks, stats = await feedback_service.for_analysis(
+            start_date=filters.get("start_date"),
+            end_date=filters.get("end_date"),
+            city=filters.get("city"),
+            rating_min=filters.get("rating_min"),
+            rating_max=filters.get("rating_max"),
+            status=filters.get("status"),
+            keyword=filters.get("keyword"),
+            feedback_type=filters.get("feedback_type"),
+            max_count=2000,
+        )
+        update_task_progress(task_id, 10)
+
+        # Step 2: Clean data (10-30%)
+        update_task_progress(task_id, 15)
+        cleaned_data = clean_feedbacks(feedbacks)
+        update_task_progress(task_id, 30)
+
+        # Prepare data for AI calls
+        feedback_texts = [fb.get("feedback_text", "") for fb in cleaned_data]
+        feedback_for_analysis = [
+            {"rating": fb.get("rating", 0), "feedback_text": fb.get("feedback_text", "")}
+            for fb in cleaned_data
+        ]
+
+        # Collect negative feedbacks for suggestions
+        negative_feedbacks = [
+            fb.get("feedback_text", "")
+            for fb in cleaned_data
+            if fb.get("rating", 0) <= 2
+        ]
+
+        # Step 3: Generate summary (30-60%)
+        update_task_progress(task_id, 35)
+        ai_client = get_minimax_client() if settings.AI_PROVIDER == "minimax" else get_kimi_client()
+        summary = await ai_client.summarize_v2(feedback_texts, stats)
+        update_task_progress(task_id, 60)
+
+        # Step 4: Analyze problems (60-85%)
+        update_task_progress(task_id, 65)
+        problems_result = await ai_client.analyze_problems(feedback_for_analysis)
+        update_task_progress(task_id, 85)
+
+        # Step 5: Generate suggestions (85-100%)
+        update_task_progress(task_id, 90)
+        suggestions = await ai_client.generate_suggestions_v2(
+            problem_categories=problems_result.get("categories", []),
+            negative_feedbacks=negative_feedbacks,
+        )
+        update_task_progress(task_id, 100)
+
+        # Save results
+        set_task_result(
+            task_id=task_id,
+            summary=summary,
+            problems=problems_result.get("categories", []),
+            suggestions=suggestions,
+            analyzed_count=len(cleaned_data),
+        )
+
+    except asyncio.CancelledError:
+        set_task_error(task_id, "Task was cancelled")
+        raise
+    except Exception as e:
+        set_task_error(task_id, f"Analysis failed: {str(e)}")
+    finally:
+        unregister_running_task(task_id)
+
+
+async def start_analysis_task(filters: dict, db: AsyncSession) -> str:
+    """
+    Start an analysis task in the background.
+
+    Args:
+        filters: Filter parameters from FilterBar
+        db: Database session
+
+    Returns:
+        task_id: The ID of the created task
+    """
+    # Create task
+    task_id = create_task(filters)
+
+    # Start background task
+    task = asyncio.create_task(run_analysis_task(task_id, filters, db))
+    register_running_task(task_id, task)
+
+    return task_id

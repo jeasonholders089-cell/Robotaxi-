@@ -220,6 +220,63 @@ export function FeedbackDetail({
               </p>
             </div>
 
+            {/* Media Attachments */}
+            {(feedback.feedback_pictures?.length || feedback.feedback_videos?.length) ? (
+              <div className="card">
+                <h3 className="text-sm font-medium text-gray-500 mb-4">附件媒体</h3>
+                <div className="space-y-4">
+                  {/* Pictures */}
+                  {feedback.feedback_pictures && feedback.feedback_pictures.length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-400 mb-2">图片 ({feedback.feedback_pictures.length})</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {feedback.feedback_pictures.map((pic, idx) => (
+                          <a
+                            key={idx}
+                            href={pic}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block aspect-video bg-gray-100 rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
+                          >
+                            <img
+                              src={pic}
+                              alt={`附件图片 ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23f0f0f0" width="100" height="100"/><text x="50" y="50" text-anchor="middle" dy=".3em" fill="%23999">图片</text></svg>'
+                              }}
+                            />
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {/* Videos */}
+                  {feedback.feedback_videos && feedback.feedback_videos.length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-400 mb-2">视频 ({feedback.feedback_videos.length})</p>
+                      <div className="space-y-2">
+                        {feedback.feedback_videos.map((vid, idx) => (
+                          <a
+                            key={idx}
+                            href={vid}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                          >
+                            <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
+                            </svg>
+                            <span className="text-sm text-gray-600">视频 {idx + 1}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : null}
+
             {/* AI Analysis */}
             <div className="card">
               <h3 className="text-sm font-medium text-gray-500 mb-4">AI 分析结果</h3>

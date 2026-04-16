@@ -57,6 +57,8 @@ class FeedbackResponse(BaseModel):
     trip_duration: int
     rating: int
     feedback_text: str
+    feedback_pictures: Optional[List[str]] = None
+    feedback_videos: Optional[List[str]] = None
     feedback_type: Optional[List[str]] = None
     sentiment: Optional[str] = None
     keywords: Optional[List[str]] = None
@@ -88,6 +90,8 @@ class FeedbackSummary(BaseModel):
     trip_duration: int
     rating: int
     feedback_text: str
+    feedback_pictures: Optional[List[str]] = None
+    feedback_videos: Optional[List[str]] = None
     feedback_type: Optional[List[str]] = None
     sentiment: Optional[str] = None
     keywords: Optional[List[str]] = None
