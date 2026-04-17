@@ -5,29 +5,34 @@ import {
   Clock,
   ThumbsUp,
   AlertCircle,
-  TrendingUp,
   Sparkles,
   ArrowRight,
   ListTodo,
   BarChart3,
 } from 'lucide-react'
-import ReactECharts from 'echarts-for-react'
-import { StatCard } from '@/components'
-import { useOverviewStats, useAISummary, useTrendData } from '@/hooks'
+import { StatCard, TrendChart } from '@/components'
+import { useOverviewStats, useTrendData, useAnalysisTask } from '@/hooks'
 import dayjs from 'dayjs'
 
 export function Workbench() {
   const navigate = useNavigate()
   const { data: stats, isLoading: statsLoading } = useOverviewStats()
-  const { data: aiSummary } = useAISummary({
-    start_date: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
-    end_date: dayjs().format('YYYY-MM-DD'),
-  })
   const { data: trendData, isLoading: trendLoading } = useTrendData({
     type: 'daily',
     start_date: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
     end_date: dayjs().format('YYYY-MM-DD'),
   })
+
+  // AI Analysis Task
+  const {
+    status: analysisStatus,
+    progress,
+    summary: aiSummary,
+    problems,
+    suggestions: aiSuggestions,
+    analyzedCount,
+    isLoading: analysisLoading,
+  } = useAnalysisTask()
 
   const today = dayjs().format('YYYY年MM月DD日')
   const hour = dayjs().hour()
@@ -35,6 +40,75 @@ export function Workbench() {
   if (hour < 12) greeting = '早上好'
   else if (hour < 18) greeting = '下午好'
   else greeting = '晚上好'
+
+  // AI Summary Structured Parser
+  interface ParsedSummary {
+    satisfaction?: string
+    positive?: string[]
+    negative?: string[]
+    coreSuggestion?: string
+  }
+
+  function parseSummaryText(text: string): ParsedSummary {
+    const result: ParsedSummary = {}
+    if (!text || !text.trim()) return result
+
+    const clean = text.replace(/^#+\s*/gm, '').replace(/---+/g, '').trim()
+    const lines = clean.split('\n').map(l => l.replace(/^\s*[-*]\s*/, '').trim()).filter(Boolean)
+
+    const satisfactionKeywords = ['整体满意度', '满意度', '总体满意度']
+    const positiveKeywords = ['正面体验', '正面反馈', '好评']
+    const negativeKeywords = ['突出不满', '负面反馈', '差评', '主要问题']
+    const suggestionKeyword = '核心建议'
+
+    let currentSection: 'satisfaction' | 'positive' | 'negative' | 'suggestion' | null = null
+    const positiveItems: string[] = []
+    const negativeItems: string[] = []
+
+    for (const line of lines) {
+      const lower = line.toLowerCase()
+
+      if (satisfactionKeywords.some(k => lower.includes(k))) {
+        currentSection = 'satisfaction'
+        const colonIdx = line.indexOf('：')
+        if (colonIdx !== -1) {
+          result.satisfaction = line.slice(colonIdx + 1).replace(/^【|】$/g, '').trim()
+        }
+        continue
+      }
+      if (suggestionKeyword && lower.includes(suggestionKeyword)) {
+        currentSection = 'suggestion'
+        const colonIdx = line.indexOf('：')
+        if (colonIdx !== -1) {
+          result.coreSuggestion = line.slice(colonIdx + 1).replace(/^【|】$/g, '').trim()
+        }
+        continue
+      }
+      if (positiveKeywords.some(k => lower.includes(k))) {
+        currentSection = 'positive'
+        continue
+      }
+      if (negativeKeywords.some(k => lower.includes(k))) {
+        currentSection = 'negative'
+        continue
+      }
+
+      const itemText = line.replace(/^【|】$/g, '').trim()
+      if (!itemText || itemText === '正面体验' || itemText === '突出不满') continue
+
+      if (currentSection === 'satisfaction' && !result.satisfaction) {
+        result.satisfaction = itemText
+      } else if (currentSection === 'positive') {
+        positiveItems.push(itemText)
+      } else if (currentSection === 'negative') {
+        negativeItems.push(itemText)
+      }
+    }
+
+    result.positive = positiveItems
+    result.negative = negativeItems
+    return result
+  }
 
   return (
     <div className="space-y-6">
@@ -156,98 +230,22 @@ export function Workbench() {
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-primary" />
+              <BarChart3 className="w-5 h-5 text-primary" />
               <h3 className="font-medium text-gray-800">趋势概览</h3>
             </div>
             <button
-              onClick={() => navigate('/feedbacks')}
+              onClick={() => navigate('/feedbacks#dashboard')}
               className="text-sm text-primary hover:text-primary-dark"
             >
               查看详情 →
             </button>
           </div>
-          {trendLoading ? (
-            <div className="h-48 animate-pulse bg-gray-50 rounded-lg" />
-          ) : trendData && trendData.length > 0 ? (
-            <ReactECharts
-              option={{
-                tooltip: {
-                  trigger: 'axis',
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  borderColor: '#E5E5E5',
-                  textStyle: { color: '#333' },
-                },
-                legend: {
-                  data: ['反馈数量', '平均评分'],
-                  top: 0,
-                  textStyle: { color: '#666', fontSize: 11 },
-                },
-                grid: { left: '3%', right: '4%', bottom: '3%', top: '25%', containLabel: true },
-                xAxis: {
-                  type: 'category',
-                  boundaryGap: false,
-                  data: trendData.map((d) => d.date?.slice(5) ?? ''),
-                  axisLine: { lineStyle: { color: '#E5E5E5' } },
-                  axisLabel: { color: '#666', fontSize: 10 },
-                },
-                yAxis: [
-                  {
-                    type: 'value',
-                    name: '数量',
-                    splitLine: { lineStyle: { color: '#F0F0F0' } },
-                    axisLine: { show: false },
-                    axisLabel: { color: '#666', fontSize: 10 },
-                  },
-                  {
-                    type: 'value',
-                    name: '评分',
-                    min: 0,
-                    max: 5,
-                    splitLine: { show: false },
-                    axisLine: { show: false },
-                    axisLabel: { color: '#666', fontSize: 10 },
-                  },
-                ],
-                series: [
-                  {
-                    name: '反馈数量',
-                    type: 'line',
-                    smooth: true,
-                    symbol: 'circle',
-                    symbolSize: 6,
-                    lineStyle: { color: '#FF6033', width: 2 },
-                    itemStyle: { color: '#FF6033' },
-                    areaStyle: {
-                      color: {
-                        type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
-                        colorStops: [
-                          { offset: 0, color: 'rgba(255, 96, 51, 0.3)' },
-                          { offset: 1, color: 'rgba(255, 96, 51, 0)' },
-                        ],
-                      },
-                    },
-                    data: trendData.map((d) => d.count),
-                  },
-                  {
-                    name: '平均评分',
-                    type: 'line',
-                    smooth: true,
-                    yAxisIndex: 1,
-                    symbol: 'diamond',
-                    symbolSize: 6,
-                    lineStyle: { color: '#1890FF', width: 2 },
-                    itemStyle: { color: '#1890FF' },
-                    data: trendData.map((d) => d.avg_rating),
-                  },
-                ],
-              }}
-              style={{ height: 180 }}
-            />
-          ) : (
-            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-400">近7天反馈趋势</p>
-            </div>
-          )}
+          <TrendChart
+            data={trendData?.count_trend ?? []}
+            type="count"
+            loading={trendLoading}
+            height={180}
+          />
         </div>
 
         {/* AI Summary */}
@@ -255,18 +253,75 @@ export function Workbench() {
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-5 h-5 text-primary" />
             <h3 className="font-medium text-gray-800">AI 摘要</h3>
+            {analysisLoading && (
+              <span className="text-xs text-white animate-pulse bg-[#FF6033] px-2 py-0.5 rounded-full">
+                生成中...
+              </span>
+            )}
           </div>
-          {aiSummary ? (
-            <div>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                {aiSummary.summary}
-              </p>
-              <p className="text-xs text-gray-400 mt-3">
-                分析时间: {dayjs(aiSummary.generated_at).format('MM-DD HH:mm')} · 已分析 {aiSummary.analyzed_count} 条反馈
-              </p>
+          {analysisStatus === 'idle' ? (
+            <div className="text-center py-6">
+              <p className="text-sm text-gray-400 mb-2">暂无摘要数据</p>
+              <p className="text-xs text-gray-400">点击快捷入口「AI 分析」生成</p>
             </div>
-          ) : (
-            <p className="text-sm text-gray-400">暂无摘要数据</p>
+          ) : aiSummary ? (() => {
+              const parsed = parseSummaryText(aiSummary)
+              return (
+                <div className="space-y-3">
+                  {parsed.satisfaction && (
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium text-[#FF6033] bg-[#FFF1F0] px-2 py-0.5 rounded">整体满意度</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{parsed.satisfaction}</p>
+                    </div>
+                  )}
+                  {(parsed.positive ?? []).length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">正面体验</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {parsed.positive?.slice(0, 2).map((item, i) => (
+                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                            <span className="text-green-500 mt-0.5">👍</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {(parsed.negative ?? []).length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded">突出不满</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {parsed.negative?.slice(0, 2).map((item, i) => (
+                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                            <span className="text-red-400 mt-0.5">👎</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {!parsed.satisfaction && !(parsed.positive ?? []).length && !(parsed.negative ?? []).length && (
+                    <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">{aiSummary}</p>
+                  )}
+                  {analyzedCount > 0 && (
+                    <p className="text-xs text-gray-400">
+                      已分析 {analyzedCount} 条反馈
+                    </p>
+                  )}
+                </div>
+              )
+            })() : (
+            <div className="animate-pulse space-y-2">
+              <div className="h-4 bg-gray-100 rounded w-full" />
+              <div className="h-4 bg-gray-100 rounded w-5/6" />
+              <div className="h-4 bg-gray-100 rounded w-4/6" />
+            </div>
           )}
         </div>
 
@@ -276,26 +331,26 @@ export function Workbench() {
             <ListTodo className="w-5 h-5 text-primary" />
             <h3 className="font-medium text-gray-800">快捷入口</h3>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <button
-              onClick={() => navigate('/feedbacks')}
-              className="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors"
+              onClick={() => navigate('/feedbacks#list')}
+              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg hover:border-[#FF6033] hover:bg-[#FFF8F0] transition-colors"
             >
-              <ListTodo className="w-5 h-5 text-primary" />
+              <ListTodo className="w-6 h-6 text-[#FF6033]" />
               <span className="text-sm text-gray-700">反馈列表</span>
             </button>
             <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors"
+              onClick={() => navigate('/feedbacks#dashboard')}
+              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg hover:border-[#FF6033] hover:bg-[#FFF8F0] transition-colors"
             >
-              <BarChart3 className="w-5 h-5 text-primary" />
+              <BarChart3 className="w-6 h-6 text-[#FF6033]" />
               <span className="text-sm text-gray-700">数据仪表盘</span>
             </button>
             <button
-              onClick={() => navigate('/ai-analysis')}
-              className="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-primary hover:bg-primary-light transition-colors"
+              onClick={() => navigate('/feedbacks#ai')}
+              className="flex flex-col items-center gap-2 p-4 border border-gray-200 rounded-lg hover:border-[#FF6033] hover:bg-[#FFF8F0] transition-colors"
             >
-              <Sparkles className="w-5 h-5 text-primary" />
+              <Sparkles className="w-6 h-6 text-[#FF6033]" />
               <span className="text-sm text-gray-700">AI 分析</span>
             </button>
           </div>

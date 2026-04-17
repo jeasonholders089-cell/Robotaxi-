@@ -15,7 +15,7 @@ from app.schemas.stats import (
     AISuggestionsResponse,
 )
 from app.services.ai_service import AIService, start_analysis_task
-from app.services.analysis_task_store import get_task
+from app.services.analysis_task_store import get_task, sync_task_from_db, get_task_from_db
 
 router = APIRouter(prefix="/ai", tags=["AI Analysis"])
 
@@ -207,8 +207,14 @@ async def get_analysis_result(
     Get AI analysis task result.
 
     Returns the analysis result including summary, problems, and suggestions.
+    First checks in-memory store, then falls back to database.
     """
     task = get_task(task_id)
+
+    # If not in memory, try loading from database
+    if not task:
+        sync_task_from_db(task_id)
+        task = get_task(task_id)
 
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")

@@ -151,7 +151,7 @@ export function AiAnalysis() {
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
                     {!problem.is_existing && (
-                      <span className="text-xs text-purple-600 font-medium">🆕</span>
+                      <span className="text-xs text-purple-600 font-medium">[新]</span>
                     )}
                     <span className="text-sm text-gray-700">{problem.name}</span>
                   </div>

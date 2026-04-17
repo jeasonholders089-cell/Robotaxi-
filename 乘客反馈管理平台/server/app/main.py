@@ -1,5 +1,6 @@
 """FastAPI application entry point."""
 
+import asyncio
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -8,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.database import close_db, init_db
+from app.services.analysis_task_store import initiate_graceful_shutdown, wait_for_tasks_to_complete
 
 
 @asynccontextmanager
@@ -16,7 +18,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Startup
     await init_db()
     yield
-    # Shutdown
+    # Shutdown - wait for background analysis tasks to complete
+    initiate_graceful_shutdown()
+    # Give tasks up to 30 seconds to finish gracefully
+    await wait_for_tasks_to_complete(timeout=30.0)
     await close_db()
 
 

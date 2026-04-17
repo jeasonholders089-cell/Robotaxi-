@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import ReactECharts from 'echarts-for-react'
-import type { EChartsOption } from 'echarts'
+import type { ECharts, EChartsOption } from 'echarts'
 
 interface PieChartData {
   name: string
@@ -13,13 +13,17 @@ interface BarChartData {
 }
 
 interface DistributionChartProps {
-  type: 'pie' | 'bar' | 'horizontalBar' | 'rosePie'
+  type: 'pie' | 'bar' | 'horizontalBar' | 'rosePie' | 'heatmap'
   data: PieChartData[] | BarChartData[]
   title: string
   loading?: boolean
   height?: number
   colors?: string[]
-  colorScheme?: 'lightness' | 'saturation' | 'morandi' | 'orange' | 'transparency'
+  colorScheme?: 'lightness' | 'saturation' | 'morandi' | 'orange' | 'transparency' | 'vivid'
+}
+
+export interface DistributionChartRef {
+  getEchartsInstance: () => ECharts | undefined
 }
 
 const defaultColors = [
@@ -115,7 +119,7 @@ const getColors = (colorScheme: 'lightness' | 'saturation' | 'morandi' | 'orange
   }
 }
 
-export function DistributionChart({
+export const DistributionChart = forwardRef<DistributionChartRef, DistributionChartProps>(({
   type,
   data,
   title,
@@ -123,7 +127,13 @@ export function DistributionChart({
   height = 280,
   colors = defaultColors,
   colorScheme = 'lightness',
-}: DistributionChartProps) {
+}, ref) => {
+  const chartRef = useRef<ECharts>(null)
+
+  useImperativeHandle(ref, () => ({
+    getEchartsInstance: () => chartRef.current,
+  }))
+
   if (loading) {
     return (
       <div className="card">
@@ -275,9 +285,12 @@ export function DistributionChart({
       const chartColors = getColors(colorScheme)
 
       // 根据数值范围分配颜色（城市分布使用）
-      const step = 5 // 每5个单位一个梯度
+      // 使用更少但对比度更高的颜色：每10个单位一个梯度，只取间隔较大的颜色
+      const step = 10
+      const colorIndices = [0, 3, 6, 9, 12, 15, 18] // 间隔取色，差异更大
       const getColorByValue = (value: number) => {
-        const colorIndex = Math.min(Math.floor(value / step), chartColors.length - 1)
+        const level = Math.floor(value / step)
+        const colorIndex = colorIndices[Math.min(level, colorIndices.length - 1)]
         return chartColors[colorIndex]
       }
 
@@ -343,6 +356,70 @@ export function DistributionChart({
                 color: getColorByValue(item.value),
               },
             })),
+          },
+        ],
+      }
+    }
+
+    // heatmap - 时段分布热力图
+    if (type === 'heatmap') {
+      const heatmapData = data as BarChartData[]
+      return {
+        tooltip: {
+          trigger: 'axis',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderColor: '#E5E5E5',
+          textStyle: { color: '#333' },
+          axisPointer: { type: 'shadow' },
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          top: '3%',
+          containLabel: true,
+        },
+        xAxis: {
+          type: 'category',
+          data: heatmapData.map((item) => item.name),
+          axisLine: { lineStyle: { color: '#E5E5E5' } },
+          axisLabel: { color: '#666', fontSize: 11, rotate: 30 },
+        },
+        yAxis: {
+          type: 'category',
+          data: ['时段'],
+          axisLine: { lineStyle: { color: '#E5E5E5' } },
+          axisLabel: { color: '#666', fontSize: 11 },
+        },
+        visualMap: {
+          min: 0,
+          max: Math.max(...heatmapData.map((d) => d.value), 1),
+          calculable: true,
+          orient: 'vertical',
+          right: '2%',
+          top: 'center',
+          itemWidth: 10,
+          itemHeight: 120,
+          textStyle: { color: '#666', fontSize: 10 },
+          inRange: {
+            color: ['#FFF7F5', '#FFD4C2', '#FFB08C', '#FF7744', '#FF6033', '#E55A2B'],
+          },
+        },
+        series: [
+          {
+            type: 'heatmap',
+            data: heatmapData.map((item, index) => [index, 0, item.value]),
+            label: {
+              show: true,
+              color: '#fff',
+              fontSize: 10,
+            },
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
           },
         ],
       }
@@ -420,7 +497,7 @@ export function DistributionChart({
   return (
     <div className="card">
       <h3 className="text-sm font-medium text-gray-700 mb-4">{title}</h3>
-      <ReactECharts option={getOption()} style={{ height }} />
+      <ReactECharts ref={chartRef} option={getOption()} style={{ height }} />
     </div>
   )
-}
+})

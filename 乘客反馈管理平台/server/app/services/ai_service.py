@@ -591,6 +591,12 @@ async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> No
             print(f"Step 4 FAILED: {e}, trace={traceback.format_exc()[:200]}", file=sys.stderr)
             problems_result = {"categories": [], "top_problems": []}
         sys.stderr.flush()
+
+        # Fallback: if categories still empty, generate from data
+        if not problems_result.get("categories"):
+            print("Step 4: Using fallback category generation", file=sys.stderr)
+            sys.stderr.flush()
+            problems_result = _generate_fallback_categories(cleaned_data, stats)
         update_task_progress(task_id, 85)
 
         # Step 5: Generate suggestions (85-100%)
@@ -629,6 +635,84 @@ async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> No
         set_task_error(task_id, error_detail)
     finally:
         unregister_running_task(task_id)
+
+
+def _generate_fallback_categories(cleaned_data: List[Dict[str, Any]], stats: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Generate problem categories from feedback data as fallback when AI fails.
+    """
+    # Predefined categories with keywords to match
+    category_keywords = {
+        "行驶体验": ["变道", "刹车", "加速", "停车", "行驶", "车道", "转弯", "方向盘", "自动驾驶"],
+        "车内环境": ["温度", "空调", "暖气", "噪音", "脏", "清洁", "座位", "座椅", "舒适", "振动", "晃"],
+        "接驾体验": ["等待", "等候", "接驾", "上车", "下车", "司机", "响应", "到达", "久等"],
+        "路线规划": ["导航", "路线", "拥堵", "红灯", "堵车", "路线规划", "错过", "路口"],
+        "安全感受": ["安全带", "安全", "危险", "紧急", "预警", "碰撞", "事故"],
+        "服务态度": ["客服", "服务", "态度", "投诉", "回复", "响应", "解决", "沟通"],
+    }
+
+    # Initialize category counters
+    category_data: Dict[str, Dict[str, Any]] = {
+        cat: {"count": 0, "negative_count": 0, "quotes": [], "issues": set()}
+        for cat in category_keywords
+    }
+    category_data["其他"] = {"count": 0, "negative_count": 0, "quotes": [], "issues": set()}
+
+    for fb in cleaned_data:
+        text = fb.get("feedback_text", "")
+        rating = fb.get("rating", 0)
+        is_negative = rating <= 2
+
+        # Match categories
+        matched = False
+        for cat, keywords in category_keywords.items():
+            for kw in keywords:
+                if kw in text:
+                    category_data[cat]["count"] += 1
+                    if is_negative:
+                        category_data[cat]["negative_count"] += 1
+                    # Extract quote (up to 50 chars)
+                    if len(category_data[cat]["quotes"]) < 3:
+                        category_data[cat]["quotes"].append(text[:50])
+                    matched = True
+                    break
+            if matched:
+                break
+
+        if not matched:
+            category_data["其他"]["count"] += 1
+            if is_negative:
+                category_data["其他"]["negative_count"] += 1
+
+    total = len(cleaned_data) or 1
+    total_negative = max(sum(1 for fb in cleaned_data if fb.get("rating", 0) <= 2), 1)
+
+    categories = []
+    for cat, data in category_data.items():
+        if data["count"] > 0:
+            neg_rate = data["negative_count"] / total_negative
+            severity = data["negative_count"] * neg_rate
+            categories.append({
+                "name": cat,
+                "is_existing": True,
+                "count": data["count"],
+                "percentage": data["count"] / total,
+                "negative_rate": neg_rate,
+                "severity_score": severity,
+                "common_issues": list(data["issues"])[:5] if data["issues"] else ["一般问题"],
+                "user_quotes": data["quotes"][:2] if data["quotes"] else [],
+            })
+
+    # Sort by severity descending
+    categories.sort(key=lambda x: x.get("severity_score", 0), reverse=True)
+
+    return {
+        "categories": categories,
+        "top_problems": [
+            {"category": c["name"], "severity_score": c["severity_score"], "problem": c["name"]}
+            for c in categories[:5]
+        ]
+    }
 
 
 async def start_analysis_task(filters: dict, db: AsyncSession) -> str:

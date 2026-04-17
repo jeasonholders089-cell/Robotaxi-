@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { forwardRef, useImperativeHandle, useRef } from 'react'
 import ReactECharts from 'echarts-for-react'
-import type { EChartsOption } from 'echarts'
+import type { ECharts, EChartsOption } from 'echarts'
 import type { TrendData } from '@/types'
 
 interface TrendChartProps {
@@ -10,7 +10,16 @@ interface TrendChartProps {
   height?: number
 }
 
-export function TrendChart({ data, type, loading, height = 300 }: TrendChartProps) {
+export interface TrendChartRef {
+  getEchartsInstance: () => ECharts | undefined
+}
+
+export const TrendChart = forwardRef<TrendChartRef, TrendChartProps>(({ data, type, loading, height = 300 }, ref) => {
+  const chartRef = useRef<ECharts>(null)
+
+  useImperativeHandle(ref, () => ({
+    getEchartsInstance: () => chartRef.current,
+  }))
   if (loading) {
     return (
       <div className="card">
@@ -133,7 +142,7 @@ export function TrendChart({ data, type, loading, height = 300 }: TrendChartProp
       <h3 className="text-sm font-medium text-gray-700 mb-4">
         {type === 'count' ? '反馈数量趋势' : '平均评分趋势'}
       </h3>
-      <ReactECharts option={option} style={{ height }} />
+      <ReactECharts ref={chartRef} option={option} style={{ height }} />
     </div>
   )
-}
+})

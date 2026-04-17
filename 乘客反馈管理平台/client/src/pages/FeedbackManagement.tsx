@@ -1,10 +1,14 @@
 import React, { useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MessageSquare, Star, ThumbsUp, ThumbsDown, Clock, CheckCircle, Sparkles } from 'lucide-react'
-import { StatCard, TrendChart, DistributionChart, FilterBar, FeedbackTable, FeedbackDetail } from '@/components'
+import { StatCard, TrendChart, DistributionChart, FilterBar, FeedbackTable, FeedbackDetail, PDFExportButton } from '@/components'
+import { TrendChartRef } from '@/components/TrendChart'
+import { DistributionChartRef } from '@/components/DistributionChart'
 import { useOverviewStats, useTrendData, useDistributionData, useAnalysisTask } from '@/hooks'
 import { useFilterStore } from '@/stores'
 import { useFeedbacks, useFeedbackDetail, useUpdateFeedback, useBatchUpdateStatus } from '@/hooks'
+import { batchExport } from '@/api/feedback'
+import { usePDFExport } from '@/hooks/usePDFExport'
 import { useNavigation } from '@/components/NavigationContext'
 import type { Feedback } from '@/types'
 
@@ -14,6 +18,17 @@ export function FeedbackManagement() {
   const dashboardRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const aiRef = useRef<HTMLDivElement>(null)
+
+  // Chart refs for PDF export
+  const countTrendRef = useRef<TrendChartRef>(null)
+  const ratingTrendRef = useRef<TrendChartRef>(null)
+  const ratingDistRef = useRef<DistributionChartRef>(null)
+  const typeDistRef = useRef<DistributionChartRef>(null)
+  const cityDistRef = useRef<DistributionChartRef>(null)
+  const routeDistRef = useRef<DistributionChartRef>(null)
+
+  // PDF export
+  const { exportPDF, generating: pdfGenerating } = usePDFExport()
 
   // Scroll spy - 滚动监听，自动更新左侧导航高亮
   useEffect(() => {
@@ -160,6 +175,52 @@ export function FeedbackManagement() {
     await batchUpdateStatus.mutateAsync({ ids: selectedIds, status })
     setSelectedIds([])
     refetch()
+  }
+
+  // 导出反馈列表（Excel/CSV）
+  const [exporting, setExporting] = React.useState(false)
+  const handleExport = async () => {
+    setExporting(true)
+    try {
+      const ids = selectedIds.length > 0 ? selectedIds : undefined
+      const blob = await batchExport(ids, 'excel')
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `反馈列表_${new Date().toISOString().split('T')[0]}.xlsx`
+      link.click()
+      URL.revokeObjectURL(url)
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  // PDF Export handler
+  const handleExportPDF = async () => {
+    await exportPDF({
+      filters: {
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
+        city: filters.city?.[0] || undefined,
+      },
+      stats: stats,
+      trendData: trendData,
+      distributionData: distributionData,
+      analysisResult: aiSummary ? {
+        summary: aiSummary,
+        problems: problems,
+        suggestions: aiSuggestions,
+        analyzed_count: analyzedCount,
+      } : undefined,
+      chartRefs: {
+        countTrend: countTrendRef.current?.getEchartsInstance(),
+        ratingTrend: ratingTrendRef.current?.getEchartsInstance(),
+        ratingDistribution: ratingDistRef.current?.getEchartsInstance(),
+        typeDistribution: typeDistRef.current?.getEchartsInstance(),
+        cityDistribution: cityDistRef.current?.getEchartsInstance(),
+        routeDistribution: routeDistRef.current?.getEchartsInstance(),
+      },
+    })
   }
 
   // AI Analysis handlers
@@ -317,8 +378,19 @@ export function FeedbackManagement() {
             <button onClick={() => handleBatchUpdateStatus('resolved')} disabled={selectedIds.length === 0} className="btn-secondary text-sm whitespace-nowrap">
               <span>批量标记已解决</span>
             </button>
-            <button className="btn-secondary text-sm whitespace-nowrap">
-              <span>导出</span>
+            <button
+              onClick={handleExport}
+              disabled={exporting || data?.total === 0}
+              className="btn-secondary text-sm whitespace-nowrap flex items-center gap-2"
+            >
+              {exporting ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span>导出中...</span>
+                </>
+              ) : (
+                <span>导出{selectedIds.length > 0 ? `（${selectedIds.length}条）` : ''}</span>
+              )}
             </button>
           </div>
         </div>
@@ -341,7 +413,13 @@ export function FeedbackManagement() {
 
       {/* ===== 数据仪表盘 ===== */}
       <div ref={dashboardRef} id="dashboard" className="space-y-6 scroll-mt-20">
-        <h2 className="text-lg font-medium text-gray-800">数据仪表盘</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-medium text-gray-800">数据仪表盘</h2>
+          <PDFExportButton
+            onExport={handleExportPDF}
+            loading={pdfGenerating}
+          />
+        </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -416,11 +494,13 @@ export function FeedbackManagement() {
         {/* Trend Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TrendChart
+            ref={countTrendRef}
             data={trendData?.count_trend ?? []}
             type="count"
             loading={trendLoading}
           />
           <TrendChart
+            ref={ratingTrendRef}
             data={trendData?.count_trend ?? []}
             type="rating"
             loading={trendLoading}
@@ -430,6 +510,7 @@ export function FeedbackManagement() {
         {/* Distribution Charts - 橙色色系 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <DistributionChart
+            ref={ratingDistRef}
             type="rosePie"
             data={ratingDistribution}
             title="评分分布"
@@ -437,6 +518,7 @@ export function FeedbackManagement() {
             colorScheme="orange"
           />
           <DistributionChart
+            ref={typeDistRef}
             type="pie"
             data={typeDistribution}
             title="反馈类型分布"
@@ -447,6 +529,7 @@ export function FeedbackManagement() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <DistributionChart
+            ref={cityDistRef}
             type="bar"
             data={cityDistribution}
             title="城市分布 Top10"
@@ -454,6 +537,7 @@ export function FeedbackManagement() {
             colorScheme="vivid"
           />
           <DistributionChart
+            ref={routeDistRef}
             type="horizontalBar"
             data={routeDistribution}
             title="路线分布 Top10"
@@ -553,7 +637,7 @@ export function FeedbackManagement() {
                       <ul className="space-y-1">
                         {parsed.positive.map((item, i) => (
                           <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                            <span className="text-green-500 mt-0.5">👍</span>
+                            <span className="text-green-500 mt-0.5 font-bold">+</span>
                             {item}
                           </li>
                         ))}
@@ -568,7 +652,7 @@ export function FeedbackManagement() {
                       <ul className="space-y-1">
                         {parsed.negative.map((item, i) => (
                           <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
-                            <span className="text-red-400 mt-0.5">👎</span>
+                            <span className="text-red-400 mt-0.5 font-bold">-</span>
                             {item}
                           </li>
                         ))}
@@ -626,7 +710,7 @@ export function FeedbackManagement() {
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
                         {!problem.is_existing && (
-                          <span className="text-xs text-purple-600 font-medium">🆕新分类</span>
+                          <span className="text-xs text-purple-600 font-medium">[新分类]</span>
                         )}
                         <span className="text-sm text-gray-700">{problem.name}</span>
                       </div>
