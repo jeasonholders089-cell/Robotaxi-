@@ -385,13 +385,13 @@ class AIService:
 def is_emoji_only(text: str) -> bool:
     """Check if text contains only emoji characters."""
     emoji_pattern = re.compile(
-        "[\U0001F600-\U0001F64F"  # emoticons
-        "\U0001F300-\U0001F5FF"  # symbols & pictographs
-        "\U0001F680-\U0001F6FF"  # transport & map symbols
-        "\U0001F1E0-\U0001F1FF"  # flags
-        "\U00002702-\U000027B0"
-        "\U000024C2-\U0001F251"
-        "]+"
+        "[\U0001F600-\U0001F64F]"  # emoticons
+        "|[\U0001F300-\U0001F5FF]"  # symbols & pictographs
+        "|[\U0001F680-\U0001F6FF]"  # transport & map symbols
+        "|[\U0001F1E0-\U0001F1FF]"  # flags
+        "|[\U00002702-\U000027B0]"  # dingbats
+        "|[\U00002460-\U000024FF]"  # enclosed alphanumerics
+        "|[\U0001F251]"  # Japanese "item" counter
     )
     cleaned = emoji_pattern.sub("", text).strip()
     return len(cleaned) == 0

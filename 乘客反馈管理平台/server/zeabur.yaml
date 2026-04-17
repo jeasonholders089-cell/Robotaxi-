@@ -1,0 +1,28 @@
+# Zeabur Service Configuration - Backend
+kind: Service
+spec:
+  name: robotaxi-api
+  runtime: docker
+  port: 8080
+  env:
+    - key: DATABASE_URL
+      value: "mysql+aiomysql://root:Pot7iJ6bqry43h9eulx0ADmfjza51E28@43.130.101.134:31891/zeabur"
+    - key: MINIMAX_API_KEY
+      type: secret
+      required: true
+    - key: MINIMAX_BASE_URL
+      value: "https://api.minimaxi.com/anthropic/v1"
+    - key: AI_PROVIDER
+      value: "minimax"
+    - key: AI_TIMEOUT
+      value: "300"
+    - key: DEBUG
+      value: "false"
+    - key: LOG_LEVEL
+      value: "info"
+    - key: CORS_ORIGINS
+      value: "*"
+    - key: APP_NAME
+      value: "Robotaxi Feedback Platform"
+    - key: API_PREFIX
+      value: "/api"

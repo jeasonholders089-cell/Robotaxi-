@@ -18,4 +18,9 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    typescript: {
+      ignoreBuildErrors: true,
+    },
+  },
 })

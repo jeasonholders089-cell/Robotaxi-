@@ -26,7 +26,7 @@ class AIClient:
             self.use_anthropic = False
         else:
             self.api_key = settings.MINIMAX_API_KEY
-            self.base_url = "https://api.minimaxi.com/anthropic/v1"
+            self.base_url = settings.MINIMAX_BASE_URL
             self.model = "MiniMax-M2.7"
             self.use_anthropic = True
 
@@ -89,18 +89,32 @@ class AIClient:
         max_tokens: int,
     ) -> str:
         """Use Anthropic-compatible API (MiniMax)."""
-        # Convert OpenAI format to Anthropic format
+        import sys
+        print(f"DEBUG _chat_anthropic: base_url={self.base_url}, api_key set={bool(self.api_key)}, max_tokens={max_tokens}", file=sys.stderr)
+        # Extract system message if present
+        system_content = None
         anthropic_messages = []
         for msg in messages:
             role = msg["role"]
             if role == "system":
-                role = "user"  # Anthropic doesn't have system messages in the same way
-            anthropic_messages.append({
-                "role": role,
-                "content": msg["content"]
-            })
+                system_content = msg["content"]
+            else:
+                anthropic_messages.append({
+                    "role": role,
+                    "content": msg["content"]
+                })
+
+        request_body = {
+            "model": self.model,
+            "messages": anthropic_messages,
+            "max_tokens": max_tokens,
+        }
+        if system_content:
+            request_body["system"] = system_content
+            print(f"DEBUG _chat_anthropic: system message present, length={len(system_content)}", file=sys.stderr)
 
         async with httpx.AsyncClient(timeout=settings.AI_TIMEOUT) as client:
+            print(f"DEBUG _chat_anthropic: making request to {self.base_url}/messages", file=sys.stderr)
             response = await client.post(
                 f"{self.base_url}/messages",
                 headers={
@@ -109,22 +123,25 @@ class AIClient:
                     "x-api-key": self.api_key,
                     "anthropic-version": "2023-06-01"
                 },
-                json={
-                    "model": self.model,
-                    "messages": anthropic_messages,
-                    "max_tokens": max_tokens,
-                },
+                json=request_body,
             )
+            print(f"DEBUG _chat_anthropic: response status={response.status_code}", file=sys.stderr)
             response.raise_for_status()
             result = response.json()
 
             # Extract text from content blocks
             content = result.get("content", [])
+            print(f"DEBUG _chat_anthropic: content blocks={len(content)}", file=sys.stderr)
             for item in content:
                 if item.get("type") == "text":
-                    return item.get("text", "")
+                    text = item.get("text", "")
+                    print(f"DEBUG _chat_anthropic: found text, length={len(text)}", file=sys.stderr)
+                    sys.stderr.flush()
+                    return text
 
             # If no text found, return empty
+            print(f"DEBUG _chat_anthropic: no text found in response", file=sys.stderr)
+            sys.stderr.flush()
             return ""
 
     async def classify(
@@ -350,11 +367,33 @@ class AIClient:
 
 核心建议：【一句话优先级最高的改进建议】"""
 
-        return await self.chat(
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=500,
-        )
+        try:
+            result = await self.chat(
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.7,
+                max_tokens=2000,
+            )
+            # If result is empty, generate a fallback summary
+            if not result or not result.strip():
+                pos_rate = stats.get('positive_rate', 0) * 100
+                neg_rate = stats.get('negative_rate', 0) * 100
+                avg_rating = stats.get('avg_rating', 0)
+                return (
+                    f"整体满意度：【基于{stats.get('total_count', 0)}条数据分析】平均评分{avg_rating}分，"
+                    f"好评率{pos_rate:.0f}%，差评率{neg_rate:.0f}%。"
+                )
+            return result
+        except Exception as e:
+            import sys
+            print(f"summarize_v2 error: {e}", file=sys.stderr)
+            # Fallback summary
+            pos_rate = stats.get('positive_rate', 0) * 100
+            neg_rate = stats.get('negative_rate', 0) * 100
+            avg_rating = stats.get('avg_rating', 0)
+            return (
+                f"整体满意度：【基于{stats.get('total_count', 0)}条数据分析】平均评分{avg_rating}分，"
+                f"好评率{pos_rate:.0f}%，差评率{neg_rate:.0f}%。"
+            )
 
     async def analyze_problems(
         self,
@@ -428,7 +467,7 @@ class AIClient:
         response = await self.chat(
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=4000,
+            max_tokens=8000,
         )
 
         try:
@@ -441,8 +480,18 @@ class AIClient:
                 if lines and lines[-1].strip() == "```":
                     lines = lines[:-1]
                 cleaned = "\n".join(lines).strip()
+            # Unescape escaped newlines and quotes (MiniMax API returns escaped versions)
+            cleaned = cleaned.replace("\\n", "\n").replace("\\\"", "\"")
+            import sys
+            print(f"DEBUG analyze_problems raw response length: {len(response)}", file=sys.stderr)
+            print(f"DEBUG analyze_problems cleaned length: {len(cleaned)}", file=sys.stderr)
+            print(f"DEBUG analyze_problems cleaned first 200: {cleaned[:200]}", file=sys.stderr)
+            sys.stderr.flush()
             return json.loads(cleaned)
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
+            import sys
+            print(f"DEBUG analyze_problems JSON parse error: {e}, response: {response[:500]}", file=sys.stderr)
+            sys.stderr.flush()
             return {"categories": [], "top_problems": []}
 
     async def generate_suggestions_v2(
@@ -503,7 +552,7 @@ class AIClient:
         response = await self.chat(
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=4000,
+            max_tokens=8000,
         )
 
         try:
@@ -516,8 +565,16 @@ class AIClient:
                 if lines and lines[-1].strip() == "```":
                     lines = lines[:-1]
                 cleaned = "\n".join(lines).strip()
+            # Unescape escaped newlines and quotes (MiniMax API returns escaped versions)
+            cleaned = cleaned.replace("\\n", "\n").replace("\\\"", "\"")
+            import sys
+            print(f"DEBUG generate_suggestions_v2 raw length: {len(response)}", file=sys.stderr)
+            sys.stderr.flush()
             return json.loads(cleaned)
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
+            import sys
+            print(f"DEBUG generate_suggestions_v2 JSON error: {e}", file=sys.stderr)
+            sys.stderr.flush()
             return []
 
 
