@@ -408,9 +408,9 @@ class FeedbackService:
         city: Optional[str] = None,
         rating_min: Optional[int] = None,
         rating_max: Optional[int] = None,
-        status: Optional[str] = None,
+        status: Optional[List[str]] = None,
         keyword: Optional[str] = None,
-        feedback_type: Optional[str] = None,
+        feedback_type: Optional[List[str]] = None,
         max_count: int = 2000,
     ) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         """
@@ -424,6 +424,7 @@ class FeedbackService:
         Returns:
             Tuple of (feedbacks list as dicts, stats dict)
         """
+        import json
         conditions = []
 
         if start_date:
@@ -451,13 +452,17 @@ class FeedbackService:
             conditions.append(Feedback.rating <= rating_max)
 
         if status:
-            conditions.append(Feedback.status == status)
+            # status is a list of status values
+            conditions.append(Feedback.status.in_(status))
 
         if keyword:
             conditions.append(Feedback.feedback_text.like(f"%{keyword}%"))
 
         if feedback_type:
-            conditions.append(Feedback.feedback_type.contains(feedback_type))
+            # feedback_type is a JSON list column, check if any of the input types are in the list
+            # Use contains with each type in the list
+            type_conditions = [Feedback.feedback_type.contains(json.dumps([ft])) for ft in feedback_type]
+            conditions.append(or_(*type_conditions))
 
         # Check if any filters are applied
         has_filters = len(conditions) > 0

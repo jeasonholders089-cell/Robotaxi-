@@ -1,18 +1,58 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MessageSquare, Star, ThumbsUp, ThumbsDown, Clock, CheckCircle, Sparkles, RefreshCw, Copy } from 'lucide-react'
+import { MessageSquare, Star, ThumbsUp, ThumbsDown, Clock, CheckCircle, Sparkles } from 'lucide-react'
 import { StatCard, TrendChart, DistributionChart, FilterBar, FeedbackTable, FeedbackDetail } from '@/components'
-import { useOverviewStats, useTrendData, useDistributionData, useAISummary, useAISuggestions, useRefreshAISummary } from '@/hooks'
+import { useOverviewStats, useTrendData, useDistributionData, useAnalysisTask } from '@/hooks'
 import { useFilterStore } from '@/stores'
 import { useFeedbacks, useFeedbackDetail, useUpdateFeedback, useBatchUpdateStatus } from '@/hooks'
+import { useNavigation } from '@/components/NavigationContext'
 import type { Feedback } from '@/types'
-import dayjs from 'dayjs'
 
 export function FeedbackManagement() {
   const navigate = useNavigate()
+  const { setActiveSection } = useNavigation()
   const dashboardRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const aiRef = useRef<HTMLDivElement>(null)
+
+  // Scroll spy - 滚动监听，自动更新左侧导航高亮
+  useEffect(() => {
+    const sectionRefs = [
+      { id: 'list', ref: listRef },
+      { id: 'dashboard', ref: dashboardRef },
+      { id: 'ai', ref: aiRef },
+    ]
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // 找出所有正在交叉的条目
+        const intersectingEntries = entries.filter((entry) => entry.isIntersecting)
+        if (intersectingEntries.length > 0) {
+          // 取第一个正在交叉的条目（最靠上的）
+          const topEntry = intersectingEntries.reduce((prev, curr) => {
+            return prev.boundingClientRect.top < curr.boundingClientRect.top ? prev : curr
+          })
+          const sectionId = sectionRefs.find((s) => s.ref.current === topEntry.target)?.id
+          if (sectionId) {
+            setActiveSection(sectionId)
+          }
+        }
+      },
+      {
+        root: null,
+        rootMargin: '-80px 0px -60% 0px', // 顶部留 80px，底部保留 60% 视口高度
+        threshold: 0,
+      }
+    )
+
+    sectionRefs.forEach(({ ref }) => {
+      if (ref.current) {
+        observer.observe(ref.current)
+      }
+    })
+
+    return () => observer.disconnect()
+  }, [setActiveSection])
 
   // Filter store
   const { filters } = useFilterStore()
@@ -36,21 +76,34 @@ export function FeedbackManagement() {
   // Distribution data with filters
   const { data: distributionData, isLoading: distLoading } = useDistributionData(apiFilters)
 
-  // AI Summary with filters
-  const { data: summary, isLoading: summaryLoading } = useAISummary({
-    ...apiFilters,
-    length: 'medium',
-    max_count: 100,
-  })
+  // AI Analysis Task - v1.5 重构版本
+  const {
+    status: analysisStatus,
+    progress,
+    summary: aiSummary,
+    problems,
+    suggestions: aiSuggestions,
+    analyzedCount,
+    error: analysisError,
+    isLoading: analysisLoading,
+    startAnalysis,
+    reset,
+  } = useAnalysisTask()
 
-  // AI Suggestions with filters
-  const { data: suggestions, isLoading: suggestionsLoading } = useAISuggestions({
-    start_date: filters.startDate || undefined,
-    end_date: filters.endDate || undefined,
-    top_n: 5,
-  })
+  // Check if any filters are applied
+  const hasFilters = Boolean(
+    filters.startDate ||
+    filters.endDate ||
+    (filters.city && filters.city.length > 0) ||
+    filters.ratingMin > 1 ||
+    filters.ratingMax < 5 ||
+    (filters.status && filters.status.length > 0) ||
+    (filters.feedbackType && filters.feedbackType.length > 0) ||
+    filters.keyword
+  )
 
-  const refreshSummary = useRefreshAISummary()
+  // Estimate data count
+  const estimatedCount = hasFilters ? '1,500' : '100'
 
   // Feedback list state
   const [page, setPage] = React.useState(1)
@@ -109,19 +162,16 @@ export function FeedbackManagement() {
     refetch()
   }
 
-  const handleRefresh = async () => {
-    await refreshSummary.mutateAsync({
-      ...apiFilters,
-      length: 'medium',
-      max_count: 100,
-    })
+  // AI Analysis handlers
+  const getAnalysisButtonText = () => {
+    if (analysisLoading) return '分析中...'
+    if (analysisStatus === 'failed') return '重试'
+    // 如果还没有分析过数据，显示"开始分析"
+    if (analysisStatus === 'idle' || !aiSummary) return '开始分析'
+    return '重新分析'
   }
 
-  const handleCopy = () => {
-    if (summary?.summary) {
-      navigator.clipboard.writeText(summary.summary)
-    }
-  }
+  const isAnalyzing = analysisLoading || analysisStatus === 'processing'
 
   // Distribution chart data
   // rating_distribution 来自 trendData，不是 distributionData
@@ -135,7 +185,7 @@ export function FeedbackManagement() {
     value: item.count,
   })) ?? []
 
-  const cityDistribution = distributionData?.city_distribution?.slice(0, 10).map((item) => ({
+  const cityDistribution = distributionData?.city_distribution?.slice(0, 20).map((item) => ({
     name: item.city,
     value: item.count,
   })) ?? []
@@ -156,6 +206,96 @@ export function FeedbackManagement() {
     medium: { label: '中优先级', color: '#FAAD14', bgColor: '#FFFBE6' },
     low: { label: '低优先级', color: '#52C41A', bgColor: '#F6FFED' },
   }
+
+  // ===== AI Summary Structured Parser =====
+  interface ParsedSummary {
+    satisfaction?: string
+    positive?: string[]
+    negative?: string[]
+    coreSuggestion?: string
+  }
+
+  function parseSummaryText(text: string): ParsedSummary {
+    const result: ParsedSummary = {}
+    if (!text || !text.trim()) return result
+
+    // Remove markdown formatting (---, #, etc.)
+    const clean = text.replace(/^#+\s*/gm, '').replace(/---+/g, '').trim()
+    const lines = clean.split('\n').map(l => l.replace(/^\s*[-*]\s*/, '').trim()).filter(Boolean)
+
+    // Find sections by keywords
+    const satisfactionKeywords = ['整体满意度', '满意度', '总体满意度']
+    const positiveKeywords = ['正面体验', '正面反馈', '好评']
+    const negativeKeywords = ['突出不满', '负面反馈', '差评', '主要问题']
+    const suggestionKeyword = '核心建议'
+
+    let currentSection: 'satisfaction' | 'positive' | 'negative' | 'suggestion' | null = null
+    const positiveItems: string[] = []
+    const negativeItems: string[] = []
+
+    for (const line of lines) {
+      const lower = line.toLowerCase()
+
+      if (satisfactionKeywords.some(k => lower.includes(k))) {
+        currentSection = 'satisfaction'
+        const colonIdx = line.indexOf('：')
+        if (colonIdx !== -1) {
+          result.satisfaction = line.slice(colonIdx + 1).replace(/^【|】$/g, '').trim()
+        }
+        continue
+      }
+      if (suggestionKeyword && lower.includes(suggestionKeyword)) {
+        currentSection = 'suggestion'
+        const colonIdx = line.indexOf('：')
+        if (colonIdx !== -1) {
+          result.coreSuggestion = line.slice(colonIdx + 1).replace(/^【|】$/g, '').trim()
+        }
+        continue
+      }
+      if (positiveKeywords.some(k => lower.includes(k))) {
+        currentSection = 'positive'
+        continue
+      }
+      if (negativeKeywords.some(k => lower.includes(k))) {
+        currentSection = 'negative'
+        continue
+      }
+
+      // Collect list items (remove 【】 brackets)
+      const itemText = line.replace(/^【|】$/g, '').trim()
+      if (!itemText || itemText === '正面体验' || itemText === '突出不满') continue
+
+      if (currentSection === 'satisfaction' && !result.satisfaction) {
+        result.satisfaction = itemText
+      } else if (currentSection === 'positive') {
+        positiveItems.push(itemText)
+      } else if (currentSection === 'negative') {
+        negativeItems.push(itemText)
+      }
+    }
+
+    result.positive = positiveItems
+    result.negative = negativeItems
+    return result
+  }
+
+  // ===== Collapsed Section State =====
+  const [problemsExpanded, setProblemsExpanded] = React.useState(false)
+  const [suggestionsExpanded, setSuggestionsExpanded] = React.useState(false)
+
+  // Sort problems by percentage desc, show top 4 when collapsed
+  const sortedProblems = [...(problems ?? [])].sort((a, b) => b.percentage - a.percentage)
+  const displayProblems = problemsExpanded ? sortedProblems : sortedProblems.slice(0, 4)
+
+  // Sort suggestions by priority: high > medium > low, show top 3 when collapsed
+  // Normalize severity to lowercase to handle AI output variations (e.g. "HIGHT" -> "high")
+  const priorityOrder: Record<string, number> = { high: 0, medium: 1, low: 2 }
+  const sortedSuggestions = [...(aiSuggestions ?? [])].sort((a, b) => {
+    const aVal = priorityOrder[String(a.severity ?? '').toLowerCase()] ?? 99
+    const bVal = priorityOrder[String(b.severity ?? '').toLowerCase()] ?? 99
+    return aVal - bVal
+  })
+  const displaySuggestions = suggestionsExpanded ? sortedSuggestions : sortedSuggestions.slice(0, 3)
 
   return (
     <div className="space-y-6">
@@ -287,19 +427,21 @@ export function FeedbackManagement() {
           />
         </div>
 
-        {/* Distribution Charts */}
+        {/* Distribution Charts - 橙色色系 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <DistributionChart
-            type="pie"
+            type="rosePie"
             data={ratingDistribution}
             title="评分分布"
             loading={distLoading}
+            colorScheme="orange"
           />
           <DistributionChart
             type="pie"
             data={typeDistribution}
             title="反馈类型分布"
             loading={distLoading}
+            colorScheme="saturation"
           />
         </div>
 
@@ -309,13 +451,14 @@ export function FeedbackManagement() {
             data={cityDistribution}
             title="城市分布 Top10"
             loading={distLoading}
+            colorScheme="vivid"
           />
           <DistributionChart
             type="horizontalBar"
             data={routeDistribution}
             title="路线分布 Top10"
             loading={distLoading}
-            barColor="#FF6033"
+            colorScheme="transparency"
           />
         </div>
 
@@ -330,66 +473,294 @@ export function FeedbackManagement() {
 
       {/* ===== AI智能分析 ===== */}
       <div ref={aiRef} id="ai" className="space-y-6 scroll-mt-20">
-        <h2 className="text-lg font-medium text-gray-800">AI智能分析</h2>
-
-        {/* AI Summary */}
-        <div className="card">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-primary" />
-            <h3 className="font-medium text-gray-800">AI 摘要</h3>
+        {/* Analysis Header - v1.5 设计 */}
+        <div className={`flex items-center justify-between px-6 py-4 bg-white border border-gray-200 rounded-lg ${isAnalyzing ? 'animate-pulse' : ''}`}>
+          <div className="flex items-center gap-3">
+            <Sparkles className={`w-5 h-5 text-primary ${isAnalyzing ? 'animate-pulse' : ''}`} />
+            <h2 className="text-lg font-semibold text-gray-800">AI 智能分析</h2>
+            {isAnalyzing ? (
+              <span className="text-sm text-primary font-medium animate-pulse">
+                分析中...
+              </span>
+            ) : (
+              <span className="text-sm text-gray-500">
+                基于当前筛选条件，预估 {estimatedCount} 条数据
+              </span>
+            )}
           </div>
+          <button
+            onClick={startAnalysis}
+            disabled={isAnalyzing}
+            className="px-4 py-2 bg-[#FF6033] text-white text-sm font-medium rounded-lg hover:bg-[#FF6033]/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {isAnalyzing && (
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            )}
+            {getAnalysisButtonText()}
+          </button>
+        </div>
 
-          {summaryLoading ? (
-            <div className="animate-pulse"><div className="h-24 bg-gray-100 rounded" /></div>
-          ) : summary ? (
-            <div>
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{summary.summary}</p>
-              <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                <span className="text-xs text-gray-400">
-                  已分析 {summary.analyzed_count} 条反馈 · {dayjs(summary.generated_at).format('MM-DD HH:mm')} 生成
-                </span>
+        {/* Error Display */}
+        {analysisError && (
+          <div className="card bg-red-50 border-red-200">
+            <p className="text-red-600 text-sm">{analysisError}</p>
+          </div>
+        )}
+
+        {/* AI Summary Card */}
+        <div className={`card ${isAnalyzing ? 'ring-2 ring-[#FF6033]/50 shadow-lg shadow-[#FF6033]/40' : ''}`}>
+          <div className="flex items-center gap-2 mb-4">
+            <h3 className="font-medium text-gray-800">AI 摘要</h3>
+            {isAnalyzing && (
+              <span className="text-xs text-white animate-pulse bg-[#FF6033] px-2 py-0.5 rounded-full">
+                正在生成...
+              </span>
+            )}
+          </div>
+          {analysisStatus === 'idle' && !isAnalyzing ? (
+            <p className="text-sm text-gray-400 text-center py-8">
+              点击上方「开始分析」按钮生成摘要
+            </p>
+          ) : isAnalyzing ? (
+            <div className="relative overflow-hidden rounded-lg">
+              <div className="animate-pulse space-y-3">
+                <div className="h-4 bg-gray-100 rounded w-full" />
+                <div className="h-4 bg-gray-100 rounded w-5/6" />
+                <div className="h-4 bg-gray-100 rounded w-4/6" />
+                <div className="h-4 bg-gray-100 rounded w-full" />
+                <div className="h-4 bg-gray-100 rounded w-3/6" />
               </div>
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
             </div>
-          ) : (
+          ) : aiSummary ? (() => {
+              const parsed = parseSummaryText(aiSummary)
+              return (
+                <div className="space-y-4">
+                  {parsed.satisfaction && (
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-[#FF6033] bg-[#FFF1F0] px-2 py-0.5 rounded">整体满意度</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{parsed.satisfaction}</p>
+                    </div>
+                  )}
+                  {parsed.positive && parsed.positive.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded">正面体验</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {parsed.positive.map((item, i) => (
+                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                            <span className="text-green-500 mt-0.5">👍</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {parsed.negative && parsed.negative.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded">突出不满</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {parsed.negative.map((item, i) => (
+                          <li key={i} className="text-sm text-gray-600 flex items-start gap-2">
+                            <span className="text-red-400 mt-0.5">👎</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {parsed.coreSuggestion && (
+                    <div className="bg-[#FFF8F0] rounded-lg p-4 border border-[#FF6033]/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-medium text-[#FF6033] bg-[#FFF1F0] px-2 py-0.5 rounded">核心建议</span>
+                      </div>
+                      <p className="text-sm text-gray-700 leading-relaxed">{parsed.coreSuggestion}</p>
+                    </div>
+                  )}
+                  {!parsed.satisfaction && !parsed.positive?.length && !parsed.negative?.length && !parsed.coreSuggestion && (
+                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{aiSummary}</p>
+                  )}
+                </div>
+              )
+            })() : (
             <p className="text-sm text-gray-400 text-center py-8">暂无摘要数据</p>
           )}
         </div>
 
-        {/* Distribution + Suggestions */}
+        {/* Problem Categories + Suggestions */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <DistributionChart type="pie" data={suggestions?.suggestions?.map((s) => ({ name: s.category, value: s.count })) ?? []} title="问题分类分布" loading={suggestionsLoading} height={320} />
-
-          <div className="card">
-            <h3 className="font-medium text-gray-800 mb-4">产品优化建议</h3>
-            {suggestionsLoading ? (
-              <div className="animate-pulse space-y-3">
-                {[...Array(3)].map((_, i) => (<div key={i} className="h-24 bg-gray-100 rounded" />))}
+          {/* Problem Categories Card */}
+          <div className={`card ${isAnalyzing ? 'ring-2 ring-[#FF6033]/50 shadow-lg shadow-[#FF6033]/40' : ''}`}>
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="font-medium text-gray-800">问题分类分布</h3>
+              {isAnalyzing && (
+                <span className="text-xs text-white animate-pulse bg-[#FF6033] px-2 py-0.5 rounded-full">
+                  分析中...
+                </span>
+              )}
+            </div>
+            {analysisStatus === 'idle' && !isAnalyzing ? (
+              <p className="text-sm text-gray-400 text-center py-8">
+                分析完成后显示问题分类
+              </p>
+            ) : isAnalyzing ? (
+              <div className="relative overflow-hidden rounded-lg">
+                <div className="animate-pulse space-y-3">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="h-8 bg-gray-100 rounded" />
+                  ))}
+                </div>
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
               </div>
-            ) : suggestions?.suggestions && suggestions.suggestions.length > 0 ? (
+            ) : problems && problems.length > 0 ? (
               <div className="space-y-4">
-                {suggestions.suggestions.map((suggestion, index) => {
-                  const config = priorityConfig[suggestion.priority]
+                {displayProblems.map((problem, index) => (
+                  <div key={index} className="animate-fadeIn" style={{ animationDelay: `${index * 100}ms` }}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        {!problem.is_existing && (
+                          <span className="text-xs text-purple-600 font-medium">🆕新分类</span>
+                        )}
+                        <span className="text-sm text-gray-700">{problem.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-400">{(problem.count)}条</span>
+                        <span className="text-sm font-medium text-[#FF6033]">
+                          {(problem.percentage * 100).toFixed(0)}%
+                        </span>
+                      </div>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${(problem.percentage * 100).toFixed(0)}%`,
+                          backgroundColor: problem.is_existing ? '#FF6033' : '#975FE4',
+                        }}
+                      />
+                    </div>
+                    {/* 问题描述 */}
+                    {problem.description && (
+                      <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{problem.description}</p>
+                    )}
+                    {/* 常见问题列表 */}
+                    {problem.common_issues && problem.common_issues.length > 0 && (
+                      <div className="mt-1.5 pl-2 border-l-2 border-gray-100">
+                        <p className="text-xs text-gray-400 mb-1">典型问题：</p>
+                        <ul className="space-y-0.5">
+                          {problem.common_issues.slice(0, 3).map((issue: string, i: number) => (
+                            <li key={i} className="text-xs text-gray-600 flex items-start gap-1">
+                              <span className="text-[#FF6033] mt-0.5">·</span>
+                              {issue}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {/* 用户原声 */}
+                    {problem.user_quotes && problem.user_quotes.length > 0 && (
+                      <p className="text-xs text-gray-400 italic mt-1.5 bg-gray-50 p-2 rounded">
+                        "{problem.user_quotes[0]}"
+                      </p>
+                    )}
+                  </div>
+                ))}
+                {problems.length > 4 && (
+                  <button
+                    onClick={() => setProblemsExpanded(!problemsExpanded)}
+                    className="w-full text-center text-sm text-primary hover:text-primary/80 py-2 border border-dashed border-gray-200 rounded-lg"
+                  >
+                    {problemsExpanded ? '收起' : `查看全部 ${problems.length} 个分类`}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 text-center py-8">暂无问题分类数据</p>
+            )}
+          </div>
+
+          {/* Suggestions Card */}
+          <div className={`card ${isAnalyzing ? 'ring-2 ring-[#FF6033]/50 shadow-lg shadow-[#FF6033]/40' : ''}`}>
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="font-medium text-gray-800">产品优化建议</h3>
+              {isAnalyzing && (
+                <span className="text-xs text-white animate-pulse bg-[#FF6033] px-2 py-0.5 rounded-full">
+                  生成中...
+                </span>
+              )}
+            </div>
+            {analysisStatus === 'idle' && !isAnalyzing ? (
+              <p className="text-sm text-gray-400 text-center py-8">
+                分析完成后显示优化建议
+              </p>
+            ) : isAnalyzing ? (
+              <div className="relative overflow-hidden rounded-lg">
+                <div className="animate-pulse space-y-3">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="h-20 bg-gray-100 rounded" />
+                  ))}
+                </div>
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+              </div>
+            ) : aiSuggestions && aiSuggestions.length > 0 ? (
+              <div className="space-y-4">
+                {displaySuggestions.map((suggestion, index) => {
+                  const config = priorityConfig[suggestion.severity] || priorityConfig.medium
                   return (
-                    <div key={index} className="p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
-                      <div className="flex items-start gap-3">
-                        <span className="px-2 py-0.5 rounded text-xs font-medium" style={{ backgroundColor: config.bgColor, color: config.color }}>
+                    <div
+                      key={index}
+                      className="p-3 rounded-lg border border-gray-100 animate-fadeIn"
+                      style={{ animationDelay: `${index * 100}ms` }}
+                    >
+                      <div className="flex items-start gap-2 mb-2">
+                        <span
+                          className="px-2 py-0.5 rounded text-xs font-medium shrink-0"
+                          style={{
+                            backgroundColor: config.bgColor,
+                            color: config.color,
+                          }}
+                        >
                           {config.label}
                         </span>
-                        <div className="flex-1">
-                          <h4 className="text-sm font-medium text-gray-800 mb-1">{suggestion.category} - {suggestion.problem}</h4>
-                          <p className="text-xs text-gray-500 mb-2">影响反馈数: {suggestion.count} 条 ({(suggestion.percentage * 100).toFixed(1)}%)</p>
-                          <div className="space-y-1">
-                            {suggestion.suggestions.slice(0, 2).map((s, i) => (
-                              <p key={i} className="text-xs text-gray-600 flex items-start gap-1">
-                                <span className="text-primary">•</span>{s}
-                              </p>
-                            ))}
-                          </div>
-                        </div>
+                        <h4 className="text-sm font-medium text-gray-800">
+                          {suggestion.problem_category} - {suggestion.specific_problem}
+                        </h4>
                       </div>
+                      <p className="text-xs text-gray-500 mb-2">
+                        影响 {suggestion.evidence.count} 条 · 差评率 {(suggestion.evidence.negative_rate * 100).toFixed(0)}%
+                      </p>
+                      <div className="space-y-1">
+                        {suggestion.suggestions.slice(0, 2).map((s, i) => (
+                          <p key={i} className="text-xs text-gray-600 flex items-start gap-1">
+                            <span className="text-primary shrink-0">•</span>
+                            {s}
+                          </p>
+                        ))}
+                      </div>
+                      {suggestion.evidence.user_voice && (
+                        <p className="text-xs text-gray-500 italic mt-2 bg-gray-50 p-2 rounded">
+                          "{suggestion.evidence.user_voice}"
+                        </p>
+                      )}
                     </div>
                   )
                 })}
+                {aiSuggestions.length > 3 && (
+                  <button
+                    onClick={() => setSuggestionsExpanded(!suggestionsExpanded)}
+                    className="w-full text-center text-sm text-primary hover:text-primary/80 py-2 border border-dashed border-gray-200 rounded-lg"
+                  >
+                    {suggestionsExpanded ? '收起' : `查看全部 ${aiSuggestions.length} 条建议`}
+                  </button>
+                )}
               </div>
             ) : (
               <p className="text-sm text-gray-400 text-center py-8">暂无建议数据</p>

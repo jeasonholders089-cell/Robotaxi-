@@ -404,16 +404,76 @@ def clean_feedbacks(feedbacks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     1. Remove invalid feedbacks (empty text, emoji-only)
     2. Sort by rating ascending, trip_time descending (low ratings first)
     """
+    import sys
+    print(f"DEBUG clean_feedbacks: input len={len(feedbacks)}, type={type(feedbacks)}", file=sys.stderr)
+    sys.stderr.flush()
     cleaned = []
-    for fb in feedbacks:
+    for i, fb in enumerate(feedbacks):
+        if not isinstance(fb, dict):
+            print(f"DEBUG clean_feedbacks: fb[{i}] is {type(fb)}, skipping", file=sys.stderr)
+            sys.stderr.flush()
+            continue
+        # Validate rating field
+        rating_val = fb.get("rating")
+        if rating_val is not None and not isinstance(rating_val, (int, float)):
+            print(f"DEBUG clean_feedbacks: fb[{i}] rating is {type(rating_val)}, value={repr(rating_val)}", file=sys.stderr)
+            sys.stderr.flush()
         text = fb.get("feedback_text", "").strip()
         # Skip empty text or emoji-only
         if not text or is_emoji_only(text):
             continue
         cleaned.append(fb)
 
-    # Sort by rating ascending, trip_time descending
-    cleaned.sort(key=lambda x: (x["rating"], x.get("trip_time", "")), reverse=[False, True])
+    print(f"DEBUG clean_feedbacks: cleaned len={len(cleaned)}, starting sorts", file=sys.stderr)
+    sys.stderr.flush()
+
+    # Sort by rating ascending, trip_time descending (low ratings first)
+    # Use stable sort: first by trip_time descending, then by rating ascending
+    try:
+        # Force all trip_time to comparable values - convert to timestamp or empty string
+        def get_trip_time_key(x):
+            tt = x.get("trip_time")
+            if tt is None:
+                return ""  # None treated as empty string
+            if hasattr(tt, 'timestamp'):  # datetime object
+                return tt.timestamp()
+            return str(tt)  # fallback to string
+        cleaned.sort(key=get_trip_time_key, reverse=True)
+        print(f"DEBUG clean_feedbacks: first sort done", file=sys.stderr)
+        sys.stderr.flush()
+    except Exception as e:
+        print(f"DEBUG clean_feedbacks: first sort error: {e}", file=sys.stderr)
+        if cleaned:
+            print(f"DEBUG clean_feedbacks: first item trip_time={repr(cleaned[0].get('trip_time'))}", file=sys.stderr)
+        sys.stderr.flush()
+        raise
+    try:
+        # Ensure rating is int for sorting - use float to handle any numeric strings
+        def get_rating(x):
+            r = x.get("rating")
+            if r is None:
+                return 0  # Default for None
+            if isinstance(r, (int, float)):
+                return r
+            # If it's a string that can be parsed, do so
+            if isinstance(r, str):
+                try:
+                    return float(r)
+                except:
+                    pass
+            # If it's a list or other type, this will fail
+            raise TypeError(f"rating is {type(r)}, value={repr(r)}")
+        cleaned.sort(key=get_rating, reverse=False)
+        print(f"DEBUG clean_feedbacks: second sort done", file=sys.stderr)
+        sys.stderr.flush()
+    except Exception as e:
+        print(f"DEBUG clean_feedbacks: second sort error: {e}", file=sys.stderr)
+        if cleaned:
+            bad_item = cleaned[0]
+            print(f"DEBUG clean_feedbacks: bad item rating={repr(bad_item.get('rating'))}, type={type(bad_item.get('rating'))}", file=sys.stderr)
+            print(f"DEBUG clean_feedbacks: bad item full keys={list(bad_item.keys())}", file=sys.stderr)
+        sys.stderr.flush()
+        raise
 
     return cleaned
 
@@ -430,11 +490,19 @@ async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> No
     - Step 5 [85-100%]: Generate optimization suggestions
     """
     try:
+        import sys
+        import traceback
+        print(f"Starting analysis task with filters: {filters}", file=sys.stderr)
+        sys.stderr.flush()
         update_task_progress(task_id, 0, "processing")
 
         # Step 1: Get feedback data (0-10%)
         update_task_progress(task_id, 5)
         feedback_service = FeedbackService(db)
+        print(f"Calling for_analysis with filters: {filters}", file=sys.stderr)
+        print(f"  status type: {type(filters.get('status'))}, value: {filters.get('status')}", file=sys.stderr)
+        print(f"  feedback_type type: {type(filters.get('feedback_type'))}, value: {filters.get('feedback_type')}", file=sys.stderr)
+        sys.stderr.flush()
         feedbacks, stats = await feedback_service.for_analysis(
             start_date=filters.get("start_date"),
             end_date=filters.get("end_date"),
@@ -446,11 +514,30 @@ async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> No
             feedback_type=filters.get("feedback_type"),
             max_count=2000,
         )
+        print(f"Step 1 done: {len(feedbacks)} feedbacks, stats={stats}", file=sys.stderr)
+        sys.stderr.flush()
         update_task_progress(task_id, 10)
 
         # Step 2: Clean data (10-30%)
         update_task_progress(task_id, 15)
+        # DEBUG: Check feedbacks structure before cleaning
+        print(f"DEBUG Step 2: feedbacks type={type(feedbacks)}, len={len(feedbacks) if feedbacks else 0}", file=sys.stderr)
+        if feedbacks and len(feedbacks) > 0:
+            fb0 = feedbacks[0]
+            print(f"DEBUG Step 2: first fb type={type(fb0)}, keys={list(fb0.keys()) if isinstance(fb0, dict) else 'NOT_A_DICT'}", file=sys.stderr)
+            if isinstance(fb0, dict):
+                r = fb0.get('rating')
+                print(f"DEBUG Step 2: rating={repr(r)}, type={type(r)}, trip_time={repr(fb0.get('trip_time'))}", file=sys.stderr)
+                # Check all items for non-int rating
+                bad_ratings = [(i, type(fb.get('rating')), repr(fb.get('rating'))) for i, fb in enumerate(feedbacks) if fb.get('rating') is not None and not isinstance(fb.get('rating'), (int, float))]
+                if bad_ratings:
+                    print(f"DEBUG Step 2: FOUND BAD RATINGS: {bad_ratings[:5]}", file=sys.stderr)
+            else:
+                print(f"DEBUG Step 2: fb0={repr(fb0)[:200]}", file=sys.stderr)
+        sys.stderr.flush()
         cleaned_data = clean_feedbacks(feedbacks)
+        print(f"Step 2 done: {len(cleaned_data)} cleaned", file=sys.stderr)
+        sys.stderr.flush()
         update_task_progress(task_id, 30)
 
         # Prepare data for AI calls
@@ -466,24 +553,59 @@ async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> No
             for fb in cleaned_data
             if fb.get("rating", 0) <= 2
         ]
+        print(f"Preparing AI calls: {len(feedback_texts)} texts, {len(negative_feedbacks)} negative", file=sys.stderr)
+        sys.stderr.flush()
 
         # Step 3: Generate summary (30-60%)
         update_task_progress(task_id, 35)
         ai_client = get_minimax_client() if settings.AI_PROVIDER == "minimax" else get_kimi_client()
-        summary = await ai_client.summarize_v2(feedback_texts, stats)
+        print(f"Calling summarize_v2 with stats: {stats}", file=sys.stderr)
+        sys.stderr.flush()
+        try:
+            summary = await ai_client.summarize_v2(feedback_texts, stats)
+            print(f"Step 3 done: summary={summary[:100] if summary else None}", file=sys.stderr)
+        except Exception as e:
+            import traceback
+            print(f"Step 3 FAILED: {e}, trace={traceback.format_exc()[:200]}", file=sys.stderr)
+            # Fallback: generate structured summary from stats when AI fails
+            pos_rate = stats.get('positive_rate', 0) * 100
+            neg_rate = stats.get('negative_rate', 0) * 100
+            avg_rating = stats.get('avg_rating', 0)
+            summary = (
+                f"整体满意度：【基于{stats.get('total_count', 0)}条数据分析】平均评分{avg_rating}分，"
+                f"好评率{pos_rate:.0f}%，差评率{neg_rate:.0f}%。\n"
+                f"正面体验：暂无明确正面反馈记录。\n"
+                f"突出不满：共{stats.get('total_count', 0)}条反馈，详见下方问题分类。\n"
+                f"核心建议：请参考下方问题分类及优化建议。"
+            )
+        sys.stderr.flush()
         update_task_progress(task_id, 60)
 
         # Step 4: Analyze problems (60-85%)
         update_task_progress(task_id, 65)
-        problems_result = await ai_client.analyze_problems(feedback_for_analysis)
+        try:
+            problems_result = await ai_client.analyze_problems(feedback_for_analysis)
+            print(f"Step 4 done: {len(problems_result.get('categories', []))} categories", file=sys.stderr)
+        except Exception as e:
+            import traceback
+            print(f"Step 4 FAILED: {e}, trace={traceback.format_exc()[:200]}", file=sys.stderr)
+            problems_result = {"categories": [], "top_problems": []}
+        sys.stderr.flush()
         update_task_progress(task_id, 85)
 
         # Step 5: Generate suggestions (85-100%)
         update_task_progress(task_id, 90)
-        suggestions = await ai_client.generate_suggestions_v2(
-            problem_categories=problems_result.get("categories", []),
-            negative_feedbacks=negative_feedbacks,
-        )
+        try:
+            suggestions = await ai_client.generate_suggestions_v2(
+                problem_categories=problems_result.get("categories", []),
+                negative_feedbacks=negative_feedbacks,
+            )
+            print(f"Step 5 done: {len(suggestions)} suggestions", file=sys.stderr)
+        except Exception as e:
+            import traceback
+            print(f"Step 5 FAILED: {e}, trace={traceback.format_exc()[:200]}", file=sys.stderr)
+            suggestions = []
+        sys.stderr.flush()
         update_task_progress(task_id, 100)
 
         # Save results
@@ -499,7 +621,12 @@ async def run_analysis_task(task_id: str, filters: dict, db: AsyncSession) -> No
         set_task_error(task_id, "Task was cancelled")
         raise
     except Exception as e:
-        set_task_error(task_id, f"Analysis failed: {str(e)}")
+        import traceback
+        import sys
+        print(f"ERROR in run_analysis_task: {e}", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+        error_detail = f"Analysis failed: {str(e)}\n{traceback.format_exc()}"
+        set_task_error(task_id, error_detail)
     finally:
         unregister_running_task(task_id)
 
@@ -510,7 +637,7 @@ async def start_analysis_task(filters: dict, db: AsyncSession) -> str:
 
     Args:
         filters: Filter parameters from FilterBar
-        db: Database session
+        db: Database session (from FastAPI dependency, will be closed after API returns)
 
     Returns:
         task_id: The ID of the created task
@@ -518,8 +645,13 @@ async def start_analysis_task(filters: dict, db: AsyncSession) -> str:
     # Create task
     task_id = create_task(filters)
 
-    # Start background task
-    task = asyncio.create_task(run_analysis_task(task_id, filters, db))
+    # Start background task - get a fresh db context for the background task
+    from app.database import AsyncSessionLocal
+    async def run_with_new_session():
+        async with AsyncSessionLocal() as session:
+            await run_analysis_task(task_id, filters, session)
+
+    task = asyncio.create_task(run_with_new_session())
     register_running_task(task_id, task)
 
     return task_id

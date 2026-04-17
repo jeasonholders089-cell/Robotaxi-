@@ -11,8 +11,9 @@ import {
   ListTodo,
   BarChart3,
 } from 'lucide-react'
+import ReactECharts from 'echarts-for-react'
 import { StatCard } from '@/components'
-import { useOverviewStats, useAISummary } from '@/hooks'
+import { useOverviewStats, useAISummary, useTrendData } from '@/hooks'
 import dayjs from 'dayjs'
 
 export function Workbench() {
@@ -20,6 +21,11 @@ export function Workbench() {
   const { data: stats, isLoading: statsLoading } = useOverviewStats()
   const { data: aiSummary } = useAISummary({
     start_date: dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
+    end_date: dayjs().format('YYYY-MM-DD'),
+  })
+  const { data: trendData, isLoading: trendLoading } = useTrendData({
+    type: 'daily',
+    start_date: dayjs().subtract(6, 'day').format('YYYY-MM-DD'),
     end_date: dayjs().format('YYYY-MM-DD'),
   })
 
@@ -154,15 +160,94 @@ export function Workbench() {
               <h3 className="font-medium text-gray-800">趋势概览</h3>
             </div>
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/feedbacks')}
               className="text-sm text-primary hover:text-primary-dark"
             >
               查看详情 →
             </button>
           </div>
-          <div className="h-32 flex items-center justify-center bg-gray-50 rounded-lg">
-            <p className="text-sm text-gray-400">近7天反馈趋势</p>
-          </div>
+          {trendLoading ? (
+            <div className="h-48 animate-pulse bg-gray-50 rounded-lg" />
+          ) : trendData && trendData.length > 0 ? (
+            <ReactECharts
+              option={{
+                tooltip: {
+                  trigger: 'axis',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderColor: '#E5E5E5',
+                  textStyle: { color: '#333' },
+                },
+                legend: {
+                  data: ['反馈数量', '平均评分'],
+                  top: 0,
+                  textStyle: { color: '#666', fontSize: 11 },
+                },
+                grid: { left: '3%', right: '4%', bottom: '3%', top: '25%', containLabel: true },
+                xAxis: {
+                  type: 'category',
+                  boundaryGap: false,
+                  data: trendData.map((d) => d.date?.slice(5) ?? ''),
+                  axisLine: { lineStyle: { color: '#E5E5E5' } },
+                  axisLabel: { color: '#666', fontSize: 10 },
+                },
+                yAxis: [
+                  {
+                    type: 'value',
+                    name: '数量',
+                    splitLine: { lineStyle: { color: '#F0F0F0' } },
+                    axisLine: { show: false },
+                    axisLabel: { color: '#666', fontSize: 10 },
+                  },
+                  {
+                    type: 'value',
+                    name: '评分',
+                    min: 0,
+                    max: 5,
+                    splitLine: { show: false },
+                    axisLine: { show: false },
+                    axisLabel: { color: '#666', fontSize: 10 },
+                  },
+                ],
+                series: [
+                  {
+                    name: '反馈数量',
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 6,
+                    lineStyle: { color: '#FF6033', width: 2 },
+                    itemStyle: { color: '#FF6033' },
+                    areaStyle: {
+                      color: {
+                        type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                        colorStops: [
+                          { offset: 0, color: 'rgba(255, 96, 51, 0.3)' },
+                          { offset: 1, color: 'rgba(255, 96, 51, 0)' },
+                        ],
+                      },
+                    },
+                    data: trendData.map((d) => d.count),
+                  },
+                  {
+                    name: '平均评分',
+                    type: 'line',
+                    smooth: true,
+                    yAxisIndex: 1,
+                    symbol: 'diamond',
+                    symbolSize: 6,
+                    lineStyle: { color: '#1890FF', width: 2 },
+                    itemStyle: { color: '#1890FF' },
+                    data: trendData.map((d) => d.avg_rating),
+                  },
+                ],
+              }}
+              style={{ height: 180 }}
+            />
+          ) : (
+            <div className="h-48 flex items-center justify-center bg-gray-50 rounded-lg">
+              <p className="text-sm text-gray-400">近7天反馈趋势</p>
+            </div>
+          )}
         </div>
 
         {/* AI Summary */}

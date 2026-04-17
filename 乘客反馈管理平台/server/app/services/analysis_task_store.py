@@ -48,6 +48,10 @@ def get_task(task_id: str) -> Optional[AnalysisTask]:
 
 def update_task_progress(task_id: str, progress: int, status: str = None) -> None:
     """Update task progress."""
+    import sys
+    print(f"DEBUG update_task_progress: task_id={task_id}, progress={progress}, status={status}", file=sys.stderr)
+    print(f"DEBUG update_task_progress: progress type={type(progress)}", file=sys.stderr)
+    sys.stderr.flush()
     task = _tasks.get(task_id)
     if task:
         task.progress = progress
@@ -75,6 +79,9 @@ def set_task_result(
 
 def set_task_error(task_id: str, error: str) -> None:
     """Set task error."""
+    import sys
+    print(f"DEBUG set_task_error: task_id={task_id}, error={error[:200] if error else 'None'}", file=sys.stderr)
+    sys.stderr.flush()
     task = _tasks.get(task_id)
     if task:
         task.error = error

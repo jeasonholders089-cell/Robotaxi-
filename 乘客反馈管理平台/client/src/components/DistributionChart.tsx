@@ -13,12 +13,13 @@ interface BarChartData {
 }
 
 interface DistributionChartProps {
-  type: 'pie' | 'bar' | 'horizontalBar'
+  type: 'pie' | 'bar' | 'horizontalBar' | 'rosePie'
   data: PieChartData[] | BarChartData[]
   title: string
   loading?: boolean
   height?: number
   colors?: string[]
+  colorScheme?: 'lightness' | 'saturation' | 'morandi' | 'orange' | 'transparency'
 }
 
 const defaultColors = [
@@ -32,6 +33,88 @@ const defaultColors = [
   '#FF7A45',
 ]
 
+// 莫兰迪色系 - 低饱和度柔和色调
+const morandiColors = [
+  '#E8DED1', // 米灰
+  '#D4C4B0', // 浅褐
+  '#C9B8A8', // 灰褐
+  '#B8A99A', // 深灰褐
+  '#A99B8C', // 橄榄灰
+  '#9B8E7C', // 褐灰
+  '#8C7E6D', // 深褐灰
+  '#7D6F5E', // 炭灰
+]
+
+// 橙色色系 - 低饱和度、高亮度、透明感
+const orangeColors = [
+  '#FFF5F0', '#FFE8E0', '#FFDDD5', '#FFD5C8', '#FFCDBB',
+  '#FFC5AE', '#FFBDA1', '#FFB594', '#FFAD87', '#FFA57A',
+  '#FF9D6D', '#FF9560', '#FF8D53', '#FF8546', '#FF7D39'
+]
+
+// 橙色色系 - 高饱和度版本
+const orangeSaturationColors = [
+  '#FFD4C2', '#FFAB66', '#FF8C55', '#FF6033', '#E55A2B',
+  '#CC4419', '#B83300', '#992600', '#801900', '#660D00'
+]
+
+// 橙色透明度版本 - 同一颜色不同透明度
+const orangeTransparencyColors = [
+  'rgba(255, 96, 51, 1)',    // 100% - 最深
+  'rgba(255, 96, 51, 0.85)', // 85%
+  'rgba(255, 96, 51, 0.7)',  // 70%
+  'rgba(255, 96, 51, 0.55)', // 55%
+  'rgba(255, 96, 51, 0.45)', // 45%
+  'rgba(255, 96, 51, 0.35)', // 35%
+  'rgba(255, 96, 51, 0.28)', // 28%
+  'rgba(255, 96, 51, 0.22)', // 22%
+  'rgba(255, 96, 51, 0.16)', // 16%
+  'rgba(255, 96, 51, 0.1)',   // 10% - 最浅
+]
+
+// 橙色色系 - 色相渐变，从浅橙到深橙红
+const orangeVividColors = [
+  '#FFF0ED',  // 1
+  '#FFE8E1',  // 2
+  '#FFE0D5',  // 3
+  '#FFD8C9',  // 4
+  '#FFD0BD',  // 5
+  '#FFC8B1',  // 6
+  '#FFC0A5',  // 7
+  '#FFB899',  // 8
+  '#FFB08D',  // 9
+  '#FFA881',  // 10
+  '#FFA075',  // 11
+  '#FF9869',  // 12
+  '#FF905D',  // 13
+  '#FF8851',  // 14
+  '#FF8045',  // 15
+  '#FF7839',  // 16
+  '#FF702D',  // 17
+  '#FF6821',  // 18
+  '#FF6015',  // 19
+  '#FF5809',  // 20
+]
+
+// 获取配色
+const getColors = (colorScheme: 'lightness' | 'saturation' | 'morandi' | 'orange' | 'transparency' | 'vivid') => {
+  if (colorScheme === 'morandi') {
+    return morandiColors
+  } else if (colorScheme === 'orange') {
+    return orangeColors
+  } else if (colorScheme === 'saturation') {
+    return orangeSaturationColors
+  } else if (colorScheme === 'transparency') {
+    return orangeTransparencyColors
+  } else if (colorScheme === 'vivid') {
+    return orangeVividColors
+  } else if (colorScheme === 'lightness') {
+    return ['#FFEEE8', '#FFD4C2', '#FFB08C', '#FF7744', '#FF6033']
+  } else {
+    return orangeColors
+  }
+}
+
 export function DistributionChart({
   type,
   data,
@@ -39,6 +122,7 @@ export function DistributionChart({
   loading,
   height = 280,
   colors = defaultColors,
+  colorScheme = 'lightness',
 }: DistributionChartProps) {
   if (loading) {
     return (
@@ -53,6 +137,7 @@ export function DistributionChart({
   const getOption = (): EChartsOption => {
     if (type === 'pie') {
       const pieData = data as PieChartData[]
+      const pieColors = getColors(colorScheme)
       return {
         tooltip: {
           trigger: 'item',
@@ -65,19 +150,22 @@ export function DistributionChart({
         },
         legend: {
           orient: 'vertical',
-          right: '5%',
+          right: '2%',
           top: 'center',
           textStyle: {
             color: '#666',
-            fontSize: 12,
+            fontSize: 11,
           },
+          itemWidth: 10,
+          itemHeight: 10,
+          itemGap: 8,
         },
-        color: colors,
+        color: pieColors,
         series: [
           {
             type: 'pie',
-            radius: ['45%', '70%'],
-            center: ['35%', '50%'],
+            radius: ['38%', '62%'],
+            center: ['32%', '50%'],
             avoidLabelOverlap: true,
             itemStyle: {
               borderRadius: 4,
@@ -85,7 +173,86 @@ export function DistributionChart({
               borderWidth: 2,
             },
             label: {
-              show: false,
+              show: true,
+              position: 'outside',
+              formatter: '{b}\n{d}%',
+              color: '#666',
+              fontSize: 11,
+              lineHeight: 14,
+              distanceToLabelLine: 6,
+            },
+            labelLine: {
+              show: true,
+              length: 8,
+              length2: 12,
+              smooth: true,
+              lineStyle: {
+                color: '#ccc',
+                width: 1,
+              },
+            },
+            emphasis: {
+              label: {
+                show: true,
+                fontSize: 13,
+                fontWeight: 'bold',
+              },
+            },
+            data: pieData.map((item, index) => ({
+              name: item.name,
+              value: item.value,
+              itemStyle: {
+                color: pieColors[index % pieColors.length],
+              },
+            })),
+          },
+        ],
+      }
+    }
+
+    if (type === 'rosePie') {
+      const pieData = data as PieChartData[]
+      const roseColors = getColors('lightness')
+      return {
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: 'rgba(255, 255, 255, 0.95)',
+          borderColor: '#E5E5E5',
+          textStyle: {
+            color: '#333',
+          },
+          formatter: '{b}: {c} ({d}%)',
+        },
+        color: roseColors,
+        series: [
+          {
+            type: 'pie',
+            radius: ['20%', '70%'],
+            center: ['50%', '50%'],
+            roseType: 'radius',
+            itemStyle: {
+              borderRadius: 4,
+              borderColor: '#fff',
+              borderWidth: 2,
+            },
+            label: {
+              show: true,
+              position: 'outside',
+              formatter: '{b}\n{d}%',
+              color: '#666',
+              fontSize: 11,
+              lineHeight: 16,
+              distanceToLabelLine: 8,
+            },
+            labelLine: {
+              show: true,
+              length: 10,
+              length2: 20,
+              smooth: true,
+              lineStyle: {
+                color: '#ccc',
+                width: 1,
+              },
             },
             emphasis: {
               label: {
@@ -105,6 +272,15 @@ export function DistributionChart({
 
     if (type === 'bar') {
       const barData = data as BarChartData[]
+      const chartColors = getColors(colorScheme)
+
+      // 根据数值范围分配颜色（城市分布使用）
+      const step = 5 // 每5个单位一个梯度
+      const getColorByValue = (value: number) => {
+        const colorIndex = Math.min(Math.floor(value / step), chartColors.length - 1)
+        return chartColors[colorIndex]
+      }
+
       return {
         tooltip: {
           trigger: 'axis',
@@ -153,7 +329,7 @@ export function DistributionChart({
             fontSize: 11,
           },
         },
-        color: colors,
+        color: chartColors,
         series: [
           {
             type: 'bar',
@@ -161,14 +337,21 @@ export function DistributionChart({
             itemStyle: {
               borderRadius: [4, 4, 0, 0],
             },
-            data: barData.map((item) => item.value),
+            data: barData.map((item) => ({
+              value: item.value,
+              itemStyle: {
+                color: getColorByValue(item.value),
+              },
+            })),
           },
         ],
       }
     }
 
-    // horizontalBar
+    // horizontalBar - 路线分布使用透明度配色
     const hBarData = data as BarChartData[]
+    const hBarColors = getColors(colorScheme)
+
     return {
       tooltip: {
         trigger: 'axis',
@@ -216,7 +399,6 @@ export function DistributionChart({
           fontSize: 11,
         },
       },
-      color: colors,
       series: [
         {
           type: 'bar',
@@ -224,7 +406,12 @@ export function DistributionChart({
           itemStyle: {
             borderRadius: [0, 4, 4, 0],
           },
-          data: hBarData.map((item) => item.value).reverse(),
+          data: hBarData.map((item, index) => ({
+            value: item.value,
+            itemStyle: {
+              color: hBarColors[index % hBarColors.length],
+            },
+          })).reverse(),
         },
       ],
     }

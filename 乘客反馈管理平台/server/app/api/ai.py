@@ -1,8 +1,8 @@
 """AI analysis API routes."""
 
-from typing import Optional
+from typing import Optional, List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -89,8 +89,8 @@ class AnalyzeRequest(BaseModel):
     city: Optional[str] = None
     rating_min: Optional[int] = None
     rating_max: Optional[int] = None
-    status: Optional[str] = None
-    feedback_type: Optional[str] = None
+    status: Optional[List[str]] = None
+    feedback_type: Optional[List[str]] = None
     keyword: Optional[str] = None
 
 
@@ -116,7 +116,7 @@ class AnalyzeResultResponse(BaseModel):
 @router.post("/analyze", response_model=APIResponse)
 async def create_analysis_task(
     request: AnalyzeRequest,
-    db: AsyncSession = Depends(get_db),
+    background_tasks: BackgroundTasks,
 ) -> APIResponse:
     """
     Start a new AI analysis task.
@@ -143,10 +143,59 @@ async def create_analysis_task(
     if request.keyword:
         filters["keyword"] = request.keyword
 
-    # Start analysis task
-    task_id = await start_analysis_task(filters, db)
+    # Create task and get task_id
+    from app.services.ai_service import create_task
+    task_id = create_task(filters)
+
+    # Add background task
+    from app.database import get_db_context
+    from app.services.ai_service import run_analysis_task
+
+    async def background_analysis():
+        async with get_db_context() as db:
+            await run_analysis_task(task_id, filters, db)
+
+    background_tasks.add_task(background_analysis)
 
     return APIResponse(data=AnalyzeResponse(task_id=task_id))
+
+
+@router.post("/analyze-debug", response_model=APIResponse)
+async def analyze_debug(
+    request: AnalyzeRequest,
+    db: AsyncSession = Depends(get_db),
+) -> APIResponse:
+    """Debug endpoint - execute analysis synchronously."""
+    # Build filters dict from request
+    filters = {}
+    if request.start_date:
+        filters["start_date"] = request.start_date
+    if request.end_date:
+        filters["end_date"] = request.end_date
+    if request.city:
+        filters["city"] = request.city
+    if request.rating_min is not None:
+        filters["rating_min"] = request.rating_min
+    if request.rating_max is not None:
+        filters["rating_max"] = request.rating_max
+    if request.status:
+        filters["status"] = request.status
+    if request.feedback_type:
+        filters["feedback_type"] = request.feedback_type
+    if request.keyword:
+        filters["keyword"] = request.keyword
+
+    # Run analysis synchronously for debugging
+    from app.services.ai_service import run_analysis_task
+    from app.database import get_db_context
+
+    try:
+        await run_analysis_task("debug", filters, get_db_context)
+        task = await get_db_context().__aenter__()
+        return APIResponse(data={"status": "ok"})
+    except Exception as e:
+        import traceback
+        return APIResponse(data={"error": str(e), "trace": traceback.format_exc()})
 
 
 @router.get("/analyze/{task_id}", response_model=APIResponse)

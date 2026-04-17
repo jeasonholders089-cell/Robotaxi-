@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   MessageSquare,
   ChevronLeft,
+  ChevronRight,
   ChevronDown,
 } from 'lucide-react'
 import { useNavigation } from './NavigationContext'
@@ -197,7 +198,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         className="absolute bottom-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
       >
         {collapsed ? (
-          <ChevronDown className="w-4 h-4 text-gray-400 transform rotate-90" />
+          <ChevronRight className="w-4 h-4 text-gray-400" />
         ) : (
           <ChevronLeft className="w-4 h-4 text-gray-500" />
         )}

@@ -325,7 +325,7 @@ class AIClient:
         # Prepare feedback text content
         texts_str = "\n".join([f"- {text}" for text in feedback_texts[:50]])
 
-        prompt = f"""你是一个专业的Robotaxi乘客反馈分析师。请分析以下反馈数据，生成简洁的摘要报告。
+        prompt = f"""你是一个专业的Robotaxi乘客反馈分析师。请分析以下反馈数据，生成详尽的摘要报告。
 
 ## 数据统计
 - 总反馈数：{stats.get('total_count', 0)} 条
@@ -336,14 +336,19 @@ class AIClient:
 ## 反馈内容
 {texts_str}
 
-## 要求
-1. 用2-3句话总结整体用户满意度状况
-2. 指出用户最常提到的正面体验（不超过2点）
-3. 指出用户最突出的不满问题（不超过2点）
-4. 整体字数控制在150字以内
+## 输出格式（严格按以下结构输出，不要使用markdown符号，不要使用#号或---分隔符）
 
-## 输出格式
-直接输出摘要文本，不需要JSON格式。"""
+整体满意度：【一句话总结整体满意度情况，包含评分和差评率数据】
+
+正面体验：
+- 【正面体验点1】
+- 【正面体验点2】（如有）
+
+突出不满：
+- 【不满点1】（需包含具体问题描述和涉及条数）
+- 【不满点2】（如有）
+
+核心建议：【一句话优先级最高的改进建议】"""
 
         return await self.chat(
             messages=[{"role": "user", "content": prompt}],
