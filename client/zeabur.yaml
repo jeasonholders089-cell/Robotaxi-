@@ -10,3 +10,5 @@ spec:
   env:
     - key: VITE_API_BASE_URL
       value: "/api"
+  command:
+    - nginx
