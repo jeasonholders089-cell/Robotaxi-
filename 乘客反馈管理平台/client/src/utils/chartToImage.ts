@@ -7,10 +7,21 @@ import type { ECharts } from 'echarts'
 export function chartToDataURL(chartInstance: ECharts | undefined): string {
   if (!chartInstance) return ''
 
-  return chartInstance.getConnectedDataURL({
-    type: 'png',
-    pixelRatio: 2,
-    backgroundColor: '#ffffff',
-    excludeComponents: ['toolbox'],
-  })
+  // Check if chartInstance has the getConnectedDataURL method
+  if (typeof chartInstance.getConnectedDataURL !== 'function') {
+    console.warn('chartToDataURL: chartInstance does not have getConnectedDataURL method')
+    return ''
+  }
+
+  try {
+    return chartInstance.getConnectedDataURL({
+      type: 'png',
+      pixelRatio: 2,
+      backgroundColor: '#ffffff',
+      excludeComponents: ['toolbox'],
+    })
+  } catch (error) {
+    console.warn('chartToDataURL failed:', error)
+    return ''
+  }
 }

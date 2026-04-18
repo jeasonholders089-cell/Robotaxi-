@@ -2,6 +2,7 @@ import React from 'react'
 import { Sparkles } from 'lucide-react'
 import { useAnalysisTask } from '@/hooks'
 import { useFilterStore } from '@/stores/filterStore'
+import { useFeedbacks } from '@/hooks/useFeedbacks'
 
 const priorityConfig = {
   high: { label: '高优先级', color: '#F5222D', bgColor: '#FFF1F0' },
@@ -47,8 +48,25 @@ export function AiAnalysis() {
     filters.keyword
   )
 
-  // Estimate data count (simplified - actual count comes from backend)
-  const estimatedCount = hasFilters ? '1,500' : '100'
+  // Get actual filtered count for display (query with pageSize=1 to get total only)
+  const { data: feedbackData } = useFeedbacks({
+    page: 1,
+    pageSize: 1,
+    sortBy: 'time',
+    sortOrder: 'desc',
+    city: filters.city,
+    route: filters.route,
+    ratingMin: filters.ratingMin,
+    ratingMax: filters.ratingMax,
+    startDate: filters.startDate,
+    endDate: filters.endDate,
+    feedbackType: filters.feedbackType,
+    status: filters.status,
+    keyword: filters.keyword,
+  })
+
+  // Use actual total count if available, otherwise fall back to analyzedCount or placeholder
+  const estimatedCount = feedbackData?.total != null ? feedbackData.total : (analyzedCount > 0 ? analyzedCount : (hasFilters ? '...' : '100'))
 
   // Determine button text
   const getButtonText = () => {

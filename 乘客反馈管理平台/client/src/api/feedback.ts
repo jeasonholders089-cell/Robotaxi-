@@ -60,11 +60,21 @@ export async function batchUpdateStatus(ids: string[], status: string): Promise<
 // 批量导出
 export async function batchExport(
   ids?: string[],
-  format: 'excel' | 'csv' = 'excel'
+  format: 'excel' | 'csv' = 'excel',
+  filters?: {
+    city?: string
+    rating_min?: number
+    rating_max?: number
+    start_date?: string
+    end_date?: string
+    status?: string
+    keyword?: string
+    feedback_type?: string
+  }
 ): Promise<Blob> {
   const response = await client.post<Blob>(
     '/feedbacks/batch-export',
-    { ids, format },
+    { ids, format, ...filters },
     { responseType: 'blob' }
   )
   return response.data

@@ -128,10 +128,11 @@ export const DistributionChart = forwardRef<DistributionChartRef, DistributionCh
   colors = defaultColors,
   colorScheme = 'lightness',
 }, ref) => {
-  const chartRef = useRef<ECharts>(null)
+  // Use any type because ReactECharts ref receives the component instance, not ECharts directly
+  const chartRef = useRef<any>(null)
 
   useImperativeHandle(ref, () => ({
-    getEchartsInstance: () => chartRef.current,
+    getEchartsInstance: () => chartRef.current?.getEchartsInstance?.(),
   }))
 
   if (loading) {

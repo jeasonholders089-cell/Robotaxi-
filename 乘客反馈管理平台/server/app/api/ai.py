@@ -187,12 +187,11 @@ async def analyze_debug(
 
     # Run analysis synchronously for debugging
     from app.services.ai_service import run_analysis_task
-    from app.database import get_db_context
 
     try:
-        await run_analysis_task("debug", filters, get_db_context)
-        task = await get_db_context().__aenter__()
-        return APIResponse(data={"status": "ok"})
+        async with get_db_context() as db:
+            await run_analysis_task("debug", filters, db)
+        return APIResponse(data={"status": "ok", "filters": filters})
     except Exception as e:
         import traceback
         return APIResponse(data={"error": str(e), "trace": traceback.format_exc()})

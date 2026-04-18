@@ -189,7 +189,18 @@ export function FeedbackManagement() {
     setExportSuccess(false)
     try {
       const ids = selectedIds.length > 0 ? selectedIds : undefined
-      const blob = await batchExport(ids, 'excel')
+      // Build filter params - convert arrays to comma-separated strings for backend
+      const filterParams = {
+        city: filters.city?.join(',') || undefined,
+        rating_min: filters.ratingMin > 1 ? filters.ratingMin : undefined,
+        rating_max: filters.ratingMax < 5 ? filters.ratingMax : undefined,
+        start_date: filters.startDate || undefined,
+        end_date: filters.endDate || undefined,
+        status: filters.status?.join(',') || undefined,
+        keyword: filters.keyword || undefined,
+        feedback_type: filters.feedbackType?.join(',') || undefined,
+      }
+      const blob = await batchExport(ids, 'excel', filterParams)
       if (!blob) {
         throw new Error('导出失败，返回数据为空')
       }

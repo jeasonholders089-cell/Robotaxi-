@@ -87,10 +87,11 @@ export function useAnalysisTask(): UseAnalysisTaskReturn {
       if (filters.endDate) {
         params.end_date = filters.endDate
       }
-      if (filters.ratingMin > 1) {
+      // Always pass rating filters if they differ from defaults
+      if (filters.ratingMin !== undefined && filters.ratingMin !== 1) {
         params.rating_min = filters.ratingMin
       }
-      if (filters.ratingMax < 5) {
+      if (filters.ratingMax !== undefined && filters.ratingMax !== 5) {
         params.rating_max = filters.ratingMax
       }
       if (filters.status && filters.status.length > 0) {
