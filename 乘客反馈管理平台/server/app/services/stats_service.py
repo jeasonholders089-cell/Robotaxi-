@@ -33,6 +33,10 @@ class StatsService:
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
         city: Optional[str] = None,
+        rating_min: Optional[int] = None,
+        rating_max: Optional[int] = None,
+        status: Optional[str] = None,
+        feedback_type: Optional[str] = None,
     ) -> OverviewData:
         """
         Get overview statistics.
@@ -41,16 +45,34 @@ class StatsService:
             start_date: Start date filter
             end_date: End date filter
             city: City filter
+            rating_min: Minimum rating filter
+            rating_max: Maximum rating filter
+            status: Status filter
+            feedback_type: Feedback type filter (comma-separated)
 
         Returns:
             Overview statistics data
         """
+        import json
         today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
         # Build base conditions
         base_conditions = []
         if city:
             base_conditions.append(Feedback.city == city)
+        if rating_min is not None:
+            base_conditions.append(Feedback.rating >= rating_min)
+        if rating_max is not None:
+            base_conditions.append(Feedback.rating <= rating_max)
+        if status:
+            base_conditions.append(Feedback.status == status)
+        if feedback_type:
+            # feedback_type is comma-separated string, convert to list and check JSON array contains
+            type_list = [t.strip() for t in feedback_type.split(',') if t.strip()]
+            if type_list:
+                type_conditions = [Feedback.feedback_type.contains(json.dumps([ft])) for ft in type_list]
+                from sqlalchemy import or_
+                base_conditions.append(or_(*type_conditions))
 
         # Total count (with date range if provided)
         total_query = select(func.count(Feedback.id))

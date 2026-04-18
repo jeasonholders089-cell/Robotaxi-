@@ -11,6 +11,10 @@ export async function getOverviewStats(params?: {
   start_date?: string
   end_date?: string
   city?: string
+  rating_min?: number
+  rating_max?: number
+  status?: string
+  feedback_type?: string
 }): Promise<OverviewStats> {
   const response = await client.get<ApiResponse<OverviewStats>>('/stats/overview', { params })
   return response.data

@@ -77,6 +77,10 @@ export function FeedbackManagement() {
     city: filters.city.length > 0 ? filters.city[0] : undefined,
     start_date: filters.startDate || undefined,
     end_date: filters.endDate || undefined,
+    rating_min: filters.ratingMin > 1 ? filters.ratingMin : undefined,
+    rating_max: filters.ratingMax < 5 ? filters.ratingMax : undefined,
+    status: filters.status.length > 0 ? filters.status[0] : undefined,
+    feedback_type: filters.feedbackType.length > 0 ? filters.feedbackType.join(',') : undefined,
   }
 
   // Overview stats with filters
@@ -117,8 +121,8 @@ export function FeedbackManagement() {
     filters.keyword
   )
 
-  // Estimate data count
-  const estimatedCount = hasFilters ? '1,500' : '100'
+  // Estimate data count - use filtered feedback total, not overview stats
+  const estimatedCount = data?.total?.toLocaleString() ?? '0'
 
   // Feedback list state
   const [page, setPage] = React.useState(1)
@@ -179,17 +183,29 @@ export function FeedbackManagement() {
 
   // 导出反馈列表（Excel/CSV）
   const [exporting, setExporting] = React.useState(false)
+  const [exportSuccess, setExportSuccess] = React.useState(false)
   const handleExport = async () => {
     setExporting(true)
+    setExportSuccess(false)
     try {
       const ids = selectedIds.length > 0 ? selectedIds : undefined
       const blob = await batchExport(ids, 'excel')
+      if (!blob) {
+        throw new Error('导出失败，返回数据为空')
+      }
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
       link.download = `反馈列表_${new Date().toISOString().split('T')[0]}.xlsx`
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
       URL.revokeObjectURL(url)
+      setExportSuccess(true)
+      setTimeout(() => setExportSuccess(false), 3000)
+    } catch (error) {
+      console.error('导出失败:', error)
+      alert('导出失败，请重试')
     } finally {
       setExporting(false)
     }
@@ -197,30 +213,35 @@ export function FeedbackManagement() {
 
   // PDF Export handler
   const handleExportPDF = async () => {
-    await exportPDF({
-      filters: {
-        startDate: filters.startDate || undefined,
-        endDate: filters.endDate || undefined,
-        city: filters.city?.[0] || undefined,
-      },
-      stats: stats,
-      trendData: trendData,
-      distributionData: distributionData,
-      analysisResult: aiSummary ? {
-        summary: aiSummary,
-        problems: problems,
-        suggestions: aiSuggestions,
-        analyzed_count: analyzedCount,
-      } : undefined,
-      chartRefs: {
-        countTrend: countTrendRef.current?.getEchartsInstance(),
-        ratingTrend: ratingTrendRef.current?.getEchartsInstance(),
-        ratingDistribution: ratingDistRef.current?.getEchartsInstance(),
-        typeDistribution: typeDistRef.current?.getEchartsInstance(),
-        cityDistribution: cityDistRef.current?.getEchartsInstance(),
-        routeDistribution: routeDistRef.current?.getEchartsInstance(),
-      },
-    })
+    try {
+      await exportPDF({
+        filters: {
+          startDate: filters.startDate || undefined,
+          endDate: filters.endDate || undefined,
+          city: filters.city?.[0] || undefined,
+        },
+        stats: stats,
+        trendData: trendData,
+        distributionData: distributionData,
+        analysisResult: aiSummary ? {
+          summary: aiSummary,
+          problems: problems,
+          suggestions: aiSuggestions,
+          analyzed_count: analyzedCount,
+        } : undefined,
+        chartRefs: {
+          countTrend: countTrendRef.current?.getEchartsInstance(),
+          ratingTrend: ratingTrendRef.current?.getEchartsInstance(),
+          ratingDistribution: ratingDistRef.current?.getEchartsInstance(),
+          typeDistribution: typeDistRef.current?.getEchartsInstance(),
+          cityDistribution: cityDistRef.current?.getEchartsInstance(),
+          routeDistribution: routeDistRef.current?.getEchartsInstance(),
+        },
+      })
+    } catch (error) {
+      console.error('PDF导出失败:', error)
+      alert('PDF导出失败，请重试')
+    }
   }
 
   // AI Analysis handlers
@@ -365,14 +386,15 @@ export function FeedbackManagement() {
 
       {/* ===== 反馈列表 ===== */}
       <div ref={listRef} id="list" className="space-y-4 scroll-mt-20">
-        <h2 className="text-lg font-medium text-gray-800">反馈列表</h2>
-
         {/* Summary Bar */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 text-sm text-gray-500">
-            <span>共 {data?.total ?? 0} 条反馈</span>
-            <span>|</span>
-            <span>已选 {selectedIds.length} 条</span>
+          <div className="flex items-center gap-4">
+            <h2 className="text-lg font-medium text-gray-800">反馈列表</h2>
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+              <span>共 {data?.total ?? 0} 条反馈</span>
+              <span>|</span>
+              <span>已选 {selectedIds.length} 条</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => handleBatchUpdateStatus('resolved')} disabled={selectedIds.length === 0} className="btn-secondary text-sm whitespace-nowrap">
@@ -381,17 +403,23 @@ export function FeedbackManagement() {
             <button
               onClick={handleExport}
               disabled={exporting || data?.total === 0}
-              className="btn-secondary text-sm whitespace-nowrap flex items-center gap-2"
+              className={`btn-secondary text-sm whitespace-nowrap flex items-center gap-2 ${exportSuccess ? '!border-green-500 !text-green-600' : ''}`}
             >
               {exporting ? (
                 <>
                   <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   <span>导出中...</span>
                 </>
+              ) : exportSuccess ? (
+                <>
+                  <span className="text-green-600">✓</span>
+                  <span>已下载</span>
+                </>
               ) : (
                 <span>导出{selectedIds.length > 0 ? `（${selectedIds.length}条）` : ''}</span>
               )}
             </button>
+            </div>
           </div>
         </div>
 

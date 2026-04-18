@@ -48,6 +48,7 @@ class FeedbackService:
         Returns:
             Tuple of (list of feedback summaries, total count)
         """
+        import json
         # Build query conditions
         conditions = []
 
@@ -67,6 +68,11 @@ class FeedbackService:
             conditions.append(Feedback.status == status)
         if keyword:
             conditions.append(Feedback.feedback_text.like(f"%{keyword}%"))
+        if feedback_type:
+            # feedback_type is a comma-separated string, convert to list and check JSON array contains
+            type_list = [t.strip() for t in feedback_type.split(',')]
+            type_conditions = [Feedback.feedback_type.contains(json.dumps([ft])) for ft in type_list if ft]
+            conditions.append(or_(*type_conditions))
 
         # Build base query
         query = select(Feedback)

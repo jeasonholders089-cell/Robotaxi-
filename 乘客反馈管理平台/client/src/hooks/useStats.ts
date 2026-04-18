@@ -5,6 +5,10 @@ export function useOverviewStats(params?: {
   start_date?: string
   end_date?: string
   city?: string
+  rating_min?: number
+  rating_max?: number
+  status?: string
+  feedback_type?: string
 }) {
   return useQuery({
     queryKey: ['stats', 'overview', params],
