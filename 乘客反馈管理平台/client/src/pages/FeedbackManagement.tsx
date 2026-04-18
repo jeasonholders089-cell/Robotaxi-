@@ -596,7 +596,7 @@ export function FeedbackManagement() {
               </span>
             ) : (
               <span className="text-sm text-gray-500">
-                基于当前筛选条件，预估 {estimatedCount} 条数据
+                基于当前筛选条件，共 {estimatedCount} 条数据
               </span>
             )}
           </div>
