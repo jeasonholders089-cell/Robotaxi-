@@ -1,6 +1,5 @@
 import client from './client'
 import type {
-  ApiResponse,
   AISummary,
   AISuggestionsResponse,
 } from '@/types'
@@ -18,8 +17,8 @@ export async function getAISummary(params: {
   length?: 'short' | 'medium' | 'long'
   max_count?: number
 }): Promise<AISummary> {
-  const response = await client.post<ApiResponse<AISummary>>('/ai/summary', params)
-  return response.data
+  const { data } = await client.post<AISummary>('/ai/summary', params)
+  return data
 }
 
 // 获取产品建议
@@ -34,8 +33,8 @@ export async function getAISuggestions(params: {
   keyword?: string
   top_n?: number
 }): Promise<AISuggestionsResponse> {
-  const response = await client.post<ApiResponse<AISuggestionsResponse>>('/ai/suggestions', params)
-  return response.data
+  const { data } = await client.post<AISuggestionsResponse>('/ai/suggestions', params)
+  return data
 }
 
 // 批量 AI 分类
@@ -44,12 +43,12 @@ export async function batchClassify(ids: string[]): Promise<{
   failed_count: number
   results: { id: string; feedback_type: string[]; sentiment: string }[]
 }> {
-  const response = await client.post<ApiResponse<{
+  const { data } = await client.post<{
     success_count: number
     failed_count: number
     results: { id: string; feedback_type: string[]; sentiment: string }[]
-  }>>('/feedbacks/batch-classify', { ids })
-  return response.data
+  }>('/feedbacks/batch-classify', { ids })
+  return data
 }
 
 // ===== v1.5 Analysis Pipeline APIs =====
@@ -103,12 +102,12 @@ export async function startAnalysis(params: {
   feedback_type?: string[]
   keyword?: string
 }): Promise<{ task_id: string }> {
-  const response = await client.post<ApiResponse<{ task_id: string }>>('/ai/analyze', params)
-  return response.data
+  const { data } = await client.post<{ task_id: string }>('/ai/analyze', params)
+  return data
 }
 
 // 查询分析结果
 export async function getAnalysisResult(taskId: string): Promise<AnalysisTaskResult> {
-  const response = await client.get<ApiResponse<AnalysisTaskResult>>(`/ai/analyze/${taskId}`)
-  return response.data
+  const { data } = await client.get<AnalysisTaskResult>(`/ai/analyze/${taskId}`)
+  return data
 }

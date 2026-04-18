@@ -1,6 +1,5 @@
 import client from './client'
 import type {
-  ApiResponse,
   Feedback,
   FeedbackListResponse,
   FeedbackDetailResponse,
@@ -29,14 +28,14 @@ export async function getFeedbacks(
     keyword: params.keyword || undefined,
     feedback_type: params.feedbackType?.join(',') || undefined,
   }
-  const response = await client.get<ApiResponse<FeedbackListResponse>>('/feedbacks', { params: apiParams })
-  return response.data
+  const { data } = await client.get<FeedbackListResponse>('/feedbacks', { params: apiParams })
+  return data
 }
 
 // 获取反馈详情
 export async function getFeedbackDetail(id: string): Promise<FeedbackDetailResponse> {
-  const response = await client.get<ApiResponse<FeedbackDetailResponse>>(`/feedbacks/${id}`)
-  return response.data
+  const { data } = await client.get<FeedbackDetailResponse>(`/feedbacks/${id}`)
+  return data
 }
 
 // 更新反馈状态
@@ -44,17 +43,17 @@ export async function updateFeedback(
   id: string,
   data: { status?: string; handler?: string; handler_notes?: string }
 ): Promise<Feedback> {
-  const response = await client.patch<ApiResponse<Feedback>>(`/feedbacks/${id}`, data)
-  return response.data
+  const { data: result } = await client.patch<Feedback>(`/feedbacks/${id}`, data)
+  return result
 }
 
 // 批量更新状态
 export async function batchUpdateStatus(ids: string[], status: string): Promise<{ success_count: number; failed_count: number }> {
-  const response = await client.post<ApiResponse<{ success_count: number; failed_count: number }>>('/feedbacks/batch-update', {
+  const { data } = await client.post<{ success_count: number; failed_count: number }>('/feedbacks/batch-update', {
     ids,
     status,
   })
-  return response.data
+  return data
 }
 
 // 批量导出
@@ -85,9 +84,9 @@ export async function addHandlingLog(
   feedbackId: string,
   data: { operator: string; action: string; remark?: string }
 ): Promise<HandlingLog> {
-  const response = await client.post<ApiResponse<HandlingLog>>(
+  const { data: result } = await client.post<HandlingLog>(
     `/feedbacks/${feedbackId}/handling-logs`,
     data
   )
-  return response.data
+  return result
 }

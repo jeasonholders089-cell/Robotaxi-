@@ -1,6 +1,5 @@
 import client from './client'
 import type {
-  ApiResponse,
   OverviewStats,
   TrendResponse,
   DistributionResponse,
@@ -16,8 +15,8 @@ export async function getOverviewStats(params?: {
   status?: string
   feedback_type?: string
 }): Promise<OverviewStats> {
-  const response = await client.get<ApiResponse<OverviewStats>>('/stats/overview', { params })
-  return response.data
+  const { data } = await client.get<OverviewStats>('/stats/overview', { params })
+  return data
 }
 
 // 获取趋势数据
@@ -27,8 +26,8 @@ export async function getTrendData(params: {
   end_date?: string
   city?: string
 }): Promise<TrendResponse> {
-  const response = await client.get<ApiResponse<TrendResponse>>('/stats/trend', { params })
-  return response.data
+  const { data } = await client.get<TrendResponse>('/stats/trend', { params })
+  return data
 }
 
 // 获取分布数据
@@ -37,6 +36,6 @@ export async function getDistributionData(params?: {
   end_date?: string
   city?: string
 }): Promise<DistributionResponse> {
-  const response = await client.get<ApiResponse<DistributionResponse>>('/stats/distribution', { params })
-  return response.data
+  const { data } = await client.get<DistributionResponse>('/stats/distribution', { params })
+  return data
 }

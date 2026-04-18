@@ -19,7 +19,7 @@ export function Dashboard() {
   })
   const { data: distributionData, isLoading: distLoading } = useDistributionData()
 
-  const ratingDistribution = distributionData?.rating_distribution?.map((item) => ({
+  const ratingDistribution = trendData?.rating_distribution?.map((item) => ({
     name: `${item.rating}星`,
     value: item.count,
   })) ?? []
