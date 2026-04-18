@@ -5,5 +5,5 @@ build:
   installCommand: pnpm install --frozen-lockfile --ignore-scripts
   buildCommand: pnpm run build
   outputDirectory: dist
-  port: 3000
-  startCommand: pnpm run preview --port 3000 --host
+  port: 4173
+  startCommand: pnpm run preview
