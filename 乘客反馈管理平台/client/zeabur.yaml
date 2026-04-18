@@ -4,3 +4,6 @@ spec:
   name: robotaxi-frontend
   runtime: docker
   port: 8080
+  env:
+    - key: VITE_API_BASE_URL
+      value: "https://groclawa.com"
