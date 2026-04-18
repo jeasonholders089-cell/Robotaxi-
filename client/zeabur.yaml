@@ -1,0 +1,6 @@
+build:
+  language: nodejs
+  nodejs:
+    buildCommand: yarn build
+    outputDirectory: dist
+    installCommand: yarn install
