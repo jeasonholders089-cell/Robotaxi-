@@ -121,9 +121,6 @@ export function FeedbackManagement() {
     filters.keyword
   )
 
-  // Estimate data count - use filtered feedback total, not overview stats
-  const estimatedCount = data?.total?.toLocaleString() ?? '0'
-
   // Feedback list state
   const [page, setPage] = React.useState(1)
   const [pageSize, setPageSize] = React.useState(20)
@@ -148,6 +145,9 @@ export function FeedbackManagement() {
     status: filters.status,
     keyword: filters.keyword,
   })
+
+  // Estimate data count - use filtered feedback total, not overview stats
+  const estimatedCount = data?.total?.toLocaleString() ?? '0'
 
   const { data: detailData, isLoading: detailLoading } = useFeedbackDetail(selectedFeedback?.id || null)
   const updateFeedback = useUpdateFeedback()
@@ -419,7 +419,6 @@ export function FeedbackManagement() {
                 <span>导出{selectedIds.length > 0 ? `（${selectedIds.length}条）` : ''}</span>
               )}
             </button>
-            </div>
           </div>
         </div>
 
