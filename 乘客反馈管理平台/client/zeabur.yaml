@@ -4,6 +4,9 @@ spec:
   name: robotaxi-frontend
   runtime: docker
   port: 8080
+  build:
+    context: client
+    dockerfile: client/Dockerfile
   env:
     - key: VITE_API_BASE_URL
       value: "/api"
