@@ -26,9 +26,9 @@ class AIClient:
             self.use_anthropic = False
         else:
             self.api_key = settings.MINIMAX_API_KEY
-            self.base_url = settings.MINIMAX_BASE_URL
-            self.model = "MiniMax-M2.7"
-            self.use_anthropic = True
+            self.base_url = "https://api.minimax.chat/v1"
+            self.model = "MiniMax-M2"
+            self.use_anthropic = False
 
     async def chat(
         self,
