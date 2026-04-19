@@ -79,17 +79,35 @@ export async function batchExport(
     )
     return response.data
   } catch (error: any) {
-    // If error response is a blob, try to extract error message from it
-    if (error.response?.data instanceof Blob) {
+    // Extract error message from different possible formats
+    let errorMessage = '导出失败，请重试'
+
+    if (error.response?.data) {
       try {
-        const text = await error.response.data.text()
-        const json = JSON.parse(text)
-        error.message = json.detail || text
+        // Try to parse as JSON blob or object
+        const data = error.response.data
+        if (typeof data === 'string') {
+          const json = JSON.parse(data)
+          errorMessage = json.detail || json.message || errorMessage
+        } else if (data instanceof Blob) {
+          const text = await data.text()
+          try {
+            const json = JSON.parse(text)
+            errorMessage = json.detail || json.message || errorMessage
+          } catch {
+            errorMessage = text || errorMessage
+          }
+        } else if (data.detail) {
+          errorMessage = data.detail
+        }
       } catch {
-        // If parsing fails, use the status text
-        error.message = error.response?.statusText || 'Export failed'
+        errorMessage = error.response.statusText || errorMessage
       }
+    } else if (error.message) {
+      errorMessage = error.message
     }
+
+    error.message = errorMessage
     throw error
   }
 }
