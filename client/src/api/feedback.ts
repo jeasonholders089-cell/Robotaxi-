@@ -71,44 +71,42 @@ export async function batchExport(
     feedback_type?: string
   }
 ): Promise<Blob> {
-  try {
-    const response = await client.post<Blob>(
-      '/feedbacks/batch-export',
-      { ids, format, ...filters },
-      { responseType: 'blob' }
-    )
-    return response.data
-  } catch (error: any) {
-    // Extract error message from different possible formats
-    let errorMessage = '导出失败，请重试'
+  const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+  const url = `${baseURL}/feedbacks/batch-export`
 
-    if (error.response?.data) {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ids, format, ...filters }),
+    })
+
+    if (!response.ok) {
+      // Try to parse error message from response
+      let errorMessage = `导出失败: ${response.status} ${response.statusText}`
       try {
-        // Try to parse as JSON blob or object
-        const data = error.response.data
-        if (typeof data === 'string') {
-          const json = JSON.parse(data)
-          errorMessage = json.detail || json.message || errorMessage
-        } else if (data instanceof Blob) {
-          const text = await data.text()
-          try {
-            const json = JSON.parse(text)
-            errorMessage = json.detail || json.message || errorMessage
-          } catch {
-            errorMessage = text || errorMessage
-          }
-        } else if (data.detail) {
-          errorMessage = data.detail
-        }
+        const errorData = await response.json()
+        errorMessage = errorData.detail || errorMessage
       } catch {
-        errorMessage = error.response.statusText || errorMessage
+        // Response might not be JSON
+        const text = await response.text()
+        if (text) errorMessage = text
       }
-    } else if (error.message) {
-      errorMessage = error.message
+      throw new Error(errorMessage)
     }
 
-    error.message = errorMessage
-    throw error
+    const blob = await response.blob()
+    if (!blob || blob.size === 0) {
+      throw new Error('导出失败，返回数据为空')
+    }
+    return blob
+  } catch (error: any) {
+    if (error.message.includes('导出失败')) {
+      throw error
+    }
+    throw new Error('导出失败，请重试')
   }
 }
 
