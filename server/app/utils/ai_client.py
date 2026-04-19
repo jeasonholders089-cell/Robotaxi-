@@ -64,7 +64,7 @@ class AIClient:
         temperature: float,
         max_tokens: int,
     ) -> str:
-        """Use OpenAI-compatible API (Kimi)."""
+        """Use OpenAI-compatible API (Kimi/MiniMax)."""
         async with httpx.AsyncClient(timeout=settings.AI_TIMEOUT) as client:
             response = await client.post(
                 f"{self.base_url}/chat/completions",
@@ -81,7 +81,17 @@ class AIClient:
             )
             response.raise_for_status()
             result = response.json()
-            return result["choices"][0]["message"]["content"]
+            content = result["choices"][0]["message"].get("content", "")
+
+            # Filter out thinking tags if present (MiniMax reasoning content)
+            import sys
+            if "<think>" in content:
+                print(f"DEBUG: Filtering out thinking content from MiniMax response", file=sys.stderr)
+                content = content.split("</think>")[-1].strip()
+            if "</think>" in content:
+                content = content.replace("</think>", "").strip()
+
+            return content
 
     async def _chat_anthropic(
         self,
