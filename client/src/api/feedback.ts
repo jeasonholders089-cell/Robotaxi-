@@ -71,12 +71,27 @@ export async function batchExport(
     feedback_type?: string
   }
 ): Promise<Blob> {
-  const response = await client.post<Blob>(
-    '/feedbacks/batch-export',
-    { ids, format, ...filters },
-    { responseType: 'blob' }
-  )
-  return response.data
+  try {
+    const response = await client.post<Blob>(
+      '/feedbacks/batch-export',
+      { ids, format, ...filters },
+      { responseType: 'blob' }
+    )
+    return response.data
+  } catch (error: any) {
+    // If error response is a blob, try to extract error message from it
+    if (error.response?.data instanceof Blob) {
+      try {
+        const text = await error.response.data.text()
+        const json = JSON.parse(text)
+        error.message = json.detail || text
+      } catch {
+        // If parsing fails, use the status text
+        error.message = error.response?.statusText || 'Export failed'
+      }
+    }
+    throw error
+  }
 }
 
 // 添加处理备注

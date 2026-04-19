@@ -232,28 +232,40 @@ async def batch_export_feedback(
 
     Returns file download with specified format.
     """
+    import logging
+    logger = logging.getLogger(__name__)
+
     service = FeedbackService(db)
 
-    # Get export data
-    data = await service.export_data(
-        ids=request.ids,
-        city=request.city,
-        route=request.route,
-        rating_min=request.rating_min,
-        rating_max=request.rating_max,
-        start_date=request.start_date,
-        end_date=request.end_date,
-        status=request.status,
-        keyword=request.keyword,
-    )
+    try:
+        # Get export data
+        data = await service.export_data(
+            ids=request.ids,
+            city=request.city,
+            route=request.route,
+            rating_min=request.rating_min,
+            rating_max=request.rating_max,
+            start_date=request.start_date,
+            end_date=request.end_date,
+            status=request.status,
+            keyword=request.keyword,
+        )
+        logger.info(f"Export request: ids={request.ids}, format={request.format}, filters={ {k: v for k, v in request.model_dump().items() if k not in ('ids', 'format')} }, data_count={len(data) if data else 0}")
+    except Exception as e:
+        logger.error(f"Export data query failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Export query failed: {str(e)}")
 
     if not data:
         raise HTTPException(status_code=404, detail="No data to export")
 
-    if request.format == "csv":
-        return await _export_csv(data)
-    else:
-        return await _export_excel(data)
+    try:
+        if request.format == "csv":
+            return await _export_csv(data)
+        else:
+            return await _export_excel(data)
+    except Exception as e:
+        logger.error(f"Export file generation failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Export file generation failed: {str(e)}")
 
 
 async def _export_csv(data: list) -> Response:

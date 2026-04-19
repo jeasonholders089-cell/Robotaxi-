@@ -214,9 +214,11 @@ export function FeedbackManagement() {
       URL.revokeObjectURL(url)
       setExportSuccess(true)
       setTimeout(() => setExportSuccess(false), 3000)
-    } catch (error) {
+    } catch (error: any) {
       console.error('导出失败:', error)
-      alert('导出失败，请重试')
+      // Try to extract error message from response
+      const errorMessage = error?.response?.data?.detail || error?.message || '导出失败，请重试'
+      alert(errorMessage)
     } finally {
       setExporting(false)
     }
