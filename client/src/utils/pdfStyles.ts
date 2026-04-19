@@ -63,6 +63,7 @@ export const pdfStyles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#FF6033',
+    maxWidth: '100%',
   },
   // 图表容器
   chartContainer: {
@@ -76,7 +77,13 @@ export const pdfStyles = StyleSheet.create({
   },
   chartImage: {
     width: '100%',
-    height: 180,
+    height: 160,
+    objectFit: 'contain',
+  },
+  chartImageLarge: {
+    width: '100%',
+    height: 200,
+    objectFit: 'contain',
   },
   chartRow: {
     flexDirection: 'row',
@@ -92,6 +99,7 @@ export const pdfStyles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
     marginBottom: 12,
+    flexWrap: 'wrap',
   },
   tagRow: {
     flexDirection: 'row',
@@ -112,6 +120,7 @@ export const pdfStyles = StyleSheet.create({
     paddingBottom: 8,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
+    flexWrap: 'wrap',
   },
   problemHeader: {
     flexDirection: 'row',
@@ -146,6 +155,7 @@ export const pdfStyles = StyleSheet.create({
     backgroundColor: '#fff8f0',
     borderLeftWidth: 3,
     borderLeftColor: '#FF6033',
+    flexWrap: 'wrap',
   },
   suggestionPriority: {
     fontSize: 8,
@@ -160,6 +170,7 @@ export const pdfStyles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333333',
     marginBottom: 4,
+    maxWidth: '100%',
   },
   suggestionImpact: {
     fontSize: 8,

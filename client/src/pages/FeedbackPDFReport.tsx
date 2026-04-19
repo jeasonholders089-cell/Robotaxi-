@@ -114,7 +114,7 @@ export function FeedbackPDFReport({
         {chartImages.cityDistribution && (
           <View style={pdfStyles.chartContainer}>
             <Text style={pdfStyles.chartTitle}>城市分布 Top10</Text>
-            <Image src={chartImages.cityDistribution} style={{ ...pdfStyles.chartImage, height: 220 }} />
+            <Image src={chartImages.cityDistribution} style={pdfStyles.chartImageLarge} />
           </View>
         )}
       </Page>
@@ -126,9 +126,11 @@ export function FeedbackPDFReport({
         {analysisResult?.summary && (
           <View style={pdfStyles.summaryBox}>
             <Text style={{ fontWeight: 'bold', marginBottom: 4, fontSize: 10 }}>摘要</Text>
-            <Text style={{ fontSize: 9, color: '#333333', lineHeight: 1.4 }}>
-              {analysisResult.summary}
-            </Text>
+            {analysisResult.summary.split('\n').filter(line => line.trim()).map((line, i) => (
+              <Text key={i} style={{ fontSize: 9, color: '#333333', lineHeight: 1.4, marginBottom: 2 }}>
+                {line}
+              </Text>
+            ))}
           </View>
         )}
 
@@ -138,7 +140,9 @@ export function FeedbackPDFReport({
             {analysisResult.problems.slice(0, 6).map((problem, index) => (
               <View key={index} style={pdfStyles.problemItem}>
                 <View style={pdfStyles.problemHeader}>
-                  <Text style={pdfStyles.problemName}>{problem.name}</Text>
+                  <View style={{ flexShrink: 1, maxWidth: '70%' }}>
+                    <Text style={pdfStyles.problemName}>{problem.name}</Text>
+                  </View>
                   <Text style={pdfStyles.problemPercent}>
                     {(problem.percentage * 100).toFixed(1)}% · {problem.count}条
                   </Text>
@@ -147,7 +151,7 @@ export function FeedbackPDFReport({
                   <View style={{ ...pdfStyles.problemBarFill, width: `${(problem.percentage * 100).toFixed(1)}%` }} />
                 </View>
                 {problem.description && (
-                  <Text style={{ fontSize: 8, color: '#666666', marginTop: 2 }}>{problem.description}</Text>
+                  <Text style={{ fontSize: 8, color: '#666666', marginTop: 2, maxWidth: '100%' }}>{problem.description}</Text>
                 )}
               </View>
             ))}
@@ -166,9 +170,11 @@ export function FeedbackPDFReport({
                       {config.label}
                     </Text>
                   </View>
-                  <Text style={pdfStyles.suggestionTitle}>
-                    {suggestion.problem_category} - {suggestion.specific_problem}
-                  </Text>
+                  <View style={{ maxWidth: '100%' }}>
+                    <Text style={pdfStyles.suggestionTitle}>
+                      {suggestion.problem_category} - {suggestion.specific_problem}
+                    </Text>
+                  </View>
                   <Text style={pdfStyles.suggestionImpact}>
                     影响 {suggestion.evidence.count} 条 · 差评率 {(suggestion.evidence.negative_rate * 100).toFixed(0)}%
                   </Text>
