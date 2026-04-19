@@ -344,6 +344,10 @@ class AIClient:
 
         prompt = f"""你是一个专业的Robotaxi乘客反馈分析师。请分析以下反馈数据，生成详尽的摘要报告。
 
+## 重要指示
+- 直接输出文本，不要输出任何思考、解释或思考过程
+- 只输出干净的文本
+
 ## 数据统计
 - 总反馈数：{stats.get('total_count', 0)} 条
 - 平均评分：{stats.get('avg_rating', 0)} 分（满分5分）
@@ -418,6 +422,10 @@ class AIClient:
         feedback_str = "\n".join(feedback_lines)
 
         prompt = f"""你是一个专业的自动驾驶产品分析师。请从以下乘客反馈中识别和分类产品问题。
+
+## 重要指示
+- 直接输出JSON，不要输出任何思考、解释或思考过程
+- 只输出干净的JSON格式
 
 ## 已有分类参考
 - 行驶体验：与车辆行驶、加速、刹车、变道等相关
@@ -516,6 +524,10 @@ class AIClient:
         negatives_str = "\n".join([f"- {fb}" for fb in negative_feedbacks[:30]])
 
         prompt = f"""你是一个自动驾驶产品专家。请基于以下问题分析，生成可落地的产品优化建议。
+
+## 重要指示
+- 直接输出JSON，不要输出任何思考、解释或思考过程
+- 只输出干净的JSON数组
 
 ## 问题分类详情
 {categories_str}
