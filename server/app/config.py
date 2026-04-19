@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # AI API Configuration - MiniMax
     MINIMAX_API_KEY: Optional[str] = None
-    MINIMAX_BASE_URL: str = "https://api.minimax.chat/v1"
+    MINIMAX_BASE_URL: str = "https://api.minimaxi.com/anthropic"
 
     # AI Configuration
     AI_MODEL: str = "moonshot-v1-8k"
