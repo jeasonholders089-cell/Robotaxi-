@@ -1,16 +1,8 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type { OverviewStats } from '@/types'
 
-// Only register font if not already registered
-if (!Font.getRegisteredFontFamilies().includes('NotoSansSC')) {
-  Font.register({
-    family: 'NotoSansSC',
-    fonts: [
-      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
-      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
-    ],
-  })
-}
+// Font registration is handled in usePDFExport.tsx
+// This component uses fontFamily: 'NotoSansSC' via the styles
 
 // Fallback to standard font for compatibility
 const styles = StyleSheet.create({

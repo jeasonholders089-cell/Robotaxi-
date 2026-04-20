@@ -7,23 +7,45 @@ import type { ECharts } from 'echarts'
 import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types'
 import type { AnalysisTaskResult } from '@/api/ai'
 
-// Pre-register Chinese font from local file (16MB NotoSansSC)
-// Using synchronous registration for reliability
-Font.register({
-  family: 'NotoSansSC',
-  fonts: [
-    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
-    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
-  ],
-})
-console.log('Chinese font registered from local file')
+// Pre-load font as ArrayBuffer for reliable PDF generation
+let fontBuffer: ArrayBuffer | null = null
+let fontLoadingPromise: Promise<void> | null = null
 
-// Wait for font to be ready before generating PDF
-async function ensureFontLoaded(): Promise<void> {
-  return new Promise((resolve) => {
-    // Font.register is synchronous, so we just need a small delay for processing
-    setTimeout(resolve, 100)
-  })
+async function loadFontOnce(): Promise<void> {
+  if (fontBuffer) return
+  if (fontLoadingPromise) return fontLoadingPromise
+
+  fontLoadingPromise = (async () => {
+    try {
+      console.log('Loading NotoSansSC font from /fonts/NotoSansSC.ttf...')
+      const response = await fetch('/fonts/NotoSansSC.ttf')
+      if (!response.ok) {
+        throw new Error(`Font load failed: ${response.status}`)
+      }
+      fontBuffer = await response.arrayBuffer()
+      console.log('Font loaded successfully, size:', fontBuffer.byteLength)
+    } catch (e) {
+      console.error('Failed to load font:', e)
+      fontBuffer = null
+    }
+  })()
+
+  return fontLoadingPromise
+}
+
+async function registerFont(): Promise<void> {
+  await loadFontOnce()
+
+  if (fontBuffer && !Font.getRegisteredFontFamilies().includes('NotoSansSC')) {
+    Font.register({
+      family: 'NotoSansSC',
+      fonts: [
+        { src: fontBuffer, fontWeight: 'normal' },
+        { src: fontBuffer, fontWeight: 'bold' },
+      ],
+    })
+    console.log('Font registered from ArrayBuffer')
+  }
 }
 
 // Create a minimal fallback PDF that doesn't require Chinese fonts
@@ -130,7 +152,7 @@ export function usePDFExport() {
       let blob: Blob | null = null
 
       // Ensure font is registered before PDF generation
-      await ensureFontLoaded()
+      await registerFont()
 
       const pdfPromise = pdf(doc).toBlob()
 
@@ -167,6 +189,7 @@ export function usePDFExport() {
       // Try fallback to simple PDF without Chinese fonts
       try {
         console.log('Attempting fallback PDF with Helvetica...')
+        await registerFont() // Try to load font even for fallback
         const generatedAt = new Date().toLocaleString('zh-CN')
         const fallbackDoc = createFallbackDocument(options.stats, generatedAt, errorMsg)
         const fallbackBlob = await Promise.race([

@@ -3,17 +3,9 @@ import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types
 import type { AnalysisTaskResult } from '@/api/ai'
 import { pdfStyles } from '@/utils/pdfStyles'
 
-// Note: Font.register is called in usePDFExport.tsx to avoid duplicate registration
-// Only register here if not already registered
-if (!Font.getRegisteredFontFamilies().includes('NotoSansSC')) {
-  Font.register({
-    family: 'NotoSansSC',
-    fonts: [
-      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
-      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
-    ],
-  })
-}
+// Font registration is handled in usePDFExport.tsx
+// This component uses pdfStyles which has fontFamily: 'NotoSansSC' set
+// Font should already be registered when this component renders
 
 interface ChartImages {
   countTrend?: string
