@@ -251,9 +251,9 @@ export function FeedbackManagement() {
           routeDistribution: routeDistRef.current?.getEchartsInstance(),
         },
       })
-    } catch (error) {
+    } catch (error: any) {
       console.error('PDF导出失败:', error)
-      alert('PDF导出失败，请重试')
+      alert(error?.message || 'PDF导出失败，请重试')
     }
   }
 
