@@ -52,7 +52,7 @@ export function usePDFExport() {
     setGenerating(true)
     setError(null)
 
-    const timeoutMs = 60000
+    const timeoutMs = 180000
 
     try {
       const chartImages: Record<string, string> = {}
@@ -138,7 +138,7 @@ export function usePDFExport() {
         const simpleDoc = <SimplePDF stats={options.stats} generatedAt={generatedAt} errorMessage={errorMsg} />
         const fallbackBlob = await Promise.race([
           pdf(simpleDoc).toBlob(),
-          new Promise<Blob>((_, reject) => setTimeout(() => reject(new Error('Fallback timeout')), 30000))
+          new Promise<Blob>((_, reject) => setTimeout(() => reject(new Error('Fallback timeout')), 60000))
         ])
 
         if (fallbackBlob && fallbackBlob.size > 1000) {
