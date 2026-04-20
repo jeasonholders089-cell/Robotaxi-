@@ -1,14 +1,16 @@
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
 import type { OverviewStats } from '@/types'
 
-// Register Chinese font from local file
-Font.register({
-  family: 'NotoSansSC',
-  fonts: [
-    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
-    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
-  ],
-})
+// Only register font if not already registered
+if (!Font.getRegisteredFontFamilies().includes('NotoSansSC')) {
+  Font.register({
+    family: 'NotoSansSC',
+    fonts: [
+      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
+      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
+    ],
+  })
+}
 
 // Fallback to standard font for compatibility
 const styles = StyleSheet.create({

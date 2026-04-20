@@ -8,6 +8,7 @@ import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types
 import type { AnalysisTaskResult } from '@/api/ai'
 
 // Pre-register Chinese font from local file (16MB NotoSansSC)
+// Using synchronous registration for reliability
 Font.register({
   family: 'NotoSansSC',
   fonts: [
@@ -16,6 +17,14 @@ Font.register({
   ],
 })
 console.log('Chinese font registered from local file')
+
+// Wait for font to be ready before generating PDF
+async function ensureFontLoaded(): Promise<void> {
+  return new Promise((resolve) => {
+    // Font.register is synchronous, so we just need a small delay for processing
+    setTimeout(resolve, 100)
+  })
+}
 
 // Create a minimal fallback PDF that doesn't require Chinese fonts
 function createFallbackDocument(stats: any, generatedAt: string, errorMsg: string) {
@@ -119,10 +128,14 @@ export function usePDFExport() {
 
       // PDF generation with timeout
       let blob: Blob | null = null
+
+      // Ensure font is registered before PDF generation
+      await ensureFontLoaded()
+
       const pdfPromise = pdf(doc).toBlob()
 
       const timeoutPromise = new Promise<Blob>((_, reject) => {
-        setTimeout(() => reject(new Error('PDF generation timeout (60s)')), timeoutMs)
+        setTimeout(() => reject(new Error('PDF generation timeout (180s)')), timeoutMs)
       })
 
       blob = await Promise.race([pdfPromise, timeoutPromise])

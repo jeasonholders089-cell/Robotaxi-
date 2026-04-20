@@ -3,14 +3,17 @@ import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types
 import type { AnalysisTaskResult } from '@/api/ai'
 import { pdfStyles } from '@/utils/pdfStyles'
 
-// Register Chinese font from local file (bundled in public/fonts/)
-Font.register({
-  family: 'NotoSansSC',
-  fonts: [
-    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
-    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
-  ],
-})
+// Note: Font.register is called in usePDFExport.tsx to avoid duplicate registration
+// Only register here if not already registered
+if (!Font.getRegisteredFontFamilies().includes('NotoSansSC')) {
+  Font.register({
+    family: 'NotoSansSC',
+    fonts: [
+      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
+      { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
+    ],
+  })
+}
 
 interface ChartImages {
   countTrend?: string
