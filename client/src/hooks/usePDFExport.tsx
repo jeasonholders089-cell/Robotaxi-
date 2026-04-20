@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { pdf, Font } from '@react-pdf/renderer'
+import { pdf, Font, Document, Page, Text } from '@react-pdf/renderer'
 import { FeedbackPDFReport } from '@/pages/FeedbackPDFReport'
 import { SimplePDF } from '@/pages/SimplePDF'
 import { chartToDataURL } from '@/utils/chartToImage'
@@ -40,8 +40,8 @@ if (!fontRegistered) {
 }
 
 // Create a minimal fallback PDF that doesn't require Chinese fonts
-function createFallbackPDF(stats: any, generatedAt: string, errorMsg: string) {
-  const FallbackDocument = () => (
+function createFallbackDocument(stats: any, generatedAt: string, errorMsg: string) {
+  return (
     <Document>
       <Page size="A4" style={{ padding: 40, fontFamily: 'Helvetica', fontSize: 10 }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' }}>
@@ -66,7 +66,6 @@ function createFallbackPDF(stats: any, generatedAt: string, errorMsg: string) {
       </Page>
     </Document>
   )
-  return FallbackDocument
 }
 
 export interface ChartRefs {
@@ -178,9 +177,9 @@ export function usePDFExport() {
       try {
         console.log('Attempting fallback PDF with Helvetica...')
         const generatedAt = new Date().toLocaleString('zh-CN')
-        const FallbackDoc = createFallbackPDF(options.stats, generatedAt, errorMsg)
+        const fallbackDoc = createFallbackDocument(options.stats, generatedAt, errorMsg)
         const fallbackBlob = await Promise.race([
-          pdf(<FallbackDoc />).toBlob(),
+          pdf(fallbackDoc).toBlob(),
           new Promise<Blob>((_, reject) => setTimeout(() => reject(new Error('Fallback timeout')), 60000))
         ])
 
