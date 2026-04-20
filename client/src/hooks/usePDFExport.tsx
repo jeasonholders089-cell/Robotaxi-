@@ -7,37 +7,15 @@ import type { ECharts } from 'echarts'
 import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types'
 import type { AnalysisTaskResult } from '@/api/ai'
 
-// Pre-register Chinese font with multiple fallback CDN sources
-const fontSources = [
-  // jsDelivr CDN - version agnostic
-  'https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.0.3/files/noto-sans-sc-chinese-simplified-400-normal.woff2',
-  // unpkg CDN
-  'https://unpkg.com/@fontsource/noto-sans-sc@5.0.3/files/noto-sans-sc-chinese-simplified-400-normal.woff2',
-  // fonts.gstatic.com - latest version path
-  'https://fonts.gstatic.com/s/notosanssc/v37/k3kXo84MPvpLmixcA63oeALhLO6UwcPgQ.woff2',
-]
-
-let fontRegistered = false
-for (const src of fontSources) {
-  try {
-    Font.register({
-      family: 'NotoSansSC',
-      fonts: [
-        { src, fontWeight: 'normal' },
-        { src, fontWeight: 'bold' },
-      ],
-    })
-    fontRegistered = true
-    console.log('Chinese font registered from:', src)
-    break
-  } catch (e) {
-    console.warn('Font registration failed for:', src)
-  }
-}
-
-if (!fontRegistered) {
-  console.warn('All Chinese font sources failed, using fallback Helvetica')
-}
+// Pre-register Chinese font from local file (16MB NotoSansSC)
+Font.register({
+  family: 'NotoSansSC',
+  fonts: [
+    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
+    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
+  ],
+})
+console.log('Chinese font registered from local file')
 
 // Create a minimal fallback PDF that doesn't require Chinese fonts
 function createFallbackDocument(stats: any, generatedAt: string, errorMsg: string) {
