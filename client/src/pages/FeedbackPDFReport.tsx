@@ -3,19 +3,12 @@ import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types
 import type { AnalysisTaskResult } from '@/api/ai'
 import { pdfStyles } from '@/utils/pdfStyles'
 
-// Register Chinese font once - use a more compatible approach
-// Use a system-available Chinese font as fallback, or bundle the font
+// Register Chinese font from local file (bundled in public/fonts/)
 Font.register({
   family: 'NotoSansSC',
   fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
-      fontWeight: 'normal',
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
-      fontWeight: 'bold',
-    },
+    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'normal' },
+    { src: '/fonts/NotoSansSC.ttf', fontWeight: 'bold' },
   ],
 })
 
