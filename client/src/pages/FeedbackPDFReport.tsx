@@ -1,7 +1,13 @@
-import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer'
+import { Document, Page, Text, View, Image, StyleSheet, Font } from '@react-pdf/renderer'
 import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types'
 import type { AnalysisTaskResult } from '@/api/ai'
 import { pdfStyles } from '@/utils/pdfStyles'
+
+// Register Chinese font (Noto Sans SC from Google Fonts CDN)
+Font.register({
+  family: 'NotoSansSC',
+  src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
+})
 
 interface ChartImages {
   countTrend?: string

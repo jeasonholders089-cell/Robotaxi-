@@ -4,7 +4,7 @@ export const pdfStyles = StyleSheet.create({
   // 页面基础样式
   page: {
     padding: 40,
-    fontFamily: 'Helvetica',
+    fontFamily: 'NotoSansSC',
     fontSize: 10,
   },
   // 封面标题
