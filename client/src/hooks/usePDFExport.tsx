@@ -39,6 +39,36 @@ if (!fontRegistered) {
   console.warn('All Chinese font sources failed, using fallback Helvetica')
 }
 
+// Create a minimal fallback PDF that doesn't require Chinese fonts
+function createFallbackPDF(stats: any, generatedAt: string, errorMsg: string) {
+  const FallbackDocument = () => (
+    <Document>
+      <Page size="A4" style={{ padding: 40, fontFamily: 'Helvetica', fontSize: 10 }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center' }}>
+          Robotaxi Feedback Report
+        </Text>
+        <Text style={{ fontSize: 12, marginBottom: 10, color: '#666' }}>
+          Generated: {generatedAt}
+        </Text>
+        {errorMsg && (
+          <Text style={{ fontSize: 10, color: '#F5222D', marginBottom: 10 }}>
+            Note: {errorMsg}
+          </Text>
+        )}
+        <Text style={{ fontSize: 14, fontWeight: 'bold', marginTop: 20, marginBottom: 10 }}>
+          Stats Summary:
+        </Text>
+        <Text>Total: {stats?.total_count ?? '-'}</Text>
+        <Text>Today: {stats?.today_count ?? '-'}</Text>
+        <Text>Avg Rating: {stats?.avg_rating?.toFixed(1) ?? '-'}</Text>
+        <Text>Positive Rate: {stats?.positive_rate ? `${(stats.positive_rate * 100).toFixed(1)}%` : '-'}</Text>
+        <Text>Negative Rate: {stats?.negative_rate ? `${(stats.negative_rate * 100).toFixed(1)}%` : '-'}</Text>
+      </Page>
+    </Document>
+  )
+  return FallbackDocument
+}
+
 export interface ChartRefs {
   countTrend?: ECharts
   ratingTrend?: ECharts
@@ -144,13 +174,13 @@ export function usePDFExport() {
       const errorMsg = err.message || 'PDF导出失败'
       console.error('PDF export failed:', errorMsg, err)
 
-      // Try fallback to simple PDF
+      // Try fallback to simple PDF without Chinese fonts
       try {
-        console.log('Attempting fallback PDF...')
+        console.log('Attempting fallback PDF with Helvetica...')
         const generatedAt = new Date().toLocaleString('zh-CN')
-        const simpleDoc = <SimplePDF stats={options.stats} generatedAt={generatedAt} errorMessage={errorMsg} />
+        const FallbackDoc = createFallbackPDF(options.stats, generatedAt, errorMsg)
         const fallbackBlob = await Promise.race([
-          pdf(simpleDoc).toBlob(),
+          pdf(<FallbackDoc />).toBlob(),
           new Promise<Blob>((_, reject) => setTimeout(() => reject(new Error('Fallback timeout')), 60000))
         ])
 
