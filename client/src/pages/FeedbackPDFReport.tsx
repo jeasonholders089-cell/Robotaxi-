@@ -3,10 +3,20 @@ import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types
 import type { AnalysisTaskResult } from '@/api/ai'
 import { pdfStyles } from '@/utils/pdfStyles'
 
-// Register Chinese font (Noto Sans SC from Google Fonts CDN)
+// Register Chinese font once - use a more compatible approach
+// Use a system-available Chinese font as fallback, or bundle the font
 Font.register({
   family: 'NotoSansSC',
-  src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
+  fonts: [
+    {
+      src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
+      fontWeight: 'normal',
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
+      fontWeight: 'bold',
+    },
+  ],
 })
 
 interface ChartImages {
@@ -34,11 +44,14 @@ const priorityConfig = {
   low: { label: '低优先级', color: '#52C41A', bgColor: '#F6FFED' },
 }
 
+// Helper to ensure Chinese text renders - use inline fontFamily on all Text
+const chineseTextStyle = { fontFamily: 'NotoSansSC' as const }
+
 function StatCardPDF({ title, value, suffix = '' }: { title: string; value?: string | number; suffix?: string }) {
   return (
     <View style={pdfStyles.statCard}>
-      <Text style={pdfStyles.statCardLabel}>{title}</Text>
-      <Text style={pdfStyles.statCardValue}>{value ?? '-'} {suffix}</Text>
+      <Text style={{ ...pdfStyles.statCardLabel, ...chineseTextStyle }}>{title}</Text>
+      <Text style={{ ...pdfStyles.statCardValue, ...chineseTextStyle }}>{value ?? '-'}{suffix ? ` ${suffix}` : ''}</Text>
     </View>
   )
 }
