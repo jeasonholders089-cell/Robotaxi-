@@ -40,8 +40,8 @@ async function registerFont(): Promise<void> {
     Font.register({
       family: 'NotoSansSC',
       fonts: [
-        { src: fontBuffer, fontWeight: 'normal' },
-        { src: fontBuffer, fontWeight: 'bold' },
+        { src: fontBuffer as unknown as string, fontWeight: 'normal' },
+        { src: fontBuffer as unknown as string, fontWeight: 'bold' },
       ],
     })
     console.log('Font registered from ArrayBuffer')
