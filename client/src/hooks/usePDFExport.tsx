@@ -7,23 +7,32 @@ import type { ECharts } from 'echarts'
 import type { OverviewStats, TrendResponse, DistributionResponse } from '@/types'
 import type { AnalysisTaskResult } from '@/api/ai'
 
-// Pre-register Chinese font
-try {
-  Font.register({
-    family: 'NotoSansSC',
-    fonts: [
-      {
-        src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
-        fontWeight: 'normal',
-      },
-      {
-        src: 'https://fonts.gstatic.com/s/notosanssc/v36/k3kCo84MPvpLmixcA63oeALhL4iJ-Q7m8w.woff2',
-        fontWeight: 'bold',
-      },
-    ],
-  })
-} catch (e) {
-  console.warn('Font registration warning:', e)
+// Pre-register Chinese font with multiple fallback URLs
+const fontUrls = [
+  'https://fonts.gstatic.com/s/notosanssc/v37/k3kXo84MPvpLmixcA63oeALhLO6UwcPgQ.woff2',
+  'https://fonts.gstatic.com/s/notosanssc/latest/k3kXo84MPvpLmixcA63oeALhLO6UwcPgQ.woff2',
+]
+
+let fontRegistered = false
+for (const url of fontUrls) {
+  try {
+    Font.register({
+      family: 'NotoSansSC',
+      fonts: [
+        { src: url, fontWeight: 'normal' },
+        { src: url, fontWeight: 'bold' },
+      ],
+    })
+    fontRegistered = true
+    console.log('Chinese font registered successfully')
+    break
+  } catch (e) {
+    console.warn('Font registration failed for:', url)
+  }
+}
+
+if (!fontRegistered) {
+  console.warn('All Chinese font URLs failed, will use Helvetica for ASCII only')
 }
 
 export interface ChartRefs {
